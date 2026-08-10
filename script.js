@@ -550,6 +550,39 @@
     5.45,
   );
 
+  // Scroll-snap safety: past the doorway, a stop between section dwell
+  // points settles at one, so a section is never left half entered or
+  // half exited — scrolling even a little into a section carries it to
+  // its middle state. The hero zoom stays a free scrub, and a dead zone
+  // around each dwell keeps tiny nudges from committing a full jump.
+  const SNAP_DWELLS = [11.4, 14.8, 19.7, 24.6, 29.6, 34.6, 39.8, 44];
+  const SNAP_FREE_END = 10.05;
+  const SNAP_DEADZONE = 0.5;
+  const snapToDwell = (value, self) => {
+    const T = value * TIMELINE_SPAN;
+    if (T < SNAP_FREE_END) return value;
+    let previous = -1;
+    let next = -1;
+    for (const dwell of SNAP_DWELLS) {
+      if (dwell <= T) previous = dwell;
+      else {
+        next = dwell;
+        break;
+      }
+    }
+    let target;
+    if (self.direction >= 0) {
+      target =
+        previous >= 0 && T <= previous + SNAP_DEADZONE ? previous : next;
+    } else {
+      target = next >= 0 && T >= next - SNAP_DEADZONE ? next : previous;
+    }
+    // Scrolling back up out of the first section hands the doorway zoom
+    // over to the user un-snapped.
+    if (target < 0) return value;
+    return target / TIMELINE_SPAN;
+  };
+
   // Scroll only drives the camera: museum grows to full framing, then
   // pushes through the door. The skyline never moves.
   const scrollTimeline = gsap.timeline({
@@ -560,6 +593,13 @@
       end: "bottom bottom",
       scrub: 1,
       invalidateOnRefresh: true,
+      snap: {
+        snapTo: snapToDwell,
+        inertia: false,
+        duration: { min: 0.4, max: 1.4 },
+        delay: 0.1,
+        ease: "power2.inOut",
+      },
       onUpdate(self) {
         // If the user starts scrolling mid-sunset, hurry the intro along.
         if (self.progress > 0.04 && intro.isActive() && intro.timeScale() === 1) {
