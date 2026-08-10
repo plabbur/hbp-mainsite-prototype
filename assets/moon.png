@@ -1,0 +1,17 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="119" height="119" viewBox="0 0 119 119" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Moon">
+<mask id="mask0_0_4" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="119" height="119">
+<circle id="Ellipse 200" cx="59.5" cy="59.5" r="59.5" fill="#E7E7E7"/>
+</mask>
+<g mask="url(#mask0_0_4)">
+<circle id="Ellipse 198" cx="59.5" cy="59.5" r="59.5" fill="#E7E7E7"/>
+<circle id="Ellipse 199" cx="55.4108" cy="55.4122" r="59.5" fill="white"/>
+<circle id="Ellipse 201" cx="42.3249" cy="59.4984" r="10.4278" fill="#F6F6F6"/>
+<circle id="Ellipse 206" cx="84.8539" cy="49.2775" r="10.4278" fill="#F6F6F6"/>
+<circle id="Ellipse 202" cx="11.6546" cy="86.4888" r="11.6546" fill="#F6F6F6"/>
+<circle id="Ellipse 203" cx="14.9259" cy="22.281" r="8.7921" fill="#F6F6F6"/>
+<circle id="Ellipse 204" cx="64.407" cy="-0.198542" r="13.2904" fill="#F6F6F6"/>
+<circle id="Ellipse 205" cx="73.4048" cy="85.6675" r="7.56529" fill="#F6F6F6"/>
+</g>
+</g>
+</svg>

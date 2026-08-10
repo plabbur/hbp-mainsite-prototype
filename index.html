@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#e1e3ff" />
+    <title>HackBeanpot Museum Hero Prototype</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Special+Gothic+Condensed+One&family=Amarante&family=Merriweather:wght@300&display=swap"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"
+    ></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"
+    ></script>
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <main>
+      <section class="hero" id="hero" aria-labelledby="hero-title">
+        <h1 class="sr-only" id="hero-title">HackBeanpot 2027</h1>
+        <p class="sr-only">
+          Scroll to watch day become night over the museum, then approach its
+          front door.
+        </p>
+
+        <div class="hero__viewport">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <a class="site-nav__logo" href="#">
+              <img src="./assets/logo.png" alt="HackBeanpot" />
+            </a>
+            <div class="site-nav__links">
+              <a href="#" class="is-current" data-section="about">About us</a>
+              <a href="#" data-section="values">Our values</a>
+              <a href="#" data-section="speakers">Speakers</a>
+              <a href="#" data-section="testimonials">Testimonials</a>
+              <a href="#" data-section="projects">Projects</a>
+              <a href="#" data-section="sponsors">Sponsors</a>
+              <a href="#" data-section="team">Our team</a>
+              <a href="#">FAQs</a>
+              <div class="site-nav__actions">
+                <a class="btn btn--ghost" href="#">SPONSOR US</a>
+                <a class="btn btn--solid" href="#">APPLY</a>
+              </div>
+            </div>
+          </nav>
+          <div class="scene-fit" id="scene-fit" aria-hidden="true">
+            <div class="scene-camera" id="scene-camera">
+              <div class="scene-group" id="scene-bg">
+                <div class="sky" id="sky"></div>
+
+                <img
+                  class="layer star-field star-field--far"
+                  src="./assets/starfield-far.svg"
+                  alt=""
+                />
+                <img
+                  class="layer star-field star-field--near"
+                  src="./assets/starfield-near.svg"
+                  alt=""
+                />
+
+                <div class="shooting-stars" id="shooting-stars">
+                  <div class="shooting-star"></div>
+                  <div class="shooting-star"></div>
+                  <div class="shooting-star"></div>
+                </div>
+
+                <img class="layer sun" src="./assets/sun.svg" alt="" />
+
+                <img class="layer moon" src="./assets/moon.svg" alt="" />
+
+                <div class="moon-rig">
+                  <div class="mlh-banner-mask">
+                    <div class="mlh-banner" id="mlh-banner">
+                      <div class="mlh-banner__strap"></div>
+                      <img
+                        class="mlh-banner__badge"
+                        src="./assets/mlh-badge.png"
+                        alt="MLH Official 2025 Season"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sky-shade" id="sky-shade"></div>
+
+                <img
+                  class="layer skyline skyline--day"
+                  src="./assets/skyline-day.svg"
+                  alt=""
+                />
+                <img
+                  class="layer skyline skyline--twilight"
+                  src="./assets/skyline-twilight.svg"
+                  alt=""
+                />
+                <img
+                  class="layer skyline skyline--night"
+                  src="./assets/skyline-night.svg"
+                  alt=""
+                />
+              </div>
+
+              <div class="scene-group" id="scene-fg">
+                <div class="grass-fill" id="grass-fill"></div>
+                <img
+                  class="layer grass-hills"
+                  id="grass-hills"
+                  src="./assets/grass-hills.svg"
+                  alt=""
+                />
+                <div class="museum-shadow" id="museum-shadow"></div>
+
+                <img
+                  class="layer museum museum--day"
+                  src="./assets/museum-day-alpha.png"
+                  alt=""
+                />
+                <img
+                  class="layer museum museum--night"
+                  src="./assets/museum-night-alpha.png"
+                  alt=""
+                />
+
+                <img
+                  class="layer bushes bushes--four"
+                  src="./assets/bushes-4.svg"
+                  alt=""
+                />
+                <img
+                  class="layer bushes bushes--three"
+                  src="./assets/bushes-3.svg"
+                  alt=""
+                />
+                <img
+                  class="layer staircase staircase--upper"
+                  src="./assets/staircase-upper.svg"
+                  alt=""
+                />
+
+                <img
+                  class="layer light-off light-off--left"
+                  src="./assets/light-left-off.svg"
+                  alt=""
+                />
+                <img
+                  class="layer light-off light-off--right"
+                  src="./assets/light-right-off.svg"
+                  alt=""
+                />
+                <img
+                  class="layer spotlight spotlight--left"
+                  src="./assets/spotlight-left.svg"
+                  alt=""
+                />
+                <img
+                  class="layer spotlight spotlight--right"
+                  src="./assets/spotlight-right.svg"
+                  alt=""
+                />
+
+                <img
+                  class="layer bushes bushes--two"
+                  src="./assets/bushes-2.svg"
+                  alt=""
+                />
+                <img
+                  class="layer bushes bushes--one"
+                  src="./assets/bushes-1.svg"
+                  alt=""
+                />
+                <img
+                  class="layer staircase staircase--main"
+                  src="./assets/staircase-main.svg"
+                  alt=""
+                />
+                <img
+                  class="layer staircase staircase--front"
+                  src="./assets/staircase-main.svg"
+                  alt=""
+                />
+
+                <div class="hud-intro" id="hud-intro">
+                  <img
+                    class="layer event-title"
+                    src="./assets/hackbeanpot-title.png"
+                    alt=""
+                  />
+                  <img
+                    class="layer sponsor-lockup"
+                    src="./assets/sponsor-lockup.png"
+                    alt=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stage-backdrop" id="stage-backdrop"></div>
+
+          <div
+            class="stage-section stage-section--about"
+            id="section-about"
+            aria-label="About us"
+          >
+            <div class="section-fit" id="about-fit">
+              <div class="section-canvas">
+                <div class="mist-layer" id="mist-layer">
+                  <img class="mist mist--a" src="./assets/mist-a.svg" alt="" />
+                  <img class="mist mist--b" src="./assets/mist-b.svg" alt="" />
+                </div>
+
+                <img
+                  class="team-picture"
+                  src="./assets/team-picture.png"
+                  alt="The HackBeanpot team waving in front of a hedge"
+                />
+
+                <div class="candle candle--one">
+                  <div class="candle__float">
+                    <img
+                      class="candle__rings"
+                      src="./assets/candle-rings.svg"
+                      alt=""
+                    />
+                    <img
+                      class="candle__flame"
+                      src="./assets/candle-flame.svg"
+                      alt=""
+                    />
+                    <img
+                      class="candle__body"
+                      src="./assets/candle-body.svg"
+                      alt=""
+                    />
+                  </div>
+                </div>
+                <div class="candle candle--two">
+                  <div class="candle__float">
+                    <img
+                      class="candle__rings"
+                      src="./assets/candle-rings.svg"
+                      alt=""
+                    />
+                    <img
+                      class="candle__flame"
+                      src="./assets/candle-flame.svg"
+                      alt=""
+                    />
+                    <img
+                      class="candle__body"
+                      src="./assets/candle-body.svg"
+                      alt=""
+                    />
+                  </div>
+                </div>
+
+                <div class="about-copy">
+                  <h2>ABOUT US</h2>
+                  <p>
+                    We're a non-profit organization in the Boston area that
+                    organizes an annual undergraduate hackathon. Our goal is to
+                    expand and nurture the hacker culture that exists in Boston
+                    and the surrounding areas. We connect students and other
+                    aspiring nerds to their colleagues so that they can meet
+                    new people, learn new things, and have a great time.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="stage-section stage-section--values"
+            id="section-values"
+            aria-label="Our values"
+          >
+            <div class="section-fit">
+              <div class="section-canvas">
+                <h2 class="values-title" id="values-title">OUR VALUES</h2>
+
+                <div class="pillar-group pillar-group--exploration">
+                  <div class="pillar-top">
+                    <img
+                      class="fossil"
+                      src="./assets/fossil-exploration.svg"
+                      alt=""
+                    />
+                    <div class="pillar-copy">
+                      <h3>EXPLORATION</h3>
+                      <p>
+                        Discover new ideas and technologies with the help of
+                        our experienced mentors, or learn new skills at our
+                        beginner-friendly workshops!
+                      </p>
+                    </div>
+                  </div>
+                  <img
+                    class="pillar-img"
+                    src="./assets/pillar-left.svg"
+                    alt=""
+                  />
+                </div>
+
+                <div class="pillar-group pillar-group--growth">
+                  <div class="pillar-top">
+                    <img
+                      class="fossil"
+                      src="./assets/fossil-growth.svg"
+                      alt=""
+                    />
+                    <div class="pillar-copy">
+                      <h3>GROWTH</h3>
+                      <p>
+                        Expand beyond your horizons and grow your current
+                        skill set in a safe and supportive environment.
+                      </p>
+                    </div>
+                  </div>
+                  <img
+                    class="pillar-img"
+                    src="./assets/pillar-mid.svg"
+                    alt=""
+                  />
+                </div>
+
+                <div class="pillar-group pillar-group--community">
+                  <div class="pillar-top">
+                    <img
+                      class="fossil"
+                      src="./assets/fossil-community.svg"
+                      alt=""
+                    />
+                    <div class="pillar-copy">
+                      <h3>COMMUNITY</h3>
+                      <p>
+                        Connect with fellow students and our partners in the
+                        tech community. Make connections that will last a
+                        lifetime!
+                      </p>
+                    </div>
+                  </div>
+                  <img
+                    class="pillar-img"
+                    src="./assets/pillar-right.svg"
+                    alt=""
+                  />
+                </div>
+
+                <img class="vase vase--1" src="./assets/vase-1.svg" alt="" />
+                <img class="vase vase--2" src="./assets/vase-2.svg" alt="" />
+                <img class="vase vase--3" src="./assets/vase-3.svg" alt="" />
+                <img class="vase vase--4" src="./assets/vase-4.svg" alt="" />
+                <img class="vase vase--5" src="./assets/vase-5.svg" alt="" />
+                <img class="vase vase--6" src="./assets/vase-6.svg" alt="" />
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="stage-section stage-section--speakers"
+            id="section-speakers"
+            aria-label="Speakers"
+          >
+            <div class="section-fit">
+              <div class="section-canvas">
+                <div class="speakers-line"></div>
+                <h2 class="speakers-title" id="speakers-title">SPEAKERS</h2>
+
+                <div class="speakers-strip" id="speakers-strip">
+                <div class="speaker-row speaker-row--one">
+                  <img
+                    class="speaker-frame"
+                    src="./assets/speaker-frame.svg"
+                    alt=""
+                  />
+                  <div class="speaker-info">
+                    <h3>Sue Harnett</h3>
+                    <p class="speaker-role">Founder of Rewriting the Code</p>
+                    <p class="speaker-bio">
+                      Sue Harnett is the Founder &amp; CEO of Rewriting the
+                      Code, the nonprofit she launched in 2017 that has grown
+                      into a global community of 38,000+ university and
+                      early-career women in tech, offering mentorship,
+                      education, and career-readiness programs. She will be
+                      speaking about women in technology, and the value of
+                      community, teamwork, and thoughtful leadership!
+                    </p>
+                  </div>
+                </div>
+
+                <div class="speaker-row speaker-row--two">
+                  <img
+                    class="speaker-frame"
+                    src="./assets/speaker-frame.svg"
+                    alt=""
+                  />
+                  <div class="speaker-info">
+                    <h3>Jessica Cao</h3>
+                    <p class="speaker-role">Founder of Rewriting the Code</p>
+                    <p class="speaker-bio">
+                      Sue Harnett is the Founder &amp; CEO of Rewriting the
+                      Code, the nonprofit she launched in 2017 that has grown
+                      into a global community of 38,000+ university and
+                      early-career women in tech, offering mentorship,
+                      education, and career-readiness programs. She will be
+                      speaking about women in technology, and the value of
+                      community, teamwork, and thoughtful leadership!
+                    </p>
+                  </div>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="stage-section stage-section--testimonials"
+            id="section-testimonials"
+            aria-label="Hacker testimonials"
+          >
+            <div class="section-fit">
+              <div class="section-canvas">
+                <div class="testi-mist" id="testi-mist">
+                  <img class="mist mist--a" src="./assets/mist-a.svg" alt="" />
+                  <img class="mist mist--b" src="./assets/mist-b.svg" alt="" />
+                </div>
+
+                <h2 class="testi-title" id="testi-title">
+                  HACKER TESTIMONIALS
+                </h2>
+
+                <div class="testi-center" id="testi-center">
+                  <img
+                    class="testi-medallion"
+                    src="./assets/testi-medallion-alpha.png"
+                    alt="Portrait of Jimin Kim"
+                  />
+                  <div class="testi-quote">
+                    <p class="testi-quote__text">
+                      &ldquo;I joined the astronaut bootcamp event in 2021,
+                      and I wanted to highlight my great experience there. I
+                      was able to connect with friendly people, learn about
+                      web development through workshops, and have free pizza
+                      for lunch!&rdquo;
+                    </p>
+                    <p class="testi-quote__name">Jimin Kim</p>
+                    <p class="testi-quote__school">Northeastern 22&rsquo;</p>
+                  </div>
+                </div>
+
+                <img
+                  class="testi-pillar testi-pillar--left"
+                  src="./assets/testi-pillar-left.svg"
+                  alt=""
+                />
+                <img
+                  class="testi-pillar testi-pillar--right"
+                  src="./assets/testi-pillar-right.svg"
+                  alt=""
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="stage-buttons" id="stage-buttons" aria-hidden="true">
+            <div class="section-fit">
+              <div class="section-canvas">
+                <img
+                  class="stage-button stage-button--prev"
+                  src="./assets/testi-button-a.svg"
+                  alt=""
+                />
+                <img
+                  class="stage-button stage-button--next"
+                  src="./assets/testi-button-b.svg"
+                  alt=""
+                />
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="stage-section stage-section--projects"
+            id="section-projects"
+            aria-label="Past projects"
+          >
+            <div class="section-fit">
+              <div class="section-canvas">
+                <h2 class="projects-title" id="projects-title">
+                  PAST PROJECTS
+                </h2>
+                <img
+                  class="project-frame project-frame--main"
+                  src="./assets/project-frame-a.svg"
+                  alt="Futura project card"
+                />
+                <img
+                  class="project-frame project-frame--peek"
+                  src="./assets/project-frame-b.svg"
+                  alt=""
+                />
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="stage-section stage-section--sponsors"
+            id="section-sponsors"
+            aria-label="Sponsors"
+          >
+            <div class="section-fit">
+              <div class="section-canvas">
+                <h2 class="sponsors-title" id="sponsors-title">SPONSORS</h2>
+
+                <div class="sponsor-grid" id="sponsor-grid">
+                  <div class="sponsor-tile"></div>
+                  <div class="sponsor-tile"></div>
+                  <div class="sponsor-tile"></div>
+                  <div class="sponsor-tile"></div>
+                  <div class="sponsor-tile"></div>
+                  <div class="sponsor-tile"></div>
+                  <div class="sponsor-tile"></div>
+                  <div class="sponsor-tile"></div>
+                </div>
+
+                <div class="sponsor-stage" id="sponsor-stage">
+                  <img
+                    class="sponsor-platform"
+                    src="./assets/sponsor-platform.svg"
+                    alt=""
+                  />
+                  <img
+                    class="sponsor-stone"
+                    id="sponsor-stone"
+                    src="./assets/sponsor-stone.svg"
+                    alt=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="stage-section stage-section--team"
+            id="section-team"
+            aria-label="Meet the team"
+          >
+            <div class="section-fit">
+              <div class="section-canvas">
+                <h2 class="team-title" id="team-title">MEET THE TEAM</h2>
+
+                <!-- Slots are generated by script: randomized order, no
+                     frame repeated twice in a row, looping marquee. -->
+                <div class="team-row team-row--top" id="team-row-top">
+                  <div class="team-row__inner"></div>
+                </div>
+                <div class="team-row team-row--bottom" id="team-row-bottom">
+                  <div class="team-row__inner"></div>
+                </div>
+
+                <img
+                  class="team-floor"
+                  id="team-floor"
+                  src="./assets/team-floor.png"
+                  alt=""
+                />
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="stage-section stage-section--blank"
+            id="section-blank"
+            aria-hidden="true"
+          >
+            <div class="section-fit">
+              <div class="section-canvas"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

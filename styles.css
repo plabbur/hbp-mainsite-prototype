@@ -1,0 +1,1277 @@
+:root {
+  --design-width: 1512;
+  --design-height: 982;
+  --sky-day: #e1e3ff;
+  --sky-twilight: #5760c3;
+  --sky-night: #0b0d21;
+  --grass-day: #67bf5a;
+  --grass-night: #2d5827;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--sky-night);
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  overflow-x: hidden;
+  background: var(--sky-night);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+img {
+  display: block;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.hero {
+  position: relative;
+  height: 2000svh;
+  background: var(--sky-night);
+}
+
+.hero__viewport {
+  --backdrop-sky: var(--sky-day);
+  --backdrop-grass: var(--grass-day);
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+  background: linear-gradient(
+    to bottom,
+    var(--backdrop-sky) 0 62%,
+    var(--backdrop-grass) 62% 100%
+  );
+}
+
+/* Transparent navbar from the Figma file; shown only alongside the title. */
+.site-nav {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px 32px;
+  font-family: "Special Gothic Condensed One", Arial, sans-serif;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.site-nav__logo img {
+  display: block;
+  width: 163px;
+  height: auto;
+}
+
+.site-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.site-nav__links > a {
+  position: relative;
+  padding-bottom: 4px;
+  color: #fff;
+  font-size: 20px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* Tab underline from the Figma Tab component (hover/selected states). */
+.site-nav__links > a::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: #fff;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.site-nav__links > a:hover::after {
+  opacity: 1;
+}
+
+/* Once past the doorway, the tab for the active section stays underlined. */
+.site-nav--sectioned .site-nav__links > a.is-current::after {
+  opacity: 1;
+}
+
+.site-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: 1px solid #ffda82;
+  border-radius: 12px;
+  font-size: 20px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn--ghost {
+  background: linear-gradient(
+    to top,
+    rgba(233, 172, 29, 0.2),
+    rgba(255, 210, 104, 0.2)
+  );
+  color: #fff;
+  box-shadow:
+    0 0 20px rgba(0, 0, 0, 0.1),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.btn--solid {
+  background: linear-gradient(to top, #e9ac1d, #ffd268);
+  color: #1a1000;
+  box-shadow:
+    0 0 10px rgba(0, 0, 0, 0.1),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.btn:hover {
+  filter: brightness(1.08);
+}
+
+@media (max-width: 1180px) {
+  .site-nav__links > a {
+    display: none;
+  }
+}
+
+.scene-fit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1512px;
+  height: 982px;
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+  will-change: transform;
+}
+
+.scene-camera {
+  position: relative;
+  width: 1512px;
+  height: 982px;
+  overflow: hidden;
+}
+
+/* Background and foreground move as separate planes for parallax depth. */
+.scene-group {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1512px;
+  height: 982px;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.layer,
+.sky,
+.sky-shade {
+  position: absolute;
+}
+
+.sky {
+  inset: -520px;
+  background: var(--sky-day);
+}
+
+/* Matches Figma's "Rectangle 1289" shade overlay, which bleeds past the frame. */
+.sky-shade {
+  z-index: 3;
+  top: -90.674px;
+  left: -174.164px;
+  width: 1757.737px;
+  height: 1046.674px;
+  opacity: 0.02;
+  background: linear-gradient(
+    to bottom,
+    rgba(9, 9, 18, 0) 12.315%,
+    rgba(9, 9, 18, 1) 38.724%
+  );
+}
+
+.star-field {
+  z-index: 1;
+  top: -309px;
+  left: -344px;
+  width: 2200px;
+  height: 1600px;
+  will-change: transform, opacity;
+}
+
+.star-field--far {
+  opacity: 0.14;
+}
+
+.star-field--near {
+  opacity: 0.05;
+}
+
+/* Behind the skyline (z 1 vs 4), so streaks vanish behind the buildings. */
+.shooting-stars {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  opacity: 0;
+}
+
+.shooting-star {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 90px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.9));
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* Full unclipped vector: bleeds 494px left and 323px right of the frame. */
+.skyline {
+  z-index: 6;
+  top: 83.168px;
+  left: -494.082px;
+  width: 2328.76px;
+  height: 585.51px;
+}
+
+.skyline--twilight,
+.skyline--night {
+  opacity: 0;
+}
+
+.sun {
+  z-index: 2;
+  top: 92px;
+  left: 145px;
+  width: 79px;
+  height: 79px;
+  filter: drop-shadow(0 0 12px rgba(255, 245, 166, 0.28));
+  will-change: transform, opacity, filter;
+}
+
+/* Faded look comes from brightness, not opacity — the disc must stay
+   fully opaque so it occludes the banner tucked behind it. */
+.moon {
+  z-index: 5;
+  top: 72px;
+  left: 125px;
+  width: 119px;
+  height: 119px;
+  opacity: 0;
+  filter: brightness(0.66) drop-shadow(0 0 14px rgba(225, 232, 255, 0.18));
+  will-change: transform, opacity;
+}
+
+/* Behind the moon disc but above the dusk shade — fully under the shade
+   the badge's lower half would black out at night. Slightly transparent
+   for the tucked-into-the-background look. */
+.moon-rig {
+  position: absolute;
+  z-index: 4;
+  top: 72px;
+  left: 125px;
+  width: 119px;
+  height: 119px;
+  opacity: 0.85;
+}
+
+/* Clips the banner to below the moon's midline while it drops; the disc
+   itself occludes the window's top edge. */
+.mlh-banner-mask {
+  position: absolute;
+  z-index: 1;
+  top: 59.5px;
+  left: 0;
+  width: 119px;
+  height: 300px;
+  overflow: hidden;
+}
+
+/* Geometry from the "Moon with banner" spec, scaled 119/149. */
+.mlh-banner {
+  position: absolute;
+  top: 37.94px;
+  left: 19.17px;
+  width: 81.47px;
+  height: 165.26px;
+  /* Fully above the mask window while tucked. */
+  transform: translateY(-210px);
+  will-change: transform;
+}
+
+.mlh-banner__strap {
+  position: absolute;
+  top: 0;
+  left: 3.51px;
+  width: 74.02px;
+  height: 22.47px;
+  border-radius: 3px;
+  background: #f7f7f7;
+}
+
+.mlh-banner__badge {
+  position: absolute;
+  top: 21.77px;
+  left: 0;
+  width: 81.47px;
+  height: 143.48px;
+}
+
+/* Solid underlay in the middle hill green: invisible behind the hills at
+   the resting framing, it fills the corner gaps where the hill flanks
+   curve away from the frame at the 0.75x opening. */
+.grass-fill {
+  position: absolute;
+  z-index: 5;
+  top: 640px;
+  left: -1650px;
+  width: 5300px;
+  height: 1300px;
+  background: #0d6719;
+  will-change: filter;
+}
+
+/* Rolling grass hills from the Figma "GRASS" group, unprojected from the
+   mockup's 80% framing into foreground design space. Bleeds far enough to
+   stay full-width even at the 0.75x intro framing. */
+.grass-hills {
+  z-index: 5;
+  top: 522.32px;
+  left: -1387.69px;
+  width: 5118.4px;
+  height: 1265.55px;
+  will-change: filter;
+}
+
+/* Ground shadow cast by the museum; its lean/stretch tracks the sun. */
+.museum-shadow {
+  position: absolute;
+  z-index: 5;
+  top: 648px;
+  left: 20px;
+  width: 1473px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(9, 9, 18, 0.32);
+  filter: blur(16px);
+  transform-origin: 50% 0;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.museum {
+  z-index: 6;
+  top: 166.263px;
+  left: 40px;
+  width: 1433px;
+  height: 500.452px;
+}
+
+.museum--night {
+  opacity: 0;
+}
+
+.bushes--four {
+  z-index: 7;
+  top: 506px;
+  left: 41px;
+  width: 1432px;
+  height: 172px;
+}
+
+.bushes--three {
+  z-index: 8;
+  top: 626.661px;
+  left: 506px;
+  width: 500.909px;
+  height: 74.93px;
+}
+
+.staircase--upper {
+  z-index: 9;
+  top: 634px;
+  left: 525.744px;
+  width: 459.742px;
+  height: 190.74px;
+}
+
+.light-off {
+  z-index: 10;
+  top: 692px;
+  width: 80.54px;
+  height: 94.634px;
+  opacity: 0;
+}
+
+.light-off--left {
+  left: 243px;
+}
+
+.light-off--right {
+  left: 1189px;
+}
+
+.spotlight {
+  z-index: 10;
+  top: 166px;
+  width: 602.396px;
+  height: 648.589px;
+  opacity: 0;
+  will-change: opacity;
+}
+
+.spotlight--left {
+  left: -203px;
+}
+
+.spotlight--right {
+  left: 1113px;
+  transform: scaleX(-1);
+}
+
+.bushes--two {
+  z-index: 11;
+  top: 673px;
+  left: 228px;
+  width: 1063.825px;
+  height: 191.692px;
+}
+
+.bushes--one {
+  z-index: 12;
+  top: 787px;
+  left: -298px;
+  width: 1915px;
+  height: 295.587px;
+}
+
+.staircase--main {
+  z-index: 13;
+  top: 672px;
+  left: 207.309px;
+  width: 1098.152px;
+  height: 455.608px;
+}
+
+/* Third flight continuing the file's cascade: each flight is 2.3886x the
+   previous, door-axis centered, with the top offset scaled to match. */
+.staircase--front {
+  z-index: 13;
+  top: 762.8px;
+  left: -555.5px;
+  width: 2623.05px;
+  height: 1088.27px;
+}
+
+/* Wrapper lets scroll fade the title/sponsors without fighting the intro pop. */
+.hud-intro {
+  position: absolute;
+  inset: 0;
+  z-index: 14;
+  will-change: opacity;
+}
+
+.event-title {
+  z-index: 14;
+  top: 22px;
+  left: 561px;
+  width: 390px;
+  height: 51px;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.sponsor-lockup {
+  z-index: 14;
+  top: 106px;
+  left: 619px;
+  width: 274.681px;
+  height: 29px;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+
+/* ---------- Post-hero stage sections ---------- */
+
+/* Shared backdrop behind all post-hero sections: its two gradient stops
+   are tweened as the user scrolls from one section to the next. */
+.stage-backdrop {
+  --sec-top: #322243;
+  --sec-bottom: #251930;
+  position: absolute;
+  inset: 0;
+  z-index: 14;
+  background: linear-gradient(180deg, var(--sec-top), var(--sec-bottom));
+  display: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Each section is a transparent full-viewport content panel over the
+   backdrop; content swaps in and out with its own animations. */
+.stage-section {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  overflow: hidden;
+  display: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Fixed 1512x982 design canvas, contain-fit to the viewport by script. */
+.section-fit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1512px;
+  height: 982px;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+}
+
+.section-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.section-canvas > * {
+  position: absolute;
+}
+
+.mist-layer {
+  inset: 0;
+}
+
+.mist {
+  position: absolute;
+  will-change: transform, opacity;
+}
+
+.mist--a {
+  top: -120px;
+  left: -170px;
+  width: 688px;
+  height: 360px;
+}
+
+.mist--b {
+  top: 750px;
+  left: -260px;
+  width: 840px;
+  height: 464px;
+}
+
+.team-picture {
+  top: 248px;
+  left: 755px;
+  width: 611.9px;
+  height: 480.1px;
+}
+
+.candle {
+  width: 362.86px;
+  height: 591.6px;
+  will-change: transform;
+}
+
+.candle--one {
+  top: 577.23px;
+  left: 1002px;
+}
+
+.candle--two {
+  top: 478px;
+  left: 1165.9px;
+}
+
+.candle__float {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.candle__float > img {
+  position: absolute;
+}
+
+.candle__rings {
+  top: 0;
+  left: 0;
+  width: 362.86px;
+  height: 362.86px;
+  will-change: transform, opacity;
+}
+
+.candle__flame {
+  top: 109.23px;
+  left: 172.27px;
+  width: 14.98px;
+  height: 52.04px;
+  transform-origin: 50% 100%;
+  will-change: transform;
+}
+
+.candle__body {
+  top: 159.08px;
+  left: 115.09px;
+  width: 127.19px;
+  height: 432.53px;
+}
+
+.about-copy {
+  top: 377px;
+  left: 150px;
+  display: flex;
+  width: 411px;
+  flex-direction: column;
+  gap: 12px;
+  color: #fff;
+}
+
+.about-copy h2 {
+  margin: 0;
+  font-family: "Amarante", serif;
+  font-size: 50px;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.about-copy p {
+  margin: 0;
+  font-family: "Merriweather", Georgia, serif;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.4;
+}
+
+/* ---------- Our values ---------- */
+
+.values-title {
+  top: 150px;
+  left: 624px;
+  width: 264px;
+  margin: 0;
+  color: #fff;
+  font-family: "Amarante", serif;
+  font-size: 50px;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  will-change: transform, opacity;
+}
+
+.pillar-group {
+  will-change: transform;
+}
+
+.pillar-group--exploration {
+  top: 290px;
+  left: 141px;
+  width: 285px;
+  height: 692px;
+}
+
+.pillar-group--growth {
+  top: 407px;
+  left: 614px;
+  width: 285px;
+  height: 575px;
+}
+
+.pillar-group--community {
+  top: 290px;
+  left: 1083px;
+  width: 285px;
+  height: 692px;
+}
+
+.pillar-top {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 0;
+  will-change: transform, opacity;
+}
+
+.fossil {
+  position: absolute;
+  top: -2px;
+  left: 112px;
+  width: 61px;
+  will-change: transform;
+}
+
+.pillar-copy {
+  position: absolute;
+  top: 86.5px;
+  left: 0;
+  display: flex;
+  width: 285px;
+  flex-direction: column;
+  gap: 12px;
+  color: #fff;
+  text-align: center;
+}
+
+.pillar-copy h3 {
+  margin: 0;
+  font-family: "Special Gothic Condensed One", Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.pillar-copy p {
+  margin: 0;
+  font-family: "Merriweather", Georgia, serif;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.4;
+}
+
+.pillar-img {
+  position: absolute;
+  transform-origin: 50% 100%;
+  will-change: transform, opacity;
+}
+
+.pillar-group--exploration .pillar-img {
+  top: 236px;
+  left: 13px;
+  width: 265px;
+  height: 909px;
+}
+
+.pillar-group--growth .pillar-img {
+  top: 216px;
+  left: 8px;
+  width: 270px;
+  height: 932px;
+}
+
+.pillar-group--community .pillar-img {
+  top: 235px;
+  left: 9px;
+  width: 265px;
+  height: 650px;
+}
+
+.vase {
+  position: absolute;
+  will-change: transform;
+}
+
+.vase--1 {
+  top: 821px;
+  left: 154px;
+  width: 103.5px;
+}
+
+.vase--2 {
+  top: 900px;
+  left: 446px;
+  width: 103px;
+}
+
+.vase--3 {
+  top: 830px;
+  left: 522px;
+  width: 73px;
+}
+
+.vase--4 {
+  top: 841px;
+  left: 908px;
+  width: 103.5px;
+}
+
+.vase--5 {
+  top: 887px;
+  left: 981px;
+  width: 73px;
+}
+
+.vase--6 {
+  top: 852px;
+  left: 1276px;
+  width: 103px;
+}
+
+/* ---------- Speakers ---------- */
+
+/* The faint rail the picture frames ride along. */
+.speakers-line {
+  top: 0;
+  left: 746px;
+  width: 1.5px;
+  height: 982px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 5%,
+    rgba(255, 255, 255, 0.2) 14%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
+}
+
+.speakers-title {
+  top: 460px;
+  left: 109px;
+  width: 210px;
+  margin: 0;
+  color: #fff;
+  font-family: "Amarante", serif;
+  font-size: 50px;
+  font-weight: 400;
+  white-space: nowrap;
+  will-change: transform, opacity;
+}
+
+/* Both frames ride the rail as one strip, so their spacing never changes. */
+.speakers-strip {
+  inset: 0;
+  will-change: transform;
+}
+
+.speaker-row {
+  position: absolute;
+  width: 784px;
+  will-change: transform, opacity;
+}
+
+.speaker-row--one {
+  top: 168px;
+  left: 623px;
+}
+
+.speaker-row--two {
+  top: 600.96px;
+  left: 623px;
+}
+
+.speaker-frame {
+  position: absolute;
+  top: -3.5px;
+  left: -3.5px;
+  width: 251px;
+  height: 320px;
+}
+
+.speaker-info {
+  position: absolute;
+  top: 0;
+  left: 285px;
+  width: 499px;
+  color: #fff;
+  will-change: transform, opacity;
+}
+
+.speaker-info h3 {
+  margin: 0;
+  font-family: "Special Gothic Condensed One", Arial, sans-serif;
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.speaker-role {
+  margin: 0;
+  color: #e8b1a5;
+  font-family: "Merriweather", Georgia, serif;
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.speaker-bio {
+  margin: 20px 0 0;
+  font-family: "Merriweather", Georgia, serif;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.35;
+}
+
+/* ---------- Hacker testimonials ---------- */
+
+.testi-mist {
+  inset: 0;
+  will-change: transform, opacity;
+}
+
+.testi-title {
+  top: 160px;
+  left: 510px;
+  width: 491px;
+  margin: 0;
+  color: #fdfbfb;
+  font-family: "Amarante", serif;
+  font-size: 50px;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  will-change: transform, opacity;
+}
+
+.testi-center {
+  top: 356px;
+  left: 337px;
+  width: 838.6px;
+  height: 348px;
+  will-change: transform, opacity;
+}
+
+.testi-medallion {
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: 298px;
+  height: 358px;
+}
+
+.testi-quote {
+  position: absolute;
+  top: 79.5px;
+  left: 339.6px;
+  width: 499px;
+  color: #fff;
+}
+
+.testi-quote__text {
+  margin: 0;
+  font-family: "Merriweather", Georgia, serif;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.38;
+}
+
+.testi-quote__name {
+  margin: 13px 0 0;
+  font-family: "Special Gothic Condensed One", Arial, sans-serif;
+  font-size: 24px;
+}
+
+.testi-quote__school {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-family: "Merriweather", Georgia, serif;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.testi-pillar {
+  will-change: transform, opacity;
+}
+
+.testi-pillar--left {
+  top: 639px;
+  left: 91px;
+  width: 188px;
+  height: 466px;
+}
+
+.testi-pillar--right {
+  top: 455px;
+  left: 1218px;
+  width: 250px;
+  height: 715px;
+}
+
+/* Persistent circular arrow buttons; they outlive the Testimonials
+   section since the next page reuses similar controls. */
+.stage-buttons {
+  position: absolute;
+  inset: 0;
+  z-index: 16;
+  display: none;
+  pointer-events: none;
+}
+
+.stage-button {
+  position: absolute;
+  top: 844px;
+  width: 74px;
+  height: 74px;
+  opacity: 0;
+  visibility: hidden;
+  will-change: transform, opacity;
+}
+
+.stage-button--prev {
+  left: 677px;
+}
+
+.stage-button--next {
+  left: 760px;
+}
+
+/* ---------- Past projects ---------- */
+
+.projects-title {
+  top: 125px;
+  left: 590px;
+  width: 332px;
+  margin: 0;
+  color: #fdfbfb;
+  font-family: "Amarante", serif;
+  font-size: 50px;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  will-change: transform, opacity;
+}
+
+.project-frame {
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+}
+
+.project-frame--main {
+  top: 250.7px;
+  left: 292.5px;
+  width: 927px;
+  height: 523px;
+}
+
+.project-frame--peek {
+  top: 282px;
+  left: 1374px;
+  width: 788px;
+  height: 445px;
+}
+
+/* ---------- Sponsors ---------- */
+
+/* The design frame is 904 tall vs our 982 canvas, so everything sits
+   +78px lower, keeping the pedestal pinned to the viewport bottom. */
+.sponsors-title {
+  top: 294px;
+  left: 136px;
+  margin: 0;
+  color: #fff;
+  font-family: "Amarante", serif;
+  font-size: 50px;
+  font-weight: 400;
+  white-space: nowrap;
+  will-change: transform, opacity;
+}
+
+.sponsor-grid {
+  top: 399px;
+  left: 136px;
+  display: grid;
+  grid-template-columns: repeat(3, 207px);
+  grid-auto-rows: 86px;
+  gap: 17px 19px;
+}
+
+.sponsor-tile {
+  background: rgba(217, 217, 217, 0.3);
+  will-change: transform, opacity;
+}
+
+/* Stone-on-pedestal assembly; overflows the canvas right edge like the
+   design, and its base lines up with the canvas bottom. */
+.sponsor-stage {
+  top: 294px;
+  left: 961px;
+  width: 688px;
+  height: 689px;
+  will-change: transform, opacity;
+}
+
+.sponsor-platform {
+  position: absolute;
+  top: 266.6px;
+  left: 0;
+  width: 688px;
+  height: 422px;
+}
+
+.sponsor-stone {
+  position: absolute;
+  top: 0;
+  left: 88.4px;
+  width: 482.7px;
+  height: 445.9px;
+  transform-origin: 50% 86%;
+  will-change: transform;
+}
+
+/* ---------- Meet the team ---------- */
+
+.team-title {
+  top: 64px;
+  left: 586px;
+  width: 340px;
+  margin: 0;
+  color: #fff;
+  font-family: "Amarante", serif;
+  font-size: 50px;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  will-change: transform, opacity;
+}
+
+/* Marquee rows: the inner strip holds three copies of a randomized cycle
+   and is translated by exactly one cycle width for a seamless loop. The
+   wide left offset keeps frames flowing past the letterbox bleed on very
+   wide viewports. */
+.team-row {
+  position: absolute;
+  left: -1200px;
+  height: 370px;
+  will-change: transform, opacity;
+}
+
+.team-row--top {
+  top: 160px;
+}
+
+.team-row--bottom {
+  top: 540px;
+}
+
+/* Gaps run 24px tighter than the design's frame-to-frame spacing because
+   each export carries a 12px transparent pad on every side. */
+.team-row__inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  gap: 56px;
+  will-change: transform;
+}
+
+.team-row--bottom .team-row__inner {
+  gap: 66px;
+}
+
+.team-slot {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 0 var(--lift, 0px);
+}
+
+.team-slot figcaption {
+  margin-top: 14px;
+  text-align: center;
+  color: #fff;
+}
+
+.team-name {
+  display: block;
+  font-family: "Special Gothic Condensed One", Arial, sans-serif;
+  font-size: 22px;
+  line-height: 29px;
+}
+
+.team-role {
+  display: block;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: "Merriweather", Georgia, serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 18px;
+}
+
+/* Exported sizes carry a 12px transparent pad; sized to the design scale. */
+.team-slot--maia img {
+  width: 373px;
+}
+
+.team-slot--zahra img {
+  width: 262px;
+}
+
+.team-slot--carolyn img {
+  width: 218px;
+}
+
+.team-slot--lucy img {
+  width: 206px;
+}
+
+.team-slot--cole img {
+  width: 256px;
+}
+
+.team-slot--maia {
+  --lift: 12px;
+}
+
+.team-slot--lucy {
+  --lift: 16px;
+}
+
+.team-slot--carolyn {
+  --lift: 4px;
+}
+
+/* Checkered museum floor pinned to the bottom edge; wider than the canvas
+   so it survives wide-viewport letterboxing, and taller than the visible
+   sliver so it can ride up in during the entrance. */
+.team-floor {
+  top: 912px;
+  left: -352px;
+  width: 2217px;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero {
+    height: 100svh;
+  }
+
+  .scene-fit,
+  .scene-camera,
+  .layer,
+  .sky,
+  .sky-shade,
+  .grass {
+    will-change: auto;
+  }
+}
