@@ -8,7 +8,7 @@ await page.goto("http://localhost:4173", { waitUntil: "load" });
 await page.waitForTimeout(7500);
 
 const max = await page.evaluate(
-  () => document.documentElement.scrollHeight - innerHeight,
+  () => document.querySelector(".hero").offsetHeight - innerHeight,
 );
 const jumpTo = (T) =>
   page.evaluate((y) => window.scrollTo(0, y), Math.round((max * T) / SPAN));

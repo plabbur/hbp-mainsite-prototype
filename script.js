@@ -13,6 +13,8 @@
   const SECTION_WIDTH = 1512;
   const SECTION_HEIGHT = 982;
   const sectionFits = document.querySelectorAll(".section-fit");
+  const flowCanvases = document.querySelectorAll(".flow-canvas");
+  const faqPanel = document.querySelector(".faq-panel");
 
   function fitSceneToViewport() {
     const viewportWidth = window.visualViewport?.width ?? window.innerWidth;
@@ -35,6 +37,19 @@
       element.style.transform =
         `translate(-50%, -50%) scale(${sectionScale.toFixed(5)})`;
     });
+
+    // Post-hero flow sections (FAQs, footer) scale by width alone; their
+    // aspect-ratio CSS keeps the section heights in step.
+    const flowScale = document.documentElement.clientWidth / SECTION_WIDTH;
+    flowCanvases.forEach((element) => {
+      element.style.transform = `scale(${flowScale.toFixed(5)})`;
+    });
+
+    // The illustration must fill the width, but text should render at the
+    // same effective size as the contain-fit stage sections — counter
+    // scale the FAQ panel by the ratio between the two fits.
+    const faqTextScale = Math.min(1, sectionScale / flowScale);
+    faqPanel.style.transform = `scale(${faqTextScale.toFixed(5)})`;
   }
 
   fitSceneToViewport();
@@ -73,7 +88,6 @@
   const stageBackdrop = document.querySelector("#stage-backdrop");
   const sectionAbout = document.querySelector("#section-about");
   const sectionValues = document.querySelector("#section-values");
-  const sectionBlank = document.querySelector("#section-blank");
   const candles = gsap.utils.toArray(".candle");
   const valuesTitle = document.querySelector("#values-title");
   const pillarGroups = gsap.utils.toArray(".pillar-group");
@@ -113,6 +127,7 @@
   const teamRows = gsap.utils.toArray(".team-row");
   const teamFloor = document.querySelector("#team-floor");
   const navTeamLink = document.querySelector('[data-section="team"]');
+  const navFaqsLink = document.querySelector('[data-section="faqs"]');
   const museumShadow = document.querySelector("#museum-shadow");
   const bushLayers = gsap.utils.toArray(".bushes");
   const stoneLayers = gsap.utils.toArray(".staircase");
@@ -192,6 +207,41 @@
   gsap.set(lightFixtures, { y: 90 });
   gsap.set([...bushLayers, ...stoneLayers, ...grassLayers], {
     filter: "brightness(1)",
+  });
+
+  // --- FAQs accordion + footer wiring (works with reduced motion too) ---
+  document.querySelectorAll(".faq-item").forEach((item) => {
+    const button = item.querySelector(".faq-q");
+    const answer = item.querySelector(".faq-answer");
+    button.addEventListener("click", () => {
+      const open = item.classList.toggle("is-open");
+      gsap.to(answer, {
+        height: open ? "auto" : 0,
+        duration: reducedMotion ? 0 : 0.45,
+        ease: "power2.inOut",
+      });
+    });
+  });
+  gsap.set(".faq-item.is-open .faq-answer", { height: "auto" });
+
+  document.querySelector("#back-to-top").addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" });
+  });
+
+  // Mailing list form: functional for illustration only — no backend.
+  const mailForm = document.querySelector("#mail-form");
+  const mailInput = mailForm.querySelector("input");
+  const mailSubmit = mailForm.querySelector(".footer-submit");
+  mailForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!mailInput.value.trim()) return;
+    mailInput.value = "";
+    mailSubmit.textContent = "THANKS!";
+    mailSubmit.disabled = true;
+    gsap.delayedCall(2, () => {
+      mailSubmit.textContent = "SUBMIT";
+      mailSubmit.disabled = false;
+    });
   });
 
   if (reducedMotion) {
@@ -294,6 +344,71 @@
 
   buildTeamRow(document.querySelector("#team-row-top"), 56, true);
   buildTeamRow(document.querySelector("#team-row-bottom"), 66, false);
+
+  // --- FAQs sock ambient animations ---
+
+  // Both skeletons float like the About page candlesticks.
+  gsap.to(".sock-float--fg", {
+    y: -8,
+    duration: 3.4,
+    yoyo: true,
+    repeat: -1,
+    ease: "sine.inOut",
+  });
+  gsap.to(".sock-float--bg", {
+    y: -6,
+    duration: 4.3,
+    yoyo: true,
+    repeat: -1,
+    ease: "sine.inOut",
+    delay: 0.9,
+  });
+
+  // The star in the skeleton's eye twinkles, its glow breathing with it.
+  gsap.set(["#sock-eye-star", "#sock-glow", ".sock-twinkle"], {
+    transformOrigin: "50% 50%",
+  });
+  gsap.to("#sock-eye-star", {
+    scale: 0.72,
+    opacity: 0.55,
+    duration: 1.4,
+    yoyo: true,
+    repeat: -1,
+    ease: "sine.inOut",
+  });
+  gsap.to("#sock-glow", {
+    scale: 1.18,
+    opacity: 0.5,
+    duration: 1.4,
+    yoyo: true,
+    repeat: -1,
+    ease: "sine.inOut",
+    delay: 0.2,
+  });
+
+  // The stars scattered through the right-side mist twinkle on their own
+  // offbeat rhythms.
+  gsap.utils.toArray(".sock-twinkle").forEach((star, index) => {
+    gsap.to(star, {
+      opacity: gsap.utils.random(0.2, 0.5),
+      scale: gsap.utils.random(0.55, 0.8),
+      duration: gsap.utils.random(0.9, 2.1),
+      yoyo: true,
+      repeat: -1,
+      ease: "sine.inOut",
+      delay: index * 0.37,
+    });
+  });
+
+  // The mist wafts gently, echoing the About page haze.
+  gsap.to("#sock-mist", {
+    x: -26,
+    y: 8,
+    duration: 11,
+    yoyo: true,
+    repeat: -1,
+    ease: "sine.inOut",
+  });
 
   // --- About section ambient animations (per the design's Prompt frame) ---
 
@@ -558,7 +673,14 @@
   const SNAP_DWELLS = [11.4, 14.8, 19.7, 24.6, 29.6, 34.6, 39.8, 44];
   const SNAP_FREE_END = 10.05;
   const SNAP_DEADZONE = 0.5;
+  // True while a navbar jump choreographs the scroll; pauses snapping
+  // and the section entrance latches.
+  let navJumping = false;
   const snapToDwell = (value, self) => {
+    if (navJumping) return value;
+    // Fully past the hero: the user is in the FAQs/footer page flow, and
+    // snapping would yank them back up to the pinned viewport.
+    if (value >= 0.999) return value;
     const T = value * TIMELINE_SPAN;
     if (T < SNAP_FREE_END) return value;
     let previous = -1;
@@ -648,6 +770,9 @@
     y: (491 - introFrame.y) / introFrame.scale,
   };
   let cameraEngaged = false;
+  // The camera T of the previous unsuppressed frame; nav jumps leave it
+  // stale on purpose so a post-jump frame sees the crossing it made.
+  let lastCameraT = 0;
 
   // Piecewise Hermite: (0, 0, slope 0) -> (T_CROP, U_CROP, slope M) -> (1, 1).
   const pace = (t) => {
@@ -718,7 +843,6 @@
     gsap.set(sectionTeam, {
       display: T >= 37.3 && T <= 43.1 ? "block" : "none",
     });
-    gsap.set(sectionBlank, { display: T >= 42.6 ? "block" : "none" });
     // Past the doorway the navbar marks the active section tab.
     nav.classList.toggle("site-nav--sectioned", T >= 10);
     navAboutLink.classList.toggle("is-current", T < 13.6);
@@ -727,7 +851,11 @@
     navTestimonialsLink.classList.toggle("is-current", T >= 22.2 && T < 27.4);
     navProjectsLink.classList.toggle("is-current", T >= 27.4 && T < 32.6);
     navSponsorsLink.classList.toggle("is-current", T >= 32.6 && T < 37.8);
-    navTeamLink.classList.toggle("is-current", T >= 37.8);
+    navTeamLink.classList.toggle("is-current", T >= 37.8 && T < 43.5);
+    navFaqsLink.classList.toggle("is-current", T >= 43.5);
+    // During navbar jumps the entrance latches pause, so sections being
+    // skipped over never animate mid-flight; they re-sync on arrival.
+    if (navJumping) return;
     // One-shot entrances for section contents.
     if (T >= 10.05 && !aboutEntered) {
       aboutEntered = true;
@@ -791,6 +919,33 @@
       teamEntered = false;
       teamEnter.pause(0);
     }
+    // Crossing back below a section's exit range re-asserts its latched
+    // entrance state. The one-shot enter timelines and the scrubbed exit
+    // tweens write the same properties, and across nav-jump seeks the
+    // last writer can be the wrong one, leaving entered content stuck at
+    // a stale state; an explicit end-state render on the crossing makes
+    // the dwell state deterministic.
+    const reassertEnter = (timeline) =>
+      timeline.pause(0, false).progress(1, false);
+    if (lastCameraT >= 12.2 && T < 12.2 && aboutEntered) {
+      reassertEnter(aboutEnter);
+    }
+    if (lastCameraT >= 15.7 && T < 15.7 && valuesEntered) {
+      reassertEnter(valuesEnter);
+    }
+    if (lastCameraT >= 26 && T < 26 && testimonialsEntered) {
+      reassertEnter(testimonialsEnter);
+    }
+    if (lastCameraT >= 31.2 && T < 31.2 && projectsEntered) {
+      reassertEnter(projectsEnter);
+    }
+    if (lastCameraT >= 36.4 && T < 36.4 && sponsorsEntered) {
+      reassertEnter(sponsorsEnter);
+    }
+    if (lastCameraT >= 41.6 && T < 41.6 && teamEntered) {
+      reassertEnter(teamEnter);
+    }
+    lastCameraT = T;
   };
 
   // Section content entrance: plays once when the camera crosses into the
@@ -861,14 +1016,14 @@
         x: 3,
         rotation: 1.2,
         duration: 0.06,
-        repeat: 16,
+        repeat: 7,
         yoyo: true,
         ease: "none",
         stagger: 0.015,
       },
       0.3,
     )
-    .set(vases, { x: 0, rotation: 0 }, 1.5);
+    .set(vases, { x: 0, rotation: 0 }, 0.9);
 
   // Testimonials entrance, in the prompted order: center content, then the
   // mist breathes in, then the pillars rise while the buttons pop in.
@@ -1444,51 +1599,99 @@
       41.65,
     )
     .to(sectionTeam, { autoAlpha: 0, duration: 0.5 }, 42.6)
-    // ---- Gradient morph: teal to the blank test page.
+    // ---- Gradient morph: teal to the FAQs section's top color, so the
+    // pinned viewport hands off seamlessly into the page flow below.
     .to(
       stageBackdrop,
       {
-        "--sec-top": "#1b1526",
-        "--sec-bottom": "#0e0b14",
+        "--sec-top": "#090912",
+        "--sec-bottom": "#090912",
         duration: 1.2,
         ease: "power1.inOut",
       },
       42.2,
     )
-    .to(
-      sectionBlank,
-      { autoAlpha: 1, duration: 0.8, ease: "power1.inOut" },
-      43.0,
-    )
-    // Dwell segment: the last section holds while the scroll runs out.
+    // Dwell segment: the handoff color holds while the scroll runs out.
     .set({}, {}, 44);
 
-  // ---- Navbar navigation: animate the page scroll to a section's dwell
-  // point, so the current section plays its exit and the target its enter
-  // along the way. The logo returns to the hero's settled night state.
-  const NAV_SCROLL_TARGETS = {
-    about: 11.4,
-    values: 14.8,
-    speakers: 19.7,
-    testimonials: 24.6,
-    projects: 29.6,
-    sponsors: 34.6,
-    team: 39.8,
+  // ---- Navbar navigation: rather than scrolling through every section
+  // between origin and destination, the origin plays its exit, the page
+  // teleports across the skipped sections in a single hidden frame, and
+  // the destination plays its entrance. The page still physically lands
+  // on the destination's real scroll position, so the section order
+  // stays consistent — scrolling up from Testimonials always reaches
+  // Speakers, no matter how you got there.
+  // enterStart: where the section's reveal begins (backward jumps unwind
+  //   to here). exitEnd: where its exit content has cleared, capped so a
+  //   forward jump's exit phase never drifts into the NEXT section's
+  //   reveal range. landing: forward-jump teleport point — the earliest T
+  //   where the PREVIOUS section's panel is fully faded out, so nothing
+  //   of it (not even static props) can show while the destination
+  //   enters.
+  const SECTION_FLOW = {
+    about: { dwell: 11.4, enterStart: 10.05, exitEnd: 13.5, landing: 10.05 },
+    values: { dwell: 14.8, enterStart: 13.55, exitEnd: 16.85, landing: 13.85 },
+    speakers: { dwell: 19.7, enterStart: 16.9, exitEnd: 22.1, landing: 17.35 },
+    testimonials: {
+      dwell: 24.6,
+      enterStart: 22.2,
+      exitEnd: 27.2,
+      landing: 22.45,
+    },
+    projects: { dwell: 29.6, enterStart: 27.4, exitEnd: 32.4, landing: 27.55 },
+    sponsors: { dwell: 34.6, enterStart: 32.6, exitEnd: 37.6, landing: 32.75 },
+    team: { dwell: 39.8, enterStart: 37.8, exitEnd: 42.8, landing: 37.95 },
   };
+  // Dwell-state backdrop colors per section, for the jump overlay.
+  const SECTION_COLORS = {
+    hero: ["#0b0d21", "#0b0d21"],
+    about: ["#322243", "#251930"],
+    values: ["#37a9c9", "#017b9d"],
+    speakers: ["#894a3c", "#512309"],
+    testimonials: ["#322243", "#251930"],
+    projects: ["#37a9c9", "#017b9d"],
+    sponsors: ["#ca6330", "#8f4622"],
+    team: ["#37a9c9", "#017b9d"],
+    faqs: ["#090912", "#090912"],
+  };
+  const navBackdrop = document.querySelector("#stage-backdrop-nav");
   let navScrollTween = null;
+  let navJumpTimeline = null;
+
+  const endNavJump = () => {
+    navJumping = false;
+    // The trigger is disabled for the duration of a jump; hand scroll
+    // control back (idempotent if it never was disabled).
+    scrollTimeline.scrollTrigger.enable(false, false);
+    gsap.to(navBackdrop, {
+      autoAlpha: 0,
+      duration: 0.35,
+      onComplete: () => gsap.set(navBackdrop, { display: "none" }),
+    });
+  };
+
   const killNavScroll = () => {
     if (navScrollTween) {
       navScrollTween.kill();
       navScrollTween = null;
     }
+    if (navJumpTimeline) {
+      navJumpTimeline.kill();
+      navJumpTimeline = null;
+      endNavJump();
+    }
+  };
+
+  const scrollYForT = (T) => {
+    const trigger = scrollTimeline.scrollTrigger;
+    return (
+      trigger.start + clamp01(T / TIMELINE_SPAN) * (trigger.end - trigger.start)
+    );
   };
 
   const scrollToTimelineT = (T) => {
-    const trigger = scrollTimeline.scrollTrigger;
-    const target =
-      trigger.start +
-      clamp01(T / TIMELINE_SPAN) * (trigger.end - trigger.start);
     killNavScroll();
+    const target = scrollYForT(T);
     const proxy = { y: window.scrollY };
     navScrollTween = gsap.to(proxy, {
       y: target,
@@ -1499,10 +1702,164 @@
     });
   };
 
+  // The section whose enter/exit range holds the playhead; falls back to
+  // the nearest dwell (or the hero before the doorway). Past the hero's
+  // scroll range entirely, the user is in the FAQs/footer page flow.
+  const currentSectionKey = () => {
+    if (window.scrollY >= scrollTimeline.scrollTrigger.end - 1) return "faqs";
+    const T = scrollTimeline.progress() * TIMELINE_SPAN;
+    if (T < SNAP_FREE_END) return "hero";
+    let best = null;
+    let bestDistance = Infinity;
+    for (const [key, flow] of Object.entries(SECTION_FLOW)) {
+      const inZone = T >= flow.enterStart - 0.01 && T <= flow.exitEnd + 0.01;
+      const distance = Math.abs(T - flow.dwell) + (inZone ? 0 : 100);
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        best = key;
+      }
+    }
+    return best;
+  };
+
+  const navigateToSection = (destinationKey) => {
+    killNavScroll();
+    const originKey = currentSectionKey();
+    if (originKey === destinationKey) {
+      if (destinationKey !== "faqs") {
+        scrollToTimelineT(SECTION_FLOW[destinationKey].dwell);
+      }
+      return;
+    }
+    const trigger = scrollTimeline.scrollTrigger;
+    // "hero" and "faqs" aren't stage sections; they get bespoke phases.
+    const origin = SECTION_FLOW[originKey] ?? null;
+    const destination = SECTION_FLOW[destinationKey] ?? null;
+    const forward =
+      destinationKey === "faqs" ||
+      (originKey !== "faqs" &&
+        (!origin || destination.dwell > origin.dwell));
+
+    // Phase 1 target: the origin finishes its exit (forward) or unwinds
+    // its entrance (backward). From the hero, dive through the door;
+    // from the FAQs flow, slide back up to the pinned viewport.
+    const exitY = origin
+      ? scrollYForT(forward ? origin.exitEnd : origin.enterStart)
+      : originKey === "faqs"
+        ? trigger.end
+        : scrollYForT(SNAP_FREE_END);
+    // Teleport landing: just before the destination's reveal (forward)
+    // or just past its exit (backward), so phase 3 plays it in. The FAQs
+    // "landing" is the hero's very end, with the flow content below.
+    const landingT = destination
+      ? forward
+        ? destination.landing
+        : destination.exitEnd
+      : TIMELINE_SPAN;
+    const landingY = destination ? scrollYForT(landingT) : trigger.end;
+    const dwellY = destination
+      ? scrollYForT(destination.dwell)
+      : trigger.end + window.innerHeight;
+
+    navJumping = true;
+    const [originTop, originBottom] = SECTION_COLORS[originKey];
+    const [destinationTop, destinationBottom] = SECTION_COLORS[destinationKey];
+    // A still-running fade from a previous jump would fight the new
+    // overlay state; clear it first.
+    gsap.killTweensOf(navBackdrop);
+    gsap.set(navBackdrop, {
+      display: "block",
+      autoAlpha: 1,
+      "--sec-top": originTop,
+      "--sec-bottom": originBottom,
+    });
+
+    // While a jump runs, the trigger is disabled and the scroll position
+    // and timeline playhead are driven together in lockstep. That keeps
+    // ScrollTrigger's internal catch-up tween — whose retargeting proved
+    // racy around teleports — entirely out of the picture, and the
+    // visuals track the jump with zero lag.
+    const exitT = origin
+      ? forward
+        ? origin.exitEnd
+        : origin.enterStart
+      : originKey === "faqs"
+        ? TIMELINE_SPAN
+        : SNAP_FREE_END;
+    const dwellT = destination ? destination.dwell : TIMELINE_SPAN;
+    const proxy = {
+      y: window.scrollY,
+      p: scrollTimeline.progress() * TIMELINE_SPAN,
+    };
+    const writeFrame = () => {
+      window.scrollTo(0, Math.round(proxy.y));
+      scrollTimeline.progress(clamp01(proxy.p / TIMELINE_SPAN));
+    };
+    const exitDuration = origin || originKey === "faqs" ? 0.9 : 1.2;
+    const teleportAt = exitDuration + 0.1;
+
+    scrollTimeline.scrollTrigger.getTween()?.pause();
+    scrollTimeline.scrollTrigger.disable(false, false);
+
+    navJumpTimeline = gsap.timeline({
+      onComplete: () => {
+        navJumpTimeline = null;
+        endNavJump();
+      },
+    });
+    navJumpTimeline
+      .to(
+        navBackdrop,
+        {
+          "--sec-top": destinationTop,
+          "--sec-bottom": destinationBottom,
+          duration: teleportAt + 0.9,
+          ease: "power1.inOut",
+        },
+        0,
+      )
+      .to(
+        proxy,
+        {
+          y: exitY,
+          p: exitT,
+          duration: exitDuration,
+          ease: "power1.inOut",
+          onUpdate: writeFrame,
+        },
+        0,
+      )
+      .call(
+        () => {
+          try {
+            proxy.y = landingY;
+            proxy.p = landingT;
+            writeFrame();
+          } finally {
+            // Whatever happens, the latches must come back.
+            navJumping = false;
+          }
+        },
+        null,
+        teleportAt,
+      )
+      .to(
+        proxy,
+        {
+          y: dwellY,
+          p: dwellT,
+          duration: 1.15,
+          ease: "power1.out",
+          onUpdate: writeFrame,
+        },
+        teleportAt + 0.05,
+      );
+  };
+
   nav.querySelectorAll(".site-nav__links > a[data-section]").forEach((link) => {
     link.addEventListener("click", (event) => {
       event.preventDefault();
-      scrollToTimelineT(NAV_SCROLL_TARGETS[link.dataset.section]);
+      navigateToSection(link.dataset.section);
     });
   });
   document.querySelector(".site-nav__logo").addEventListener("click", (event) => {

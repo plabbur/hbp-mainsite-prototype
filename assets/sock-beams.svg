@@ -1,0 +1,30 @@
+<svg width="1693" height="1659" viewBox="0 0 1693 1659" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="svgexport-sock-beams2" clip-path="url(#clip0_0_1)">
+<g id="Polygon 4" opacity="0.48" style="mix-blend-mode:hard-light">
+<path d="M201.6 179.177L864.316 1276.44L1213.5 966.098L201.6 179.177Z" fill="url(#paint0_linear_0_1)"/>
+</g>
+<g id="Polygon 5" opacity="0.48" style="mix-blend-mode:hard-light">
+<path d="M137.521 137.847L669.476 1281.75L764.45 1232.58L137.521 137.847Z" fill="url(#paint1_linear_0_1)"/>
+</g>
+<g id="Polygon 6" opacity="0.48" style="mix-blend-mode:hard-light">
+<path d="M272.805 220.983L1281.16 979.079L1341.74 890.95L272.805 220.983Z" fill="url(#paint2_linear_0_1)"/>
+</g>
+</g>
+<defs>
+<linearGradient id="paint0_linear_0_1" x1="1318.01" y1="1435.3" x2="201.6" y2="179.177" gradientUnits="userSpaceOnUse">
+<stop offset="0.274038" stop-color="#CEDCFC" stop-opacity="0"/>
+<stop offset="1" stop-color="#CEDCFC"/>
+</linearGradient>
+<linearGradient id="paint1_linear_0_1" x1="910.11" y1="1630.27" x2="137.521" y2="137.847" gradientUnits="userSpaceOnUse">
+<stop offset="0.274038" stop-color="#CEDCFC" stop-opacity="0"/>
+<stop offset="1" stop-color="#CEDCFC"/>
+</linearGradient>
+<linearGradient id="paint2_linear_0_1" x1="1657.66" y1="1173.03" x2="272.805" y2="220.983" gradientUnits="userSpaceOnUse">
+<stop offset="0.274038" stop-color="#CEDCFC" stop-opacity="0"/>
+<stop offset="1" stop-color="#CEDCFC"/>
+</linearGradient>
+<clipPath id="clip0_0_1">
+<rect width="1692.64" height="1658.65" fill="white"/>
+</clipPath>
+</defs>
+</svg>

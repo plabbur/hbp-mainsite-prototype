@@ -142,6 +142,9 @@ img {
 }
 
 .btn--ghost {
+  /* The design's stroke is a gold gradient at 10% opacity — much more
+     subtle than the solid gold of the primary button. */
+  border-color: rgba(239, 193, 85, 0.1);
   background: linear-gradient(
     to top,
     rgba(233, 172, 29, 0.2),
@@ -1259,6 +1262,452 @@ img {
   left: -352px;
   width: 2217px;
   will-change: transform, opacity;
+}
+
+/* ---------- FAQs + sock and footer (normal page flow after the hero) ---------- */
+
+/* Fixed-width design canvases scaled to the viewport width by script;
+   aspect-ratio keeps each section's height in step with the scale. */
+.flow-section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.flow-section--faqs {
+  aspect-ratio: 1512 / 2164;
+  background: #090912;
+}
+
+.flow-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1512px;
+  transform-origin: 0 0;
+}
+
+.flow-canvas--faqs {
+  height: 2164px;
+}
+
+.sock {
+  position: absolute;
+  inset: 0;
+}
+
+.sock > *,
+.sock-float {
+  position: absolute;
+}
+
+/* The frame's base gradient lives inside the canvas so the two blended
+   tint layers composite over it (and over the skeletons) exactly as the
+   design's LINEAR_BURN + HARD_LIGHT rectangles do. Stops are unprojected
+   from the Figma gradient transforms. */
+.sock-base {
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    #090912 0%,
+    #3842b1 90.67%,
+    #37a9c9 137.6%
+  );
+}
+
+/* The skeleton group (with its bones, eye star, and glow) sits at 88% of
+   the design scale, anchored bottom-left, opening a gap between it and
+   the mist and stars on the right. */
+.sock-float--fg {
+  top: 1331.2px;
+  left: -198.2px;
+  width: 1188.9px;
+  height: 836px;
+  will-change: transform;
+}
+
+.sock-float--fg img,
+.sock-float--bg img {
+  width: 100%;
+  height: 100%;
+}
+
+.sock-float--bg {
+  top: 1674.9px;
+  left: -56.8px;
+  width: 722.5px;
+  height: 507.8px;
+  will-change: transform;
+}
+
+.sock-bones--left {
+  top: 1836.3px;
+  left: -346.5px;
+  width: 664.4px;
+  height: 591.4px;
+}
+
+.sock-bones--right {
+  top: 1969.3px;
+  left: 19.4px;
+  width: 664.4px;
+  height: 591.4px;
+}
+
+/* Rectangle 1327: LINEAR_BURN at 50% — approximated with multiply at a
+   slightly higher opacity, since CSS has no linear-burn. */
+.sock-tint {
+  inset: 0;
+}
+
+.sock-tint--burn {
+  background: linear-gradient(180deg, #f08854 0%, #070f68 101.4%);
+  mix-blend-mode: multiply;
+  opacity: 0.66;
+}
+
+/* Rectangle 1262: HARD_LIGHT at 70% — CSS supports it exactly; the alpha
+   ramp is unprojected into the section's own y-space. */
+.sock-tint--light {
+  background: linear-gradient(
+    180.8deg,
+    rgba(89, 100, 218, 0.075) 0%,
+    rgba(56, 28, 97, 0.834) 100%
+  );
+  mix-blend-mode: hard-light;
+  opacity: 0.7;
+}
+
+.sock-glow {
+  top: 1804.4px;
+  left: 576.6px;
+  width: 55.4px;
+  height: 55.4px;
+  will-change: transform, opacity;
+}
+
+.sock-eye-star {
+  top: 1821.1px;
+  left: 593.9px;
+  width: 24.5px;
+  height: 22.7px;
+  will-change: transform, opacity;
+}
+
+.sock-beams {
+  top: 942.7px;
+  left: -347.3px;
+  width: 1693px;
+  height: 1659px;
+}
+
+.sock-mist {
+  top: 1830.2px;
+  left: 582.8px;
+  width: 1055px;
+  height: 428px;
+  will-change: transform;
+}
+
+.sock-twinkle {
+  will-change: transform, opacity;
+}
+
+.sock-twinkle--1 {
+  top: 2146.9px;
+  left: 1355.1px;
+  width: 36.8px;
+}
+
+.sock-twinkle--2 {
+  top: 1925px;
+  left: 1373.8px;
+  width: 36.8px;
+}
+
+.sock-twinkle--3 {
+  top: 2135.5px;
+  left: 1394.8px;
+  width: 23.5px;
+}
+
+.sock-twinkle--4 {
+  top: 2079.9px;
+  left: 1116.8px;
+  width: 25.5px;
+}
+
+.sock-twinkle--5 {
+  top: 2006.7px;
+  left: 1473.2px;
+  width: 18.7px;
+}
+
+.sock-twinkle--6 {
+  top: 2097.5px;
+  left: 1152.5px;
+  width: 18.7px;
+}
+
+.sock-twinkle--7 {
+  top: 2056.7px;
+  left: 1274.5px;
+  width: 18.7px;
+}
+
+/* ---------- FAQs accordion ---------- */
+
+/* Counter-scaled by script so text matches the stage sections' effective
+   size; the origin keeps it centered and anchored to its design top. */
+.faq-panel {
+  position: absolute;
+  top: 64px;
+  left: 433px;
+  width: 646px;
+  color: #fff;
+  transform-origin: 50% 0;
+}
+
+.faq-title {
+  margin: 0 0 95px;
+  font-family: "Amarante", serif;
+  font-size: 50px;
+  font-weight: 400;
+  text-align: center;
+}
+
+.faq-group {
+  margin-bottom: 60px;
+}
+
+.faq-group h3 {
+  margin: 0 0 16px;
+  font-family: "Special Gothic Condensed One", Arial, sans-serif;
+  font-size: 28px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.faq-item {
+  margin-bottom: 20px;
+}
+
+.faq-q {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #fff;
+  font-family: "Merriweather", Georgia, serif;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Plus that folds to a minus when the row is open. */
+.faq-icon {
+  position: relative;
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-right: 3px;
+}
+
+.faq-icon::before,
+.faq-icon::after {
+  content: "";
+  position: absolute;
+  background: #fff;
+}
+
+.faq-icon::before {
+  top: 6px;
+  left: 0;
+  width: 14px;
+  height: 2px;
+}
+
+.faq-icon::after {
+  top: 0;
+  left: 6px;
+  width: 2px;
+  height: 14px;
+  transition: transform 0.3s ease;
+}
+
+.faq-item.is-open .faq-icon::after {
+  transform: scaleY(0);
+}
+
+.faq-answer {
+  height: 0;
+  overflow: hidden;
+}
+
+.faq-answer p {
+  margin: 6px 0 16px;
+  font-family: "Merriweather", Georgia, serif;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.25;
+}
+
+.faq-divider {
+  height: 1px;
+  margin-top: 14px;
+  background: rgba(255, 255, 255, 0.4);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.faq-item.is-open .faq-divider {
+  opacity: 1;
+}
+
+/* ---------- Footer ---------- */
+
+.site-footer {
+  aspect-ratio: 1512 / 289;
+  background: linear-gradient(180deg, #090912 0%, #00005f 100%);
+}
+
+.flow-canvas--footer {
+  height: 289px;
+}
+
+.footer-left {
+  position: absolute;
+  top: 72px;
+  left: 80px;
+}
+
+.footer-btn {
+  padding: 10px 20px;
+  border: 1px solid rgba(239, 193, 85, 0.1);
+  border-radius: 12px;
+  background: linear-gradient(
+    to top,
+    rgba(233, 172, 29, 0.2),
+    rgba(255, 210, 104, 0.2)
+  );
+  color: #fff;
+  font-family: "Special Gothic Condensed One", Arial, sans-serif;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow:
+    0 0 20px rgba(0, 0, 0, 0.1),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.footer-btn:hover {
+  filter: brightness(1.15);
+}
+
+.footer-socials {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.footer-socials a {
+  display: flex;
+  width: 48px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(239, 193, 85, 0.1);
+  border-radius: 12px;
+  background: linear-gradient(
+    to top,
+    rgba(233, 172, 29, 0.2),
+    rgba(255, 210, 104, 0.2)
+  );
+  box-shadow:
+    0 0 20px rgba(0, 0, 0, 0.1),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.footer-socials a:hover {
+  filter: brightness(1.15);
+}
+
+.footer-socials img {
+  width: 20px;
+  height: 20px;
+}
+
+.footer-nonprofit {
+  margin: 16px 0 0;
+  color: #cecece;
+  font-family: "Merriweather", Georgia, serif;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.footer-mail {
+  position: absolute;
+  top: 70px;
+  left: 1021px;
+  width: 411px;
+  color: #fff;
+}
+
+.footer-mail h2 {
+  margin: 0;
+  font-family: "Special Gothic Condensed One", Arial, sans-serif;
+  font-size: 28px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.footer-mail p {
+  margin: 4px 0 0;
+  font-family: "Merriweather", Georgia, serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.footer-form {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.footer-form input {
+  width: 308px;
+  height: 44px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 12px;
+  background: #f4f4f4;
+  color: #1a1000;
+  font-family: "Merriweather", Georgia, serif;
+  font-size: 16px;
+}
+
+.footer-form input::placeholder {
+  color: #5d5d5d;
+}
+
+.footer-submit {
+  height: 46px;
+  padding: 0 20px;
+  border: 1px solid #ffda82;
+  border-radius: 12px;
+  background: linear-gradient(to top, #e9ac1d, #ffd268);
+  color: #1a1000;
+  font-family: "Special Gothic Condensed One", Arial, sans-serif;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.footer-submit:hover {
+  filter: brightness(1.08);
 }
 
 @media (prefers-reduced-motion: reduce) {
