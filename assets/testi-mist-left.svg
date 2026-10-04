@@ -1,0 +1,46 @@
+<svg width="760" height="982" viewBox="0 0 760 982" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Exported from Figma: upper-left swirl (Vector 264) and lower-left swirl (Vector 265, at y 748).
+     Each swirl billows slowly, anchored at the edge it grows out of; the canvas is wider than
+     the swirls so their tips have room to swell. -->
+<style>
+.billow {
+  transform-box: fill-box;
+  animation: billow ease-in-out infinite alternate;
+}
+.billow--top {
+  transform-origin: 0% 0%;
+  animation-duration: 9s;
+}
+.billow--bottom {
+  transform-origin: 0% 100%;
+  animation-duration: 7s;
+  animation-delay: -3s;
+}
+@keyframes billow {
+  0% { opacity: 1; transform: translate(0, 0) scale(1, 1) skewX(0deg); }
+  50% { opacity: 0.85; transform: translate(10px, 4px) scale(1.04, 1.025) skewX(1.5deg); }
+  100% { opacity: 1; transform: translate(-6px, 8px) scale(1.06, 1.01) skewX(-1deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .billow { animation: none; }
+}
+</style>
+<defs>
+<linearGradient id="mist-tl" x1="49.6432" y1="-134.426" x2="840.375" y2="201.953" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FFE3B2" stop-opacity="0.9"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="mist-bl" x1="49.1047" y1="389.151" x2="681.537" y2="102.149" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FFE3B2" stop-opacity="0.9"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</linearGradient>
+</defs>
+<g class="billow billow--top">
+<path d="M513.321 468.084C607.628 451.011 654.768 617.559 666.389 667.427C660.644 655.777 617.285 569.771 521.636 614.588C471.203 638.22 359.016 572.799 316.993 562.085C274.97 551.37 119.567 619.358 56.9307 595.259C-29.9787 561.822 -146.988 462.289 -143.027 496.563L-208.921 -40.7681C-215.968 -24.6541 -258.191 -100.323 -67.367 -72.2085C171.163 -37.065 192.095 147.079 240.135 279.703C270.316 363.024 395.437 489.425 513.321 468.084Z" fill="url(#mist-tl)"/>
+</g>
+<g transform="translate(0 748)">
+<g class="billow billow--bottom">
+<path d="M392.36 21.3527C524.705 -15.6426 569.709 5.60128 574 10.6164C566.372 17.4497 522.893 20.0564 493.907 36.8378C457.674 57.8146 427.098 111.645 404.279 177.954C363.756 295.71 259.984 284.833 210.244 343.155L-82 289.283C-57.2093 250.825 21.2797 189.863 126.337 168.19C317.035 128.849 226.93 67.5969 392.36 21.3527Z" fill="url(#mist-bl)"/>
+</g>
+</g>
+</svg>
