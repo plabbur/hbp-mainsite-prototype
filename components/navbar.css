@@ -1,0 +1,220 @@
+/* Styles for the <hbp-navbar> component (components/navbar.js). */
+
+hbp-navbar {
+  display: contents;
+}
+
+/* Transparent navbar from the Figma file; shown only alongside the title. */
+.site-nav {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px 32px;
+  font-family: "Special Gothic Condensed One", Arial, sans-serif;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.site-nav__logo {
+  position: relative;
+  z-index: 1;
+}
+
+.site-nav__logo img {
+  display: block;
+  width: 163px;
+  height: auto;
+}
+
+.site-nav__right {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.site-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.site-nav__links > a {
+  position: relative;
+  padding-bottom: 4px;
+  color: #fff;
+  font-size: 20px;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Tab underline from the Figma Tab component (hover/selected states). */
+.site-nav__links > a::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: #fff;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.site-nav__links > a:hover::after,
+.site-nav__links > a:focus-visible::after {
+  opacity: 1;
+}
+
+/* Once past the doorway, the tab for the active section stays underlined. */
+.site-nav--sectioned .site-nav__links > a.is-current::after {
+  opacity: 1;
+}
+
+.site-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* The menu copy of the buttons only appears inside the small-screen menu. */
+.site-nav__actions--menu {
+  display: none;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: 1px solid #ffda82;
+  border-radius: 12px;
+  font-size: 20px;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.btn--ghost {
+  /* The design's stroke is a gold gradient at 10% opacity — much more
+     subtle than the solid gold of the primary button. */
+  border-color: rgba(239, 193, 85, 0.1);
+  background: linear-gradient(
+    to top,
+    rgba(233, 172, 29, 0.2),
+    rgba(255, 210, 104, 0.2)
+  );
+  color: #fff;
+  box-shadow:
+    0 0 20px rgba(0, 0, 0, 0.1),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.btn--solid {
+  background: linear-gradient(to top, #e9ac1d, #ffd268);
+  color: #512309;
+  box-shadow:
+    0 0 10px rgba(0, 0, 0, 0.1),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.btn:hover {
+  filter: brightness(1.08);
+}
+
+.site-nav__toggle {
+  position: relative;
+  z-index: 1;
+  display: none;
+  width: 40px;
+  height: 40px;
+  margin: -7px -7px -7px 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.site-nav__toggle img,
+.site-nav__toggle svg {
+  display: block;
+  width: 40px;
+  height: 40px;
+}
+
+.site-nav__toggle .site-nav__toggle-close,
+.site-nav--open .site-nav__toggle .site-nav__toggle-open {
+  display: none;
+}
+
+.site-nav--open .site-nav__toggle .site-nav__toggle-close {
+  display: block;
+}
+
+/* ---------- Collapsed: medium and small ---------- */
+
+@media (max-width: 1179.98px) {
+  .site-nav {
+    padding: 16px 32px;
+  }
+
+  .site-nav__right {
+    gap: 20px;
+  }
+
+  .site-nav__toggle {
+    display: block;
+  }
+
+  /* The links become a full-viewport overlay under the bar. Absolute (not
+     fixed) because GSAP leaves a transform on the nav, which would make a
+     fixed child size to the nav bar instead of the viewport. */
+  .site-nav__links {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100svh;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 28px;
+    padding: 96px 32px 48px;
+    background: linear-gradient(180deg, #15173b, #060825);
+    overflow-y: auto;
+  }
+
+  .site-nav--open .site-nav__links {
+    display: flex;
+  }
+
+  .site-nav__links > a {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 599.98px) {
+  .site-nav {
+    padding: 12px 20px;
+  }
+
+  .site-nav__toggle {
+    margin: 0;
+  }
+
+  .site-nav__actions--bar {
+    display: none;
+  }
+
+  .site-nav__actions--menu {
+    display: flex;
+    margin-top: 12px;
+  }
+
+  .site-nav__links > a {
+    font-size: 28px;
+  }
+}

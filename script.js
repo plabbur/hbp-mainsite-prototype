@@ -28,14 +28,28 @@
       `translate(-50%, -50%) scale(${coverScale.toFixed(5)})`;
 
     // Contain-fit: the panel gradient fills the viewport, so letterboxing
-    // is invisible and section content never gets cropped.
+    // is invisible and section content never gets cropped. Each artboard's
+    // size comes from CSS, so responsive sections (About) can swap to a
+    // smaller artboard per breakpoint.
     const sectionScale = Math.min(
       viewportWidth / SECTION_WIDTH,
       viewportHeight / SECTION_HEIGHT,
     );
     sectionFits.forEach((element) => {
+      // Computed (not offset) size: hidden sections have no layout box.
+      const styles = getComputedStyle(element);
+      const scale = Math.min(
+        viewportWidth / parseFloat(styles.width),
+        viewportHeight / parseFloat(styles.height),
+      );
       element.style.transform =
-        `translate(-50%, -50%) scale(${sectionScale.toFixed(5)})`;
+        `translate(-50%, -50%) scale(${scale.toFixed(5)})`;
+      // Letterbox depth in artboard px, so edge art (the About mists) can
+      // stay pinned to the viewport's edges instead of the artboard's.
+      const bleedX = (viewportWidth / scale - parseFloat(styles.width)) / 2;
+      const bleedY = (viewportHeight / scale - parseFloat(styles.height)) / 2;
+      element.style.setProperty("--bleed-x", `${bleedX.toFixed(2)}px`);
+      element.style.setProperty("--bleed-y", `${bleedY.toFixed(2)}px`);
     });
 
     // Post-hero flow sections (FAQs, footer) scale by width alone; their
@@ -952,11 +966,12 @@
   // section, rewinds if the user scrolls back out through the door.
   const aboutTitle = document.querySelector(".about-copy h2");
   const aboutText = document.querySelector(".about-copy p");
+  const aboutPlaque = document.querySelector(".about-plaque");
   const teamPicture = document.querySelector(".team-picture");
   const mistLayer = document.querySelector("#mist-layer");
   let aboutEntered = false;
 
-  gsap.set([aboutTitle, aboutText], { autoAlpha: 0, y: 30 });
+  gsap.set([aboutPlaque, aboutTitle, aboutText], { autoAlpha: 0, y: 30 });
   gsap.set(teamPicture, {
     autoAlpha: 0,
     y: 26,
@@ -969,6 +984,11 @@
   const aboutEnter = gsap.timeline({ paused: true });
   aboutEnter
     .to(mistLayer, { autoAlpha: 1, duration: 0.9, ease: "power1.out" }, 0)
+    .to(
+      aboutPlaque,
+      { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" },
+      0.08,
+    )
     .to(
       aboutTitle,
       { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" },
@@ -1184,6 +1204,18 @@
       12.2,
     )
     .fromTo(
+      aboutPlaque,
+      { y: 0, autoAlpha: 1 },
+      {
+        y: -120,
+        autoAlpha: 0,
+        duration: 1.05,
+        ease: "power1.in",
+        immediateRender: false,
+      },
+      12.25,
+    )
+    .fromTo(
       aboutTitle,
       { y: 0, autoAlpha: 1 },
       {
@@ -1235,7 +1267,7 @@
       12.2,
     )
     .to(sectionAbout, { autoAlpha: 0, duration: 0.5 }, 13.3)
-    // ---- Gradient morph: About purple to Our Values teal.
+    // ---- Gradient morph: About navy to Our Values teal.
     .to(
       stageBackdrop,
       {
@@ -1645,7 +1677,7 @@
   // Dwell-state backdrop colors per section, for the jump overlay.
   const SECTION_COLORS = {
     hero: ["#0b0d21", "#0b0d21"],
-    about: ["#322243", "#251930"],
+    about: ["#15173b", "#060825"],
     values: ["#37a9c9", "#017b9d"],
     speakers: ["#894a3c", "#512309"],
     testimonials: ["#322243", "#251930"],

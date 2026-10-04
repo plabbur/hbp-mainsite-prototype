@@ -11,7 +11,9 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Special+Gothic+Condensed+One&family=Amarante&family=Merriweather:wght@300;400;600&display=swap"
     />
+    <link rel="stylesheet" href="./components/navbar.css" />
     <link rel="stylesheet" href="./styles.css" />
+    <script src="./components/navbar.js"></script>
     <script
       defer
       src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"
@@ -32,25 +34,7 @@
         </p>
 
         <div class="hero__viewport">
-          <nav class="site-nav" id="site-nav" aria-label="Primary">
-            <a class="site-nav__logo" href="#">
-              <img src="./assets/logo.png" alt="HackBeanpot" />
-            </a>
-            <div class="site-nav__links">
-              <a href="#" class="is-current" data-section="about">About us</a>
-              <a href="#" data-section="values">Our values</a>
-              <a href="#" data-section="speakers">Speakers</a>
-              <a href="#" data-section="testimonials">Testimonials</a>
-              <a href="#" data-section="projects">Projects</a>
-              <a href="#" data-section="sponsors">Sponsors</a>
-              <a href="#" data-section="team">Our team</a>
-              <a href="#" data-section="faqs">FAQs</a>
-              <div class="site-nav__actions">
-                <a class="btn btn--ghost" href="#">SPONSOR US</a>
-                <a class="btn btn--solid" href="#">APPLY</a>
-              </div>
-            </div>
-          </nav>
+          <hbp-navbar current="about"></hbp-navbar>
           <div class="scene-fit" id="scene-fit" aria-hidden="true">
             <div class="scene-camera" id="scene-camera">
               <div class="scene-group" id="scene-bg">
@@ -217,9 +201,38 @@
           >
             <div class="section-fit" id="about-fit">
               <div class="section-canvas">
+                <!-- Each breakpoint shows its own mist pieces; the two
+                     wrappers carry the ambient drift for whichever are on. -->
                 <div class="mist-layer" id="mist-layer">
-                  <img class="mist mist--a" src="./assets/mist-a.svg" alt="" />
-                  <img class="mist mist--b" src="./assets/mist-b.svg" alt="" />
+                  <div class="mist mist--a">
+                    <img
+                      class="mist__piece mist__piece--top"
+                      src="./assets/about-mist-top.svg"
+                      alt=""
+                    />
+                  </div>
+                  <div class="mist mist--b">
+                    <img
+                      class="mist__piece mist__piece--lg-back"
+                      src="./assets/about-mist-wave-lg-back.svg"
+                      alt=""
+                    />
+                    <img
+                      class="mist__piece mist__piece--lg-front"
+                      src="./assets/about-mist-wave-lg-front.svg"
+                      alt=""
+                    />
+                    <img
+                      class="mist__piece mist__piece--sm-back"
+                      src="./assets/about-mist-wave-sm-back.svg"
+                      alt=""
+                    />
+                    <img
+                      class="mist__piece mist__piece--sm-front"
+                      src="./assets/about-mist-wave-sm-front.svg"
+                      alt=""
+                    />
+                  </div>
                 </div>
 
                 <img
@@ -266,6 +279,8 @@
                     />
                   </div>
                 </div>
+
+                <div class="about-plaque" aria-hidden="true"></div>
 
                 <div class="about-copy">
                   <h2>ABOUT US</h2>

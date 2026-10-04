@@ -66,113 +66,7 @@ img {
   );
 }
 
-/* Transparent navbar from the Figma file; shown only alongside the title. */
-.site-nav {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  z-index: 20;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 20px 32px;
-  font-family: "Special Gothic Condensed One", Arial, sans-serif;
-  opacity: 0;
-  visibility: hidden;
-}
-
-.site-nav__logo img {
-  display: block;
-  width: 163px;
-  height: auto;
-}
-
-.site-nav__links {
-  display: flex;
-  align-items: center;
-  gap: 36px;
-}
-
-.site-nav__links > a {
-  position: relative;
-  padding-bottom: 4px;
-  color: #fff;
-  font-size: 20px;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-/* Tab underline from the Figma Tab component (hover/selected states). */
-.site-nav__links > a::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 2px;
-  background: #fff;
-  opacity: 0;
-  transition: opacity 0.15s ease;
-}
-
-.site-nav__links > a:hover::after {
-  opacity: 1;
-}
-
-/* Once past the doorway, the tab for the active section stays underlined. */
-.site-nav--sectioned .site-nav__links > a.is-current::after {
-  opacity: 1;
-}
-
-.site-nav__actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.btn {
-  padding: 10px 20px;
-  border: 1px solid #ffda82;
-  border-radius: 12px;
-  font-size: 20px;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.btn--ghost {
-  /* The design's stroke is a gold gradient at 10% opacity — much more
-     subtle than the solid gold of the primary button. */
-  border-color: rgba(239, 193, 85, 0.1);
-  background: linear-gradient(
-    to top,
-    rgba(233, 172, 29, 0.2),
-    rgba(255, 210, 104, 0.2)
-  );
-  color: #fff;
-  box-shadow:
-    0 0 20px rgba(0, 0, 0, 0.1),
-    inset 0 0 20px rgba(255, 255, 255, 0.1);
-}
-
-.btn--solid {
-  background: linear-gradient(to top, #e9ac1d, #ffd268);
-  color: #1a1000;
-  box-shadow:
-    0 0 10px rgba(0, 0, 0, 0.1),
-    inset 0 0 20px rgba(255, 255, 255, 0.1);
-}
-
-.btn:hover {
-  filter: brightness(1.08);
-}
-
-@media (max-width: 1180px) {
-  .site-nav__links > a {
-    display: none;
-  }
-}
+/* The navbar lives in components/navbar.css. */
 
 .scene-fit {
   position: absolute;
@@ -538,8 +432,8 @@ img {
 /* Shared backdrop behind all post-hero sections: its two gradient stops
    are tweened as the user scrolls from one section to the next. */
 .stage-backdrop {
-  --sec-top: #322243;
-  --sec-bottom: #251930;
+  --sec-top: #15173b;
+  --sec-bottom: #060825;
   position: absolute;
   inset: 0;
   z-index: 14;
@@ -586,46 +480,100 @@ img {
   inset: 0;
 }
 
+/* The two drift wrappers span the canvas; the mist pieces inside are
+   placed in canvas pixels per breakpoint. Their rotations live on the
+   pieces because GSAP owns the wrappers' transforms. */
 .mist {
   position: absolute;
+  inset: 0;
   will-change: transform, opacity;
 }
 
 .mist--a {
-  top: -120px;
-  left: -170px;
-  width: 688px;
-  height: 360px;
+  transform-origin: 10% 5%;
 }
 
 .mist--b {
-  top: 750px;
-  left: -260px;
-  width: 840px;
-  height: 464px;
+  transform-origin: 80% 95%;
 }
 
+/* Mist hugs the viewport's edges: --bleed-x/y (set by the fit script)
+   push each piece out by the letterbox depth, so a straight cut edge in
+   the art never floats on screen when the viewport's aspect differs. */
+.mist__piece {
+  position: absolute;
+  display: none;
+}
+
+.mist__piece--top {
+  top: calc(-179px - var(--bleed-y, 0px));
+  left: calc(-419px - var(--bleed-x, 0px));
+  width: 930px;
+  height: 423px;
+  display: block;
+}
+
+.mist__piece--lg-back {
+  top: calc(649.66px + var(--bleed-y, 0px));
+  left: 591.7px;
+  width: 930.18px;
+  height: 746.32px;
+  display: block;
+  transform: rotate(48.98deg);
+}
+
+.mist__piece--lg-front {
+  top: calc(651.87px + var(--bleed-y, 0px));
+  left: calc(1083.13px + var(--bleed-x, 0px));
+  width: 734.74px;
+  height: 589.51px;
+  display: block;
+  transform: rotate(48.98deg);
+}
+
+.mist__piece--sm-back {
+  top: calc(613.82px + var(--bleed-y, 0px));
+  left: calc(-211.35px - var(--bleed-x, 0px));
+  width: 738.71px;
+  height: 592.69px;
+  transform: rotate(131.02deg) scaleY(-1);
+}
+
+.mist__piece--sm-front {
+  top: calc(711.4px + var(--bleed-y, 0px));
+  left: calc(-43.23px - var(--bleed-x, 0px));
+  width: 476.07px;
+  height: 336.48px;
+  transform: rotate(151.15deg) scaleY(-1);
+}
+
+/* Team picture: the PNG is the frame plus its 13px drop shadow, 1:1 with
+   the Figma frame. */
 .team-picture {
-  top: 248px;
-  left: 755px;
-  width: 611.9px;
-  height: 480.1px;
+  top: 222px;
+  left: 785.76px;
+  width: 659px;
+  height: 517px;
 }
 
+/* Candle geometry is authored at the Figma 380px glow size and scaled by
+   --candle-scale, so breakpoints can shrink candles without touching the
+   transforms GSAP animates. */
 .candle {
-  width: 362.86px;
-  height: 591.6px;
+  --candle-scale: 1;
+  width: calc(380px * var(--candle-scale));
+  height: calc(619.554px * var(--candle-scale));
   will-change: transform;
 }
 
 .candle--one {
-  top: 577.23px;
-  left: 1002px;
+  top: 427px;
+  left: -83px;
 }
 
 .candle--two {
-  top: 478px;
-  left: 1165.9px;
+  top: 547px;
+  left: 14px;
 }
 
 .candle__float {
@@ -641,30 +589,45 @@ img {
 .candle__rings {
   top: 0;
   left: 0;
-  width: 362.86px;
-  height: 362.86px;
+  width: calc(380px * var(--candle-scale));
+  height: calc(380px * var(--candle-scale));
   will-change: transform, opacity;
 }
 
 .candle__flame {
-  top: 109.23px;
-  left: 172.27px;
-  width: 14.98px;
-  height: 52.04px;
+  top: calc(114.391px * var(--candle-scale));
+  left: calc(180.406px * var(--candle-scale));
+  width: calc(15.689px * var(--candle-scale));
+  height: calc(54.5px * var(--candle-scale));
   transform-origin: 50% 100%;
   will-change: transform;
 }
 
 .candle__body {
-  top: 159.08px;
-  left: 115.09px;
-  width: 127.19px;
-  height: 432.53px;
+  top: calc(166.589px * var(--candle-scale));
+  left: calc(120.526px * var(--candle-scale));
+  width: calc(133.199px * var(--candle-scale));
+  height: calc(452.965px * var(--candle-scale));
+}
+
+/* Mustard placard behind the copy, with a brass pin in each corner. */
+.about-plaque {
+  top: 279px;
+  left: 212px;
+  width: 514px;
+  height: 391px;
+  background:
+    radial-gradient(circle, #833711 5.5px, transparent 6px) left 14px top 14px / 11px 11px no-repeat,
+    radial-gradient(circle, #833711 5.5px, transparent 6px) right 14px top 14px / 11px 11px no-repeat,
+    radial-gradient(circle, #833711 5.5px, transparent 6px) left 14px bottom 14px / 11px 11px no-repeat,
+    radial-gradient(circle, #833711 5.5px, transparent 6px) right 14px bottom 14px / 11px 11px no-repeat,
+    #b26e00;
+  box-shadow: 14px 14px 18px rgba(0, 0, 0, 0.3);
 }
 
 .about-copy {
-  top: 377px;
-  left: 150px;
+  top: 333.5px;
+  left: 264px;
   display: flex;
   width: 411px;
   flex-direction: column;
@@ -683,9 +646,106 @@ img {
 .about-copy p {
   margin: 0;
   font-family: "Merriweather", Georgia, serif;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 300;
   line-height: 1.4;
+}
+
+/* Medium artboard (Figma 1000x982): picture top-right, placard
+   overlapping it bottom-left, candles bottom-right, top mist only. */
+@media (min-width: 600px) and (max-width: 1179.98px) {
+  #about-fit {
+    width: 1000px;
+    height: 982px;
+  }
+
+  .mist__piece--lg-back,
+  .mist__piece--lg-front {
+    display: none;
+  }
+
+  .team-picture {
+    top: 101px;
+    left: 321px;
+  }
+
+  .candle--one {
+    top: 491px;
+    left: 525px;
+  }
+
+  .candle--two {
+    top: 611px;
+    left: 622px;
+  }
+
+  .about-plaque {
+    top: 456px;
+    left: 32px;
+  }
+
+  .about-copy {
+    top: 510.5px;
+    left: 84px;
+  }
+}
+
+/* Small artboard (Figma 402x874): stacked picture then copy, no placard,
+   small candles bottom-right over a bottom-left wave. */
+@media (max-width: 599.98px) {
+  #about-fit {
+    width: 402px;
+    height: 874px;
+  }
+
+  .mist--b {
+    transform-origin: 30% 95%;
+  }
+
+  .mist__piece--top,
+  .mist__piece--lg-back,
+  .mist__piece--lg-front {
+    display: none;
+  }
+
+  .mist__piece--sm-back,
+  .mist__piece--sm-front {
+    display: block;
+  }
+
+  /* Figma frame is 362.59 wide; the PNG adds 13px of shadow at 1:1. */
+  .team-picture {
+    top: 88px;
+    left: 20px;
+    width: 369.63px;
+    height: 290px;
+  }
+
+  .candle--one {
+    --candle-scale: 0.59525;
+    top: 608.99px;
+    left: 213.25px;
+  }
+
+  .candle--two {
+    --candle-scale: 0.48973;
+    top: 683.91px;
+    left: 176.32px;
+  }
+
+  .about-plaque {
+    display: none;
+  }
+
+  .about-copy {
+    top: 395px;
+    left: 20px;
+    width: 362.59px;
+  }
+
+  .about-copy h2 {
+    font-size: 32px;
+  }
 }
 
 /* ---------- Our values ---------- */
