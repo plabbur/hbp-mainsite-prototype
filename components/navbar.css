@@ -1,0 +1,364 @@
+/* Styles for the <hbp-navbar> component (components/navbar.js). */
+
+hbp-navbar {
+  display: contents;
+}
+
+/* Transparent navbar from the Figma file; shown only alongside the title. */
+.site-nav {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px 32px;
+  font-family: "Special Gothic Condensed One", Arial, sans-serif;
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Figma logo lockup: 28px mark + wordmark set in the nav typeface. */
+.site-nav__logo {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  font-size: 28px;
+  line-height: normal;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.site-nav__logo img {
+  display: block;
+  width: 28px;
+  height: 28px;
+}
+
+.site-nav__right {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.site-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.site-nav__links > a {
+  position: relative;
+  padding-bottom: 4px;
+  color: #fff;
+  font-size: 20px;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Tab underline from the Figma Tab component (hover/selected states). */
+.site-nav__links > a::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: #fff;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.site-nav__links > a:hover::after,
+.site-nav__links > a:focus-visible::after {
+  opacity: 1;
+}
+
+/* Once past the doorway, the tab for the active section stays underlined. */
+.site-nav--sectioned .site-nav__links > a.is-current::after {
+  opacity: 1;
+}
+
+.site-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Menu-only pieces: the actions as plain menu items (small screens) and
+   the corner artwork. */
+.site-nav__menu-action,
+.site-nav__menu-art {
+  display: none;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: 1px solid #ffda82;
+  border-radius: 12px;
+  font-size: 20px;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.btn--ghost {
+  /* The design's stroke is a gold gradient at 10% opacity — much more
+     subtle than the solid gold of the primary button. */
+  border-color: rgba(239, 193, 85, 0.1);
+  background: linear-gradient(
+    to top,
+    rgba(233, 172, 29, 0.2),
+    rgba(255, 210, 104, 0.2)
+  );
+  color: #fff;
+  box-shadow:
+    0 0 20px rgba(0, 0, 0, 0.1),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.btn--solid {
+  background: linear-gradient(to top, #e9ac1d, #ffd268);
+  color: #512309;
+  box-shadow:
+    0 0 10px rgba(0, 0, 0, 0.1),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.btn:hover {
+  filter: brightness(1.08);
+}
+
+.site-nav__toggle {
+  position: relative;
+  z-index: 1;
+  display: none;
+  width: 40px;
+  height: 40px;
+  margin: -7px -7px -7px 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.site-nav__toggle img {
+  display: block;
+  width: 40px;
+  height: 40px;
+}
+
+.site-nav__toggle .site-nav__toggle-close,
+.site-nav--open .site-nav__toggle .site-nav__toggle-open {
+  display: none;
+}
+
+.site-nav--open .site-nav__toggle .site-nav__toggle-close {
+  display: block;
+}
+
+/* ---------- Collapsed: medium and small ---------- */
+
+@media (max-width: 1179.98px) {
+  .site-nav {
+    padding: 16px 32px;
+  }
+
+  .site-nav__right {
+    gap: 20px;
+  }
+
+  .site-nav__toggle {
+    display: block;
+  }
+
+  /* The links become a full-viewport overlay under the bar (Figma
+     "Expanded Menu" on medium, "Mobile Menu" on small). Absolute, not fixed, because GSAP leaves a transform
+     on the nav, which would make a fixed child size to the nav bar. */
+  .site-nav__links {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100svh;
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 20px;
+    padding: 97px 32px 48px;
+    background: linear-gradient(180deg, #15173b, #060825);
+    overflow-x: hidden;
+    overflow-y: auto;
+    isolation: isolate;
+  }
+
+  .site-nav--open .site-nav__links {
+    display: flex;
+  }
+
+  /* With the menu open, Sponsor us / Apply leave the bar and appear as
+     the last two menu items instead. */
+  .site-nav--open .site-nav__actions--bar {
+    display: none;
+  }
+
+  .site-nav__menu-action {
+    display: block;
+  }
+
+  .site-nav--open .site-nav__toggle-close {
+    width: 32px;
+    height: 32px;
+    margin: 4px;
+  }
+
+  .site-nav__links > a {
+    padding-bottom: 0;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 32px;
+    transition: color 0.15s ease;
+  }
+
+  .site-nav__links > a:hover,
+  .site-nav__links > a:focus-visible,
+  .site-nav__links > a.is-current {
+    color: #fff;
+  }
+
+  /* In the menu the current section gets the brush-stroke underline. */
+  .site-nav__links > a::after {
+    bottom: -7px;
+    height: 3px;
+    background: url("../assets/menu/underline.svg") 0 0 / 100% 100% no-repeat;
+  }
+
+  .site-nav__links > a.is-current::after {
+    opacity: 1;
+  }
+
+  /* Dinosaur skeleton, glowing eye and mist wave, placed in a box the
+     size of the Figma frame (1000x982 medium, 402x874 small) pinned to
+     the menu's bottom-left corner. */
+  .site-nav__menu-art {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    display: block;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .site-nav__menu-art-inner {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 1000px;
+    height: 982px;
+  }
+
+  .site-nav__menu-art-inner > img {
+    position: absolute;
+    display: block;
+    max-width: none;
+  }
+
+  .menu-art-dino {
+    top: -18px;
+    left: 277px;
+    width: 1230px;
+    height: 1230px;
+  }
+
+  .menu-art-glow {
+    top: 761.8px;
+    left: 489.8px;
+    width: 70.7px;
+    height: 70.6px;
+    mix-blend-mode: overlay;
+  }
+
+  .menu-art-eye {
+    top: 784.41px;
+    left: 513.45px;
+    width: 22.44px;
+    height: 20.8px;
+    transform: rotate(-179.67deg) scaleY(-1);
+  }
+
+  .menu-art-wave {
+    top: 273px;
+    left: -550px;
+    width: 1508px;
+    height: 1531.2px;
+  }
+}
+
+@media (max-width: 599.98px) {
+  .site-nav {
+    padding: 12px 20px;
+  }
+
+  .site-nav__toggle {
+    margin: 0;
+  }
+
+  .site-nav__actions--bar {
+    display: none;
+  }
+
+  .site-nav__links {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .site-nav__links > a {
+    font-size: 28px;
+  }
+
+  .site-nav--open .site-nav__toggle-close {
+    width: 40px;
+    height: 40px;
+    margin: 0;
+  }
+
+  .site-nav__menu-art-inner {
+    width: 402px;
+    height: 874px;
+  }
+
+  .menu-art-dino {
+    top: 349px;
+    left: 51px;
+    width: 648px;
+    height: 648px;
+  }
+
+  .menu-art-glow {
+    top: 759.86px;
+    left: 163.13px;
+    width: 37.21px;
+    height: 37.21px;
+  }
+
+  .menu-art-eye {
+    top: 771.7px;
+    left: 175.54px;
+    width: 11.82px;
+    height: 10.96px;
+  }
+
+  .menu-art-wave {
+    top: 391px;
+    left: -390px;
+    width: 932px;
+    height: 946.34px;
+  }
+}
