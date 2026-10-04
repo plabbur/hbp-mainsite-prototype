@@ -3082,15 +3082,8 @@ img {
 
 .static-scroll .site-nav {
   position: fixed;
-}
-
-/* Only the small layout gets a tinted bar; wider screens keep the
-   transparent navbar even on the stacked page. */
-@media (max-width: 599.98px) {
-  .static-scroll .site-nav {
-    background: rgba(6, 8, 37, 0.72);
-    backdrop-filter: blur(8px);
-  }
+  background: rgba(6, 8, 37, 0.72);
+  backdrop-filter: blur(8px);
 }
 
 @media (prefers-reduced-motion: reduce) {
