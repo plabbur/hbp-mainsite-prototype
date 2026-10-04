@@ -843,94 +843,150 @@ img {
 
 /* ---------- Speakers ---------- */
 
-/* The faint rail the picture frames ride along. */
-.speakers-line {
+/* A balustrade runs behind the arch; curtains sweep in from the right. */
+.speaker-railing {
+  top: 673px;
+  height: 309px;
+  will-change: transform;
+}
+
+.speaker-railing--right {
+  left: 626px;
+  width: 1021.16px;
+}
+
+.speaker-railing--left {
+  left: -68px;
+  width: 214px;
+}
+
+.speaker-curtain {
   top: 0;
-  left: 746px;
-  width: 1.5px;
+  left: 5px;
+  width: 1509px;
   height: 982px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0) 5%,
-    rgba(255, 255, 255, 0.2) 14%,
-    rgba(255, 255, 255, 0.2) 100%
-  );
+  will-change: transform;
+}
+
+/* The arch holding the current speaker's photo; slides on arrow presses. */
+.speaker-stage {
+  top: 184px;
+  left: 127px;
+  width: 525px;
+  height: 798px;
+  will-change: transform, opacity;
+}
+
+.speaker-arch {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.speaker-copy {
+  inset: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.speaker-copy > * {
+  position: absolute;
 }
 
 .speakers-title {
-  top: 460px;
-  left: 109px;
+  top: 202px;
+  left: 724px;
   width: 210px;
   margin: 0;
-  color: #fff;
+  color: #fdfbfb;
   font-family: "Amarante", serif;
   font-size: 50px;
   font-weight: 400;
+  line-height: 63px;
   white-space: nowrap;
   will-change: transform, opacity;
 }
 
-/* Both frames ride the rail as one strip, so their spacing never changes. */
-.speakers-strip {
-  inset: 0;
-  will-change: transform;
-}
-
-.speaker-row {
-  position: absolute;
-  width: 784px;
-  will-change: transform, opacity;
-}
-
-.speaker-row--one {
-  top: 168px;
-  left: 623px;
-}
-
-.speaker-row--two {
-  top: 600.96px;
-  left: 623px;
-}
-
-.speaker-frame {
-  position: absolute;
-  top: -3.5px;
-  left: -3.5px;
-  width: 251px;
-  height: 320px;
-}
-
 .speaker-info {
-  position: absolute;
-  top: 0;
-  left: 285px;
-  width: 499px;
+  top: 297px;
+  left: 724px;
+  width: 500px;
   color: #fff;
   will-change: transform, opacity;
 }
 
-.speaker-info h3 {
+.speaker-name {
   margin: 0;
   font-family: "Special Gothic Condensed One", Arial, sans-serif;
   font-size: 40px;
   font-weight: 400;
-  line-height: 1.3;
+  line-height: 52px;
 }
 
 .speaker-role {
-  margin: 0;
+  margin: 10px 0 0;
   color: #e8b1a5;
   font-family: "Merriweather", Georgia, serif;
   font-size: 20px;
   font-weight: 300;
+  line-height: 25px;
 }
 
 .speaker-bio {
-  margin: 20px 0 0;
+  margin: 10px 0 0;
   font-family: "Merriweather", Georgia, serif;
   font-size: 18px;
   font-weight: 300;
   line-height: 1.35;
+}
+
+.speaker-controls {
+  top: 601px;
+  left: 724px;
+  display: flex;
+  gap: 9px;
+  pointer-events: auto;
+  will-change: transform, opacity;
+}
+
+.speaker-arrow {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 0;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #e9ac1d 0%, #ffd268 100%);
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.speaker-arrow img {
+  width: 32px;
+  height: 32px;
+}
+
+.speaker-arrow--prev img {
+  transform: rotate(180deg);
+}
+
+.speaker-arrow:hover:not(:disabled) {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+}
+
+.speaker-arrow:focus-visible {
+  outline: 2px solid #fdfbfb;
+  outline-offset: 3px;
+}
+
+.speaker-arrow:disabled {
+  opacity: 0.42;
+  cursor: default;
 }
 
 /* ---------- Hacker testimonials ---------- */

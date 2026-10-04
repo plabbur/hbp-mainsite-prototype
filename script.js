@@ -95,10 +95,19 @@
   const pillarImgs = gsap.utils.toArray(".pillar-img");
   const vases = gsap.utils.toArray(".vase");
   const sectionSpeakers = document.querySelector("#section-speakers");
-  const speakersStrip = document.querySelector("#speakers-strip");
   const speakersTitle = document.querySelector("#speakers-title");
-  const speakerRows = gsap.utils.toArray(".speaker-row");
-  const speakerInfos = gsap.utils.toArray(".speaker-info");
+  const speakerStage = document.querySelector("#speaker-stage");
+  const speakerPhoto = document.querySelector("#speaker-photo");
+  const speakerCurtain = document.querySelector("#speaker-curtain");
+  const speakerRailings = gsap.utils.toArray(".speaker-railing");
+  const speakerInfo = document.querySelector("#speaker-info");
+  const speakerName = speakerInfo.querySelector(".speaker-name");
+  const speakerRole = speakerInfo.querySelector(".speaker-role");
+  const speakerBio = speakerInfo.querySelector(".speaker-bio");
+  const speakerControls = document.querySelector("#speaker-controls");
+  const speakerCopy = document.querySelector("#speaker-copy");
+  const speakerPrev = document.querySelector(".speaker-arrow--prev");
+  const speakerNext = document.querySelector(".speaker-arrow--next");
   const sectionTestimonials = document.querySelector("#section-testimonials");
   const testiMist = document.querySelector("#testi-mist");
   const testiTitle = document.querySelector("#testi-title");
@@ -878,6 +887,7 @@
     } else if (T < 18.7 && speakersTextShown) {
       speakersTextShown = false;
       speakersTextIn.pause(0);
+      resetSpeakers();
     }
     if (T >= 22.45 && !testimonialsEntered) {
       testimonialsEntered = true;
@@ -1134,16 +1144,97 @@
     )
     .to(teamFloor, { y: 0, duration: 0.7, ease: "power3.out" }, 0.1);
 
-  // Speakers: the info text pops in only when its frame has settled.
+  // Speakers: the title, details, and arrows pop in once the arch settles.
   let speakersTextShown = false;
-  gsap.set(speakerInfos, { autoAlpha: 0, y: 18 });
+  const speakerCopyParts = [speakersTitle, speakerInfo, speakerControls];
+  gsap.set(speakerCopyParts, { autoAlpha: 0, y: 18 });
   const speakersTextIn = gsap.timeline({ paused: true });
-  speakersTextIn.to(speakerInfos, {
+  speakersTextIn.to(speakerCopyParts, {
     autoAlpha: 1,
     y: 0,
     duration: 0.55,
     ease: "power2.out",
     stagger: 0.18,
+  });
+
+  // Speakers carousel: the arrows swap which speaker is shown. The arch and
+  // text block stay put; only the photo and details crossfade in place.
+  const SPEAKERS = [
+    {
+      name: "Sue Harnett",
+      role: "Founder of Rewriting the Code",
+      bio:
+        "Sue Harnett is the Founder & CEO of Rewriting the Code, the " +
+        "nonprofit she launched in 2017 that has grown into a global " +
+        "community of 38,000+ university and early-career women in tech, " +
+        "offering mentorship, education, and career-readiness programs. She " +
+        "will be speaking about women in technology, and the value of " +
+        "community, teamwork, and thoughtful leadership!",
+      photo: "./assets/speaker-photo-placeholder.jpg",
+    },
+    {
+      name: "Jessica Cao",
+      role: "Founder of Rewriting the Code",
+      bio:
+        "Sue Harnett is the Founder & CEO of Rewriting the Code, the " +
+        "nonprofit she launched in 2017 that has grown into a global " +
+        "community of 38,000+ university and early-career women in tech, " +
+        "offering mentorship, education, and career-readiness programs. She " +
+        "will be speaking about women in technology, and the value of " +
+        "community, teamwork, and thoughtful leadership!",
+      photo: "./assets/speaker-photo-placeholder.jpg",
+    },
+  ];
+  let speakerIndex = 0;
+  let speakerSwap = null;
+
+  function renderSpeaker(index) {
+    const speaker = SPEAKERS[index];
+    speakerName.textContent = speaker.name;
+    speakerRole.textContent = speaker.role;
+    speakerBio.textContent = speaker.bio;
+    speakerPhoto.setAttribute("href", speaker.photo);
+    speakerPrev.disabled = index === 0;
+    speakerNext.disabled = index === SPEAKERS.length - 1;
+  }
+
+  const speakerContent = [speakerPhoto, speakerName, speakerRole, speakerBio];
+
+  function showSpeaker(index) {
+    if (speakerSwap || index < 0 || index >= SPEAKERS.length) return;
+    speakerIndex = index;
+    if (reducedMotion) {
+      renderSpeaker(index);
+      return;
+    }
+    speakerSwap = gsap
+      .timeline({ onComplete: () => (speakerSwap = null) })
+      .to(speakerContent, { opacity: 0, duration: 0.25, ease: "power1.in" })
+      .add(() => renderSpeaker(index))
+      .to(speakerContent, {
+        opacity: 1,
+        duration: 0.4,
+        ease: "power1.out",
+        stagger: 0.04,
+      });
+  }
+
+  // Back to the first speaker whenever the section replays from scratch.
+  function resetSpeakers() {
+    speakerSwap?.kill();
+    speakerSwap = null;
+    speakerIndex = 0;
+    gsap.set(speakerContent, { opacity: 1 });
+    renderSpeaker(0);
+  }
+
+  speakerPrev.addEventListener("click", () => showSpeaker(speakerIndex - 1));
+  speakerNext.addEventListener("click", () => showSpeaker(speakerIndex + 1));
+  window.addEventListener("keydown", (event) => {
+    if (navJumping || !speakersTextShown) return;
+    if (!navSpeakersLink.classList.contains("is-current")) return;
+    if (event.key === "ArrowLeft") showSpeaker(speakerIndex - 1);
+    if (event.key === "ArrowRight") showSpeaker(speakerIndex + 1);
   });
 
   scrollTimeline.eventCallback("onUpdate", () => {
@@ -1308,8 +1399,8 @@
     .to(
       stageBackdrop,
       {
-        "--sec-top": "#894a3c",
-        "--sec-bottom": "#512309",
+        "--sec-top": "#ca6330",
+        "--sec-bottom": "#833711",
         duration: 1.2,
         ease: "power1.inOut",
       },
@@ -1320,11 +1411,11 @@
       { autoAlpha: 1, duration: 0.8, ease: "power1.inOut" },
       16.9,
     )
-    // ---- Speakers enter: both frames ride up the rail as one strip
-    // (constant spacing), settling into the designed layout.
+    // ---- Speakers enter: the arch rises into place, the balustrade on
+    // both sides rises with it as one piece, and the curtains sweep in.
     .fromTo(
-      speakersStrip,
-      { y: 854 },
+      speakerStage,
+      { y: 820 },
       {
         y: 0,
         duration: 2.15,
@@ -1333,9 +1424,32 @@
       },
       17.1,
     )
-    // ---- Speakers exit: frames with their text, and the title, rise away.
     .fromTo(
-      speakerRows,
+      speakerRailings,
+      { y: 340 },
+      {
+        y: 0,
+        duration: 1.5,
+        ease: "power2.out",
+        immediateRender: false,
+      },
+      17.2,
+    )
+    .fromTo(
+      speakerCurtain,
+      { x: 620 },
+      {
+        x: 0,
+        duration: 1.9,
+        ease: "power2.out",
+        immediateRender: false,
+      },
+      17.15,
+    )
+    // ---- Speakers exit: arch, railing, and text rise away; the curtains
+    // pull back to the right.
+    .fromTo(
+      [speakerStage, speakerCopy],
       { y: 0, autoAlpha: 1 },
       {
         y: -140,
@@ -1348,16 +1462,22 @@
       20.9,
     )
     .fromTo(
-      speakersTitle,
+      speakerRailings,
       { y: 0, autoAlpha: 1 },
       {
-        y: -110,
+        y: -140,
         autoAlpha: 0,
-        duration: 1,
+        duration: 1.1,
         ease: "power1.in",
         immediateRender: false,
       },
-      20.95,
+      20.9,
+    )
+    .fromTo(
+      speakerCurtain,
+      { x: 0 },
+      { x: 620, duration: 1, ease: "power1.in", immediateRender: false },
+      20.9,
     )
     .to(sectionSpeakers, { autoAlpha: 0, duration: 0.5 }, 21.9)
     // ---- Gradient morph: rust to the Testimonials purple.
@@ -1647,7 +1767,7 @@
     hero: ["#0b0d21", "#0b0d21"],
     about: ["#322243", "#251930"],
     values: ["#37a9c9", "#017b9d"],
-    speakers: ["#894a3c", "#512309"],
+    speakers: ["#ca6330", "#833711"],
     testimonials: ["#322243", "#251930"],
     projects: ["#37a9c9", "#017b9d"],
     sponsors: ["#ca6330", "#8f4622"],

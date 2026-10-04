@@ -376,50 +376,128 @@
           >
             <div class="section-fit">
               <div class="section-canvas">
-                <div class="speakers-line"></div>
-                <h2 class="speakers-title" id="speakers-title">SPEAKERS</h2>
+                <img
+                  class="speaker-railing speaker-railing--right"
+                  src="./assets/speaker-railing.svg"
+                  alt=""
+                />
+                <img
+                  class="speaker-curtain"
+                  id="speaker-curtain"
+                  src="./assets/speaker-curtain.svg"
+                  alt=""
+                />
+                <img
+                  class="speaker-railing speaker-railing--left"
+                  src="./assets/speaker-railing-left.svg"
+                  alt=""
+                />
 
-                <div class="speakers-strip" id="speakers-strip">
-                <div class="speaker-row speaker-row--one">
-                  <img
-                    class="speaker-frame"
-                    src="./assets/speaker-frame.svg"
-                    alt=""
-                  />
-                  <div class="speaker-info">
-                    <h3>Sue Harnett</h3>
-                    <p class="speaker-role">Founder of Rewriting the Code</p>
-                    <p class="speaker-bio">
-                      Sue Harnett is the Founder &amp; CEO of Rewriting the
-                      Code, the nonprofit she launched in 2017 that has grown
-                      into a global community of 38,000+ university and
-                      early-career women in tech, offering mentorship,
-                      education, and career-readiness programs. She will be
-                      speaking about women in technology, and the value of
-                      community, teamwork, and thoughtful leadership!
-                    </p>
-                  </div>
+                <!-- The arch slides on arrow presses; its window holds the
+                     current speaker's photo. Inline so the plinths can
+                     overlap the photo's lower corners, as in the design. -->
+                <div class="speaker-stage" id="speaker-stage">
+                  <svg
+                    class="speaker-arch"
+                    viewBox="0 0 525 798"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <defs>
+                      <radialGradient id="arch-dome" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(261.5 154.848) rotate(90) scale(131.935 217.534)">
+                        <stop stop-color="#E9AC1D" />
+                        <stop offset="1" stop-color="#D08000" />
+                      </radialGradient>
+                      <linearGradient id="arch-window-fill" x1="287.493" y1="296.331" x2="284.816" y2="798.298" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#3E2E68" />
+                        <stop offset="1" stop-color="#866667" />
+                      </linearGradient>
+                      <clipPath id="arch-window">
+                        <path d="M380.008 338.642C380.008 315.113 360.934 296.04 337.405 296.04H187.488C163.959 296.04 144.885 315.113 144.885 338.642C92.8956 358.298 58.9651 390.641 58.9651 427.218V797.93H465.946V427.218C465.946 390.65 432.015 358.307 380.026 338.642H380.008Z" />
+                      </clipPath>
+                    </defs>
+                    <path d="M524.58 182.103C524.58 133.807 496.946 87.4885 447.757 53.3378C398.568 19.187 331.854 0.00134642 262.29 0.00134277C192.726 0.00133913 126.012 19.187 76.823 53.3378C27.6341 87.4885 1.05038e-05 133.807 0 182.103L262.29 182.103H524.58Z" fill="#E9AC1D" />
+                    <path d="M504.04 170.254C504.04 131.177 478.445 93.6999 432.886 66.0682C387.327 38.4364 325.536 22.9131 261.105 22.9131C196.675 22.9131 134.884 38.4364 89.325 66.0681C43.766 93.6999 18.1712 131.177 18.1711 170.254L261.105 170.254H504.04Z" fill="url(#arch-dome)" />
+                    <path d="M505.604 255.062H19.2756V797.932H505.604V255.062Z" fill="#D08000" />
+                    <g clip-path="url(#arch-window)">
+                      <rect x="57.839" y="294.059" width="416.802" height="504.496" fill="url(#arch-window-fill)" />
+                      <image
+                        class="speaker-photo"
+                        id="speaker-photo"
+                        href="./assets/speaker-photo-placeholder.jpg"
+                        x="57.839"
+                        y="294.059"
+                        width="416.802"
+                        height="504.496"
+                        preserveAspectRatio="xMidYMin slice"
+                      />
+                    </g>
+                    <path d="M517.49 218.777H7.40356V255.063H517.49V218.777Z" fill="#E9AC1D" />
+                    <path d="M33.9715 255.183H18.9609V719.721H33.9715V255.183Z" fill="#E9AC1D" />
+                    <path d="M505.619 252.81H491.399V718.928H505.619V252.81Z" fill="#E9AC1D" />
+                    <path d="M65.8837 416.392H19.2756V455.854H61.799V449.441H65.8837V416.392Z" fill="#E9AC1D" />
+                    <path d="M459.004 416.392H505.604V455.854H463.08V449.441H459.004V416.392Z" fill="#E9AC1D" />
+                    <path d="M131.46 329.814C131.46 303.594 152.713 282.341 178.932 282.341H345.965C372.184 282.341 393.437 303.594 393.437 329.814C434.964 345.517 466.151 368.482 480.478 395.24V264.988H44.4102V395.24C58.7375 368.482 89.9243 345.517 131.451 329.814H131.46Z" fill="#E9AC1D" />
+                    <path d="M524.89 182.498H0V236.923H524.89V182.498Z" fill="#D08000" />
+                    <path d="M65.8837 797.933H19.2756V725.185H61.799V737.007H65.8837V797.933Z" fill="#E9AC1D" />
+                    <path d="M15.0107 797.932H61.6225V722.879H19.0877V735.075H15.0107V797.932Z" fill="#E9AC1D" />
+                    <path d="M459.007 797.931H505.619V725.248H463.084V737.06H459.007V797.931Z" fill="#E9AC1D" />
+                    <path d="M509.569 768.701H462.957V722.089H505.492V729.663H509.569V768.701Z" fill="#E9AC1D" />
+                    <g fill="#E9AC1D">
+                      <path d="M24.1741 191.132C15.594 191.132 8.63354 197.19 8.63354 204.674V227.393H39.7147V204.674C39.7147 197.19 32.7542 191.132 24.1741 191.132Z" />
+                      <path d="M63.8887 191.132C55.3086 191.132 48.3481 197.19 48.3481 204.674V227.393H79.4293V204.674C79.4293 197.19 72.4688 191.132 63.8887 191.132Z" />
+                      <path d="M103.604 191.132C95.0237 191.132 88.0632 197.19 88.0632 204.674V227.393H119.144V204.674C119.144 197.19 112.184 191.132 103.604 191.132Z" />
+                      <path d="M143.319 191.132C134.739 191.132 127.778 197.19 127.778 204.674V227.393H158.859V204.674C158.859 197.19 151.899 191.132 143.319 191.132Z" />
+                      <path d="M183.033 191.132C174.453 191.132 167.493 197.19 167.493 204.674V227.393H198.574V204.674C198.574 197.19 191.613 191.132 183.033 191.132Z" />
+                      <path d="M222.748 191.132C214.168 191.132 207.208 197.19 207.208 204.674V227.393H238.289V204.674C238.289 197.19 231.328 191.132 222.748 191.132Z" />
+                      <path d="M262.463 191.132C253.883 191.132 246.922 197.19 246.922 204.674V227.393H278.003V204.674C278.003 197.19 271.043 191.132 262.463 191.132Z" />
+                      <path d="M302.178 191.132C293.597 191.132 286.637 197.19 286.637 204.674V227.393H317.718V204.674C317.718 197.19 310.758 191.132 302.178 191.132Z" />
+                      <path d="M341.892 191.132C333.312 191.132 326.352 197.19 326.352 204.674V227.393H357.433V204.674C357.433 197.19 350.472 191.132 341.892 191.132Z" />
+                      <path d="M381.607 191.132C373.027 191.132 366.067 197.19 366.067 204.674V227.393H397.148V204.674C397.148 197.19 390.187 191.132 381.607 191.132Z" />
+                      <path d="M421.322 191.132C412.742 191.132 405.781 197.19 405.781 204.674V227.393H436.862V204.674C436.862 197.19 429.902 191.132 421.322 191.132Z" />
+                      <path d="M461.037 191.132C452.457 191.132 445.496 197.19 445.496 204.674V227.393H476.577V204.674C476.577 197.19 469.617 191.132 461.037 191.132Z" />
+                      <path d="M500.752 191.132C492.171 191.132 485.211 197.19 485.211 204.674V227.393H516.292V204.674C516.292 197.19 509.332 191.132 500.752 191.132Z" />
+                    </g>
+                  </svg>
                 </div>
 
-                <div class="speaker-row speaker-row--two">
-                  <img
-                    class="speaker-frame"
-                    src="./assets/speaker-frame.svg"
-                    alt=""
-                  />
-                  <div class="speaker-info">
-                    <h3>Jessica Cao</h3>
-                    <p class="speaker-role">Founder of Rewriting the Code</p>
-                    <p class="speaker-bio">
-                      Sue Harnett is the Founder &amp; CEO of Rewriting the
-                      Code, the nonprofit she launched in 2017 that has grown
-                      into a global community of 38,000+ university and
-                      early-career women in tech, offering mentorship,
-                      education, and career-readiness programs. She will be
-                      speaking about women in technology, and the value of
-                      community, teamwork, and thoughtful leadership!
-                    </p>
-                  </div>
+                <!-- Title, details, and arrows enter together; the scroll
+                     exit moves this wrapper so it never fights the
+                     entrance or the content swap. -->
+                <div class="speaker-copy" id="speaker-copy">
+                <h2 class="speakers-title" id="speakers-title">SPEAKERS</h2>
+
+                <div class="speaker-info" id="speaker-info" aria-live="polite">
+                  <h3 class="speaker-name">Sue Harnett</h3>
+                  <p class="speaker-role">Founder of Rewriting the Code</p>
+                  <p class="speaker-bio">
+                    Sue Harnett is the Founder &amp; CEO of Rewriting the Code,
+                    the nonprofit she launched in 2017 that has grown into a
+                    global community of 38,000+ university and early-career
+                    women in tech, offering mentorship, education, and
+                    career-readiness programs. She will be speaking about
+                    women in technology, and the value of community, teamwork,
+                    and thoughtful leadership!
+                  </p>
+                </div>
+
+                <div class="speaker-controls" id="speaker-controls">
+                  <button
+                    class="speaker-arrow speaker-arrow--prev"
+                    type="button"
+                    aria-label="Previous speaker"
+                    disabled
+                  >
+                    <img src="./assets/speaker-arrow.svg" alt="" />
+                  </button>
+                  <button
+                    class="speaker-arrow speaker-arrow--next"
+                    type="button"
+                    aria-label="Next speaker"
+                  >
+                    <img src="./assets/speaker-arrow.svg" alt="" />
+                  </button>
                 </div>
                 </div>
               </div>
