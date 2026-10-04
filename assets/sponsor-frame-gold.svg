@@ -1,0 +1,20 @@
+<svg width="326" height="219" viewBox="0 0 326 219" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Exported from Figma "Sponsors" → Frame 971 → Group 355 (a gold frame), with the
+     placeholder logo removed; the page lays a logo over the mat. -->
+<rect x="34.52" y="27.92" width="256.01" height="166.27" fill="#FDFBFB"/>
+<rect x="11.98" y="11.98" width="301.28" height="194.20" stroke="url(#gold-outer)" stroke-width="23.96"/>
+<path d="M294.79 23.68V194.48H30.36V23.68H294.79Z" stroke="url(#gold-inner)" stroke-width="15.83"/>
+<path d="M302.91 201.67V203.55L287.08 187.53V185.99L287.25 185.82L302.91 201.67ZM38.48 186.08V187.42L22.64 203.07V201.21L38.22 185.82L38.48 186.08ZM39.41 31.88H38.48V32.81L22.64 16.98V16.05L22.65 16.05H23.57L39.41 31.88ZM302.91 16.48L287.08 32.31V31.88H285.65L301.49 16.05H302.41L302.91 16.48Z" fill="#D28403"/>
+<defs>
+<linearGradient id="gold-outer" x1="10.29" y1="27.86" x2="171.95" y2="282.80" gradientUnits="userSpaceOnUse">
+<stop stop-color="#D08000"/>
+<stop offset="0.5" stop-color="#E9AC1D"/>
+<stop offset="1" stop-color="#D08000"/>
+</linearGradient>
+<linearGradient id="gold-inner" x1="26.02" y1="35.15" x2="174.12" y2="265.16" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FFB647"/>
+<stop offset="0.5" stop-color="#FFD391"/>
+<stop offset="1" stop-color="#FFB647"/>
+</linearGradient>
+</defs>
+</svg>

@@ -889,31 +889,48 @@
           >
             <div class="section-fit">
               <div class="section-canvas">
-                <h2 class="sponsors-title" id="sponsors-title">SPONSORS</h2>
+                <!-- The gallery: statues in tall windows, a marble border,
+                     and warm light. -->
+                <div class="sponsors-bg" id="sponsors-bg"></div>
 
-                <div class="sponsor-grid" id="sponsor-grid">
-                  <div class="sponsor-tile"></div>
-                  <div class="sponsor-tile"></div>
-                  <div class="sponsor-tile"></div>
-                  <div class="sponsor-tile"></div>
-                  <div class="sponsor-tile"></div>
-                  <div class="sponsor-tile"></div>
-                  <div class="sponsor-tile"></div>
-                  <div class="sponsor-tile"></div>
-                </div>
+                <div class="sponsors-copy" id="sponsors-copy">
+                  <h2 class="sponsors-title" id="sponsors-title">SPONSORS</h2>
 
-                <div class="sponsor-stage" id="sponsor-stage">
-                  <img
-                    class="sponsor-platform"
-                    src="./assets/sponsor-platform.svg"
-                    alt=""
-                  />
-                  <img
-                    class="sponsor-stone"
-                    id="sponsor-stone"
-                    src="./assets/sponsor-stone.svg"
-                    alt=""
-                  />
+                  <!-- Gold frames for the top tier, silver below. To show a
+                       sponsor, add an <img class="sponsor-logo"> with its
+                       name as alt text inside the frame. -->
+                  <ul class="sponsor-frames" aria-label="Sponsors">
+                    <li class="sponsor-frame sponsor-frame--gold sponsor-frame--1">
+                      <img class="sponsor-frame__art" src="./assets/sponsor-frame-gold.svg" alt="" />
+                    </li>
+                    <li class="sponsor-frame sponsor-frame--gold sponsor-frame--2">
+                      <img class="sponsor-frame__art" src="./assets/sponsor-frame-gold.svg" alt="" />
+                    </li>
+                    <li class="sponsor-frame sponsor-frame--gold sponsor-frame--3">
+                      <img class="sponsor-frame__art" src="./assets/sponsor-frame-gold.svg" alt="" />
+                    </li>
+                    <li class="sponsor-frame sponsor-frame--silver sponsor-frame--4">
+                      <img class="sponsor-frame__art" src="./assets/sponsor-frame-silver.svg" alt="" />
+                    </li>
+                    <li class="sponsor-frame sponsor-frame--silver sponsor-frame--5">
+                      <img class="sponsor-frame__art" src="./assets/sponsor-frame-silver.svg" alt="" />
+                    </li>
+                    <li class="sponsor-frame sponsor-frame--silver sponsor-frame--6">
+                      <img class="sponsor-frame__art" src="./assets/sponsor-frame-silver.svg" alt="" />
+                    </li>
+                  </ul>
+
+                  <div class="sponsors-cta" id="sponsors-cta">
+                    <p class="sponsors-cta__lead">Interested in sponsoring us?</p>
+                    <a class="btn btn--solid sponsors-cta__button" href="#">
+                      VIEW SPONSORSHIP PACKET
+                    </a>
+                    <p class="sponsors-cta__contact">
+                      Reach out to
+                      <a href="mailto:core@hackbeanpot.com">core@hackbeanpot.com</a>
+                      for more inquiries!
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

@@ -213,10 +213,11 @@
   const projectsNext = document.querySelector(".projects-arrow--next");
   const navProjectsLink = document.querySelector('[data-section="projects"]');
   const sectionSponsors = document.querySelector("#section-sponsors");
+  const sponsorsBg = document.querySelector("#sponsors-bg");
+  const sponsorsCopy = document.querySelector("#sponsors-copy");
   const sponsorsTitle = document.querySelector("#sponsors-title");
-  const sponsorTiles = gsap.utils.toArray(".sponsor-tile");
-  const sponsorStage = document.querySelector("#sponsor-stage");
-  const sponsorStone = document.querySelector("#sponsor-stone");
+  const sponsorFrames = gsap.utils.toArray(".sponsor-frame");
+  const sponsorsCta = document.querySelector("#sponsors-cta");
   const navSponsorsLink = document.querySelector('[data-section="sponsors"]');
   const sectionTeam = document.querySelector("#section-team");
   const teamTitle = document.querySelector("#team-title");
@@ -1609,33 +1610,29 @@
     stagger: 0.1,
   });
 
-  // Sponsors entrance: the logo grid pops in tile by tile in reading order
-  // (left to right, top to bottom) while the pedestal and stone rise from
-  // below; the stone teeters, hunting for balance before it settles.
+  // Sponsors entrance: the title fades in, the frames pop up one by one in
+  // reading order (gold row, then silver), then the call to action.
   let sponsorsEntered = false;
 
-  gsap.set(sponsorsTitle, { autoAlpha: 0, y: 26 });
-  gsap.set(sponsorTiles, { autoAlpha: 0, y: 16 });
-  gsap.set(sponsorStage, { y: 700 });
+  gsap.set(sponsorsTitle, { autoAlpha: 0 });
+  gsap.set(sponsorFrames, { autoAlpha: 0, scale: 0.9, transformOrigin: "50% 50%" });
+  gsap.set(sponsorsCta, { autoAlpha: 0 });
 
   const sponsorsEnter = gsap.timeline({ paused: true });
   sponsorsEnter
+    .to(sponsorsTitle, { autoAlpha: 1, duration: 0.6, ease: "power1.out" }, 0)
     .to(
-      sponsorsTitle,
-      { autoAlpha: 1, y: 0, duration: 0.55, ease: "power3.out" },
-      0,
-    )
-    .to(
-      sponsorTiles,
-      { autoAlpha: 1, y: 0, duration: 0.45, ease: "power2.out", stagger: 0.09 },
+      sponsorFrames,
+      {
+        autoAlpha: 1,
+        scale: 1,
+        duration: 0.5,
+        ease: "back.out(1.6)",
+        stagger: 0.09,
+      },
       0.15,
     )
-    .to(sponsorStage, { y: 0, duration: 1.15, ease: "power3.out" }, 0.2)
-    .to(sponsorStone, { rotation: -3.2, duration: 0.4, ease: "sine.inOut" }, 0.35)
-    .to(sponsorStone, { rotation: 2.6, duration: 0.42, ease: "sine.inOut" }, 0.75)
-    .to(sponsorStone, { rotation: -1.5, duration: 0.36, ease: "sine.inOut" }, 1.17)
-    .to(sponsorStone, { rotation: 0.7, duration: 0.3, ease: "sine.inOut" }, 1.53)
-    .to(sponsorStone, { rotation: 0, duration: 0.3, ease: "sine.out" }, 1.83);
+    .to(sponsorsCta, { autoAlpha: 1, duration: 0.6, ease: "power1.out" }, 0.75);
 
   // Meet the team entrance: title rises in, the rows fade up, the arrow
   // buttons appear, and the floor and benches slide up from the bottom.
@@ -2207,12 +2204,12 @@
       31.2,
     )
     .to(sectionProjects, { autoAlpha: 0, duration: 0.5 }, 32.2)
-    // ---- Gradient morph: teal to the Sponsors burnt orange.
+    // ---- Gradient morph: to the Sponsors gallery's deep blue.
     .to(
       stageBackdrop,
       {
-        "--sec-top": "#ca6330",
-        "--sec-bottom": "#8f4622",
+        "--sec-top": "#34416b",
+        "--sec-bottom": "#080a27",
         duration: 1.2,
         ease: "power1.inOut",
       },
@@ -2223,44 +2220,30 @@
       { autoAlpha: 1, duration: 0.8, ease: "power1.inOut" },
       32.6,
     )
-    // ---- Sponsors exit: the grid and its title rise and fade, while the
-    // stone and pedestal drop out the bottom, dimming as they go.
+    // ---- Sponsors exit: the title, frames, and call to action rise and
+    // fade while the gallery fades behind them.
     .fromTo(
-      sponsorTiles,
+      sponsorsCopy,
       { y: 0, autoAlpha: 1 },
       {
         y: -120,
         autoAlpha: 0,
         duration: 1.05,
         ease: "power1.in",
-        stagger: 0.02,
         immediateRender: false,
       },
       36.4,
     )
     .fromTo(
-      sponsorsTitle,
-      { y: 0, autoAlpha: 1 },
+      sponsorsBg,
+      { autoAlpha: 1 },
       {
-        y: -110,
         autoAlpha: 0,
-        duration: 1,
+        duration: 1.2,
         ease: "power1.in",
         immediateRender: false,
       },
-      36.45,
-    )
-    .fromTo(
-      sponsorStage,
-      { y: 0, autoAlpha: 1 },
-      {
-        y: 430,
-        autoAlpha: 0.45,
-        duration: 1.1,
-        ease: "power1.in",
-        immediateRender: false,
-      },
-      36.45,
+      36.4,
     )
     .to(sectionSponsors, { autoAlpha: 0, duration: 0.5 }, 37.4)
     // ---- Gradient morph: orange to the Meet the Team teal.
@@ -2372,6 +2355,18 @@
     projects: { dwell: 29.6, enterStart: 27.4, exitEnd: 32.4, landing: 27.55 },
     sponsors: { dwell: 34.6, enterStart: 32.6, exitEnd: 37.6, landing: 32.75 },
     team: { dwell: 39.8, enterStart: 37.8, exitEnd: 42.8, landing: 37.95 },
+  };
+  // Dwell-state backdrop colors per section, for the jump overlay.
+  const SECTION_COLORS = {
+    hero: ["#0b0d21", "#0b0d21"],
+    about: ["#322243", "#251930"],
+    values: ["#37a9c9", "#017b9d"],
+    speakers: ["#ca6330", "#833711"],
+    testimonials: ["#1d032c", "#1d032c"],
+    projects: ["#73678d", "#352f5a"],
+    sponsors: ["#34416b", "#080a27"],
+    team: ["#37a9c9", "#017b9d"],
+    faqs: ["#090912", "#090912"],
   };
   const navBackdrop = document.querySelector("#stage-backdrop-nav");
   let navScrollTween = null;
