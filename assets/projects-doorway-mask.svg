@@ -1,0 +1,8 @@
+<svg width="3152" height="982" viewBox="-820 0 3152 982" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- The two arch openings from projects-arches.svg, in frame coordinates. Used as a CSS mask
+     so the dinosaur scene is only ever seen through the doorways. The canvas extends 820px past
+     the frame on both sides (the slide length), so the part of the left opening that is off the
+     frame at rest still shows the scene when the arches slide right. -->
+<path d="M-184.25 1001V503.74C-184.25 503.5 -181.53 325.43 7.5 325.43C196.53 325.43 194.08 503.5 194.08 503.74V1001Z" fill="white"/>
+<path d="M270.59 1001V503.74C270.59 503.47 273.33 325.43 462.35 325.43C651.37 325.43 648.93 503.47 648.93 503.74V1001Z" fill="white"/>
+</svg>

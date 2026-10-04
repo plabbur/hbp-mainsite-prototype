@@ -1,0 +1,16 @@
+<svg width="3152" height="982" viewBox="-820 0 3152 982" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Slabs of wall that slide with the arches (below them), so moving the arches never uncovers
+     the space behind: one runs from the right of the arches 820px past the frame (covering
+     what the arches uncover sliding in), one sits off the frame to their left (covering what
+     they uncover sliding out). They start below the upper wall, which sits above the right
+     wall in Figma, and use the right wall's exact gradient, so at rest they're invisible. They
+     fade with the walls on exit. -->
+<defs>
+<linearGradient id="arch-wall-slab" x1="679.16" y1="501.78" x2="541.46" y2="1009.08" gradientUnits="userSpaceOnUse" gradientTransform="translate(687 120)">
+<stop stop-color="#73678D"/>
+<stop offset="1" stop-color="#352F5A"/>
+</linearGradient>
+</defs>
+<rect x="687" y="333" width="1645" height="649" fill="url(#arch-wall-slab)"/>
+<rect x="-820" y="333" width="640" height="649" fill="url(#arch-wall-slab)"/>
+</svg>

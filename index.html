@@ -636,23 +636,6 @@
             </div>
           </div>
 
-          <div class="stage-buttons" id="stage-buttons" aria-hidden="true">
-            <div class="section-fit">
-              <div class="section-canvas">
-                <img
-                  class="stage-button stage-button--prev"
-                  src="./assets/testi-button-a.svg"
-                  alt=""
-                />
-                <img
-                  class="stage-button stage-button--next"
-                  src="./assets/testi-button-b.svg"
-                  alt=""
-                />
-              </div>
-            </div>
-          </div>
-
           <div
             class="stage-section stage-section--projects"
             id="section-projects"
@@ -660,19 +643,145 @@
           >
             <div class="section-fit">
               <div class="section-canvas">
-                <h2 class="projects-title" id="projects-title">
-                  PAST PROJECTS
-                </h2>
-                <img
-                  class="project-frame project-frame--main"
-                  src="./assets/project-frame-a.svg"
-                  alt="Futura project card"
-                />
-                <img
-                  class="project-frame project-frame--peek"
-                  src="./assets/project-frame-b.svg"
-                  alt=""
-                />
+                <!-- Backdrop: the doorway slides in and out; the walls,
+                     frieze, and lighting stay put and fade on exit. -->
+                <div class="projects-scene" id="projects-scene">
+                  <!-- Seen through the arches: a dinosaur skeleton behind
+                       velvet ropes. The doorway is masked to the arch
+                       openings and slides with the arches; the dinosaur
+                       inside drifts at its own rate behind them. -->
+                  <div class="projects-doorway" id="projects-doorway">
+                    <img
+                      class="projects-dino"
+                      id="projects-dino"
+                      src="./assets/projects-dino-doorway.svg"
+                      alt=""
+                    />
+                  </div>
+                  <!-- The walls and the slabs that slide with the arches
+                       fade out as one group, so their overlap never shows
+                       through mid-fade. -->
+                  <div class="projects-walls-group" id="projects-walls-group">
+                    <img
+                      class="projects-walls"
+                      src="./assets/projects-walls.svg"
+                      alt=""
+                    />
+                    <img
+                      class="projects-arches projects-arch-slabs"
+                      id="projects-arch-slabs"
+                      src="./assets/projects-arch-slabs.svg"
+                      alt=""
+                    />
+                  </div>
+                  <img
+                    class="projects-arches"
+                    id="projects-arches"
+                    src="./assets/projects-arches.svg"
+                    alt=""
+                  />
+                  <img
+                    class="projects-frieze"
+                    id="projects-frieze"
+                    src="./assets/projects-frieze.svg"
+                    alt=""
+                  />
+                  <div class="projects-lighting" id="projects-lighting"></div>
+                </div>
+
+                <!-- Title, frame, details, and arrows fade in together; the
+                     arrows only swap the image and details in place. On
+                     exit the project follows the doorway out to the left
+                     while the title fades in place. -->
+                <div class="projects-copy" id="projects-copy">
+                  <h2 class="projects-title" id="projects-title">
+                    PAST PROJECTS
+                  </h2>
+
+                  <svg
+                    class="project-frame"
+                    id="project-frame"
+                    viewBox="0 0 512 289"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <defs>
+                      <filter id="project-frame-shadow" x="0" y="0" width="511.15" height="288.72" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+                        <feOffset dx="-2.88" dy="2.88" />
+                        <feComposite in2="hardAlpha" operator="out" />
+                        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+                        <feBlend mode="normal" in2="BackgroundImageFix" result="shadow" />
+                        <feBlend mode="normal" in="SourceGraphic" in2="shadow" result="shape" />
+                      </filter>
+                      <g id="project-frame-rosette">
+                        <ellipse rx="14.59" ry="14.59" fill="#833711" />
+                        <ellipse rx="2.51" ry="4.52" fill="#2C1304" />
+                        <ellipse rx="2.51" ry="4.52" transform="rotate(90)" fill="#2C1304" />
+                      </g>
+                    </defs>
+                    <g filter="url(#project-frame-shadow)">
+                      <rect x="8.92" y="8.05" width="496.19" height="269.73" fill="#833711" />
+                      <rect x="25.02" y="24.15" width="463.98" height="237.52" fill="#FDFBFB" />
+                      <image
+                        class="project-image"
+                        id="project-image"
+                        x="25.02"
+                        y="24.15"
+                        width="463.98"
+                        height="237.52"
+                        preserveAspectRatio="xMidYMid slice"
+                      />
+                      <path d="M315.89 12.07C315.89 18.74 289.53 24.15 257.01 24.15C224.49 24.15 198.13 18.74 198.13 12.07C198.13 5.40 198.13 12.07 257.01 0C315.89 12.07 315.89 5.40 315.89 12.07Z" fill="#833711" />
+                      <path d="M315.89 273.76C315.89 267.09 289.53 261.68 257.01 261.68C224.49 261.68 198.13 267.09 198.13 273.76C198.13 280.43 198.13 273.76 257.01 285.84C315.89 273.76 315.89 280.43 315.89 273.76Z" fill="#833711" />
+                      <use href="#project-frame-rosette" x="17.47" y="16.6" />
+                      <use href="#project-frame-rosette" x="496.55" y="16.6" />
+                      <use href="#project-frame-rosette" x="17.47" y="269.23" />
+                      <use href="#project-frame-rosette" x="496.55" y="269.23" />
+                    </g>
+                  </svg>
+
+                  <div class="project-details" id="project-details" aria-live="polite">
+                    <h3 class="project-name">
+                      <a class="project-link" href="#" target="_blank" rel="noopener">
+                        <span class="project-name__text">Futura</span>
+                        <img src="./assets/link-out.svg" alt="" />
+                      </a>
+                    </h3>
+                    <p class="project-authors">
+                      Cole Abrams, Maia Gonzalez, Carolyn Hoa, Lucy Liu
+                    </p>
+                    <p class="project-description">
+                      Sue Harnett is the Founder &amp; CEO of Rewriting the
+                      Code, the nonprofit she launched in 2017 that has grown
+                      into a global community of 38,000+ university and
+                      early-career women in tech, offering mentorship,
+                      education, and career-readiness programs. She will be
+                      speaking about women in technology, and the value of
+                      community, teamwork, and thoughtful leadership!
+                    </p>
+                  </div>
+
+                  <div class="projects-controls" id="projects-controls">
+                    <button
+                      class="round-arrow round-arrow--prev projects-arrow--prev"
+                      type="button"
+                      aria-label="Previous project"
+                      disabled
+                    >
+                      <img src="./assets/round-arrow.svg" alt="" />
+                    </button>
+                    <button
+                      class="round-arrow projects-arrow--next"
+                      type="button"
+                      aria-label="Next project"
+                    >
+                      <img src="./assets/round-arrow.svg" alt="" />
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

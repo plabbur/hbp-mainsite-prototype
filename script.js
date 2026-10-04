@@ -126,8 +126,6 @@
   const testiControls = document.querySelector("#testi-controls");
   const testiPrev = document.querySelector(".testi-arrow--prev");
   const testiNext = document.querySelector(".testi-arrow--next");
-  const stageButtons = document.querySelector("#stage-buttons");
-  const stageButtonEls = gsap.utils.toArray(".stage-button");
   const navAboutLink = document.querySelector('[data-section="about"]');
   const navValuesLink = document.querySelector('[data-section="values"]');
   const navSpeakersLink = document.querySelector('[data-section="speakers"]');
@@ -135,8 +133,34 @@
     '[data-section="testimonials"]',
   );
   const sectionProjects = document.querySelector("#section-projects");
+  const projectsDoorway = document.querySelector("#projects-doorway");
+  const projectsDino = document.querySelector("#projects-dino");
+  const projectsArches = document.querySelector("#projects-arches");
+  const projectsArchSlabs = document.querySelector("#projects-arch-slabs");
+  const projectsWallsGroup = document.querySelector("#projects-walls-group");
+  // The frieze and lighting wash only blend correctly over the walls.
+  const projectsHallOverlays = [
+    document.querySelector("#projects-frieze"),
+    document.querySelector("#projects-lighting"),
+  ];
+  // Their resting opacities (set in CSS), read before any tween touches them.
+  const projectsOverlayOpacity = projectsHallOverlays.map((layer) =>
+    parseFloat(getComputedStyle(layer).opacity),
+  );
+  const projectsCopy = document.querySelector("#projects-copy");
   const projectsTitle = document.querySelector("#projects-title");
-  const projectFrames = gsap.utils.toArray(".project-frame");
+  const projectFrame = document.querySelector("#project-frame");
+  const projectImage = document.querySelector("#project-image");
+  const projectDetails = document.querySelector("#project-details");
+  const projectLink = projectDetails.querySelector(".project-link");
+  const projectNameText = projectDetails.querySelector(".project-name__text");
+  const projectAuthors = projectDetails.querySelector(".project-authors");
+  const projectDescription = projectDetails.querySelector(
+    ".project-description",
+  );
+  const projectsControls = document.querySelector("#projects-controls");
+  const projectsPrev = document.querySelector(".projects-arrow--prev");
+  const projectsNext = document.querySelector(".projects-arrow--next");
   const navProjectsLink = document.querySelector('[data-section="projects"]');
   const sectionSponsors = document.querySelector("#section-sponsors");
   const sponsorsTitle = document.querySelector("#sponsors-title");
@@ -855,7 +879,6 @@
     gsap.set(sectionTestimonials, {
       display: T >= 21.7 && T <= 27.5 ? "block" : "none",
     });
-    gsap.set(stageButtons, { display: T >= 26.9 ? "block" : "none" });
     gsap.set(sectionProjects, {
       display: T >= 26.9 && T <= 32.7 ? "block" : "none",
     });
@@ -910,24 +933,14 @@
       testimonialsEnter.pause(0);
       testimonialsCarousel.reset();
     }
-    if (T >= 27.65 && !projectsEntered) {
+    // Project details appear only once the arches settle.
+    if (T >= 29.35 && !projectsEntered) {
       projectsEntered = true;
       projectsEnter.play();
-      // The Projects buttons pop in with the section.
-      gsap.fromTo(
-        stageButtonEls,
-        { scale: 0.8, autoAlpha: 0 },
-        {
-          scale: 1,
-          autoAlpha: 1,
-          duration: 0.5,
-          ease: "back.out(2)",
-          stagger: 0.1,
-        },
-      );
-    } else if (T < 26.8 && projectsEntered) {
+    } else if (T < 28.7 && projectsEntered) {
       projectsEntered = false;
       projectsEnter.pause(0);
+      projectsCarousel.reset();
     }
     if (T >= 32.85 && !sponsorsEntered) {
       sponsorsEntered = true;
@@ -1060,12 +1073,6 @@
   gsap.set(testiMistRight, { autoAlpha: 0, x: 260 });
   gsap.set(testiStars, { autoAlpha: 0 });
   gsap.set(testiCopyParts, { autoAlpha: 0, y: 18 });
-  // The Projects buttons stay hidden until Projects enters.
-  gsap.set(stageButtonEls, {
-    autoAlpha: 0,
-    scale: 0.8,
-    transformOrigin: "50% 50%",
-  });
 
   const testimonialsEnter = gsap.timeline({ paused: true });
   testimonialsEnter
@@ -1092,30 +1099,27 @@
       0.45,
     );
 
-  // Projects entrance: title rises in, the frames scale into place from
-  // their centers.
+  // Projects entrance: once the arches and dinosaur have risen into place
+  // (scrubbed on scroll, below), the title, frame, details, and arrows
+  // arrive together.
   let projectsEntered = false;
+  const projectsCopyParts = [
+    projectsTitle,
+    projectFrame,
+    projectDetails,
+    projectsControls,
+  ];
 
-  gsap.set(projectsTitle, { autoAlpha: 0, y: 26 });
-  gsap.set(projectFrames, { autoAlpha: 0, scale: 0.7 });
+  // They fade in where they sit; no slide.
+  gsap.set(projectsCopyParts, { autoAlpha: 0 });
 
   const projectsEnter = gsap.timeline({ paused: true });
-  projectsEnter
-    .to(
-      projectsTitle,
-      { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" },
-      0,
-    )
-    .to(
-      projectFrames[0],
-      { autoAlpha: 1, scale: 1, duration: 0.75, ease: "back.out(1.2)" },
-      0.15,
-    )
-    .to(
-      projectFrames[1],
-      { autoAlpha: 1, scale: 1, duration: 0.75, ease: "back.out(1.2)" },
-      0.35,
-    );
+  projectsEnter.to(projectsCopyParts, {
+    autoAlpha: 1,
+    duration: 0.6,
+    ease: "power1.out",
+    stagger: 0.1,
+  });
 
   // Sponsors entrance: the logo grid pops in tile by tile in reading order
   // (left to right, top to bottom) while the pedestal and stone rise from
@@ -1217,8 +1221,9 @@
     next.addEventListener("click", () => show(index + 1));
     window.addEventListener("keydown", (event) => {
       if (navJumping || !isActive()) return;
-      if (event.key === "ArrowLeft") show(index - 1);
-      if (event.key === "ArrowRight") show(index + 1);
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      event.preventDefault();
+      show(event.key === "ArrowLeft" ? index - 1 : index + 1);
     });
 
     return {
@@ -1294,6 +1299,33 @@
     isActive: () =>
       testimonialsEntered &&
       navTestimonialsLink.classList.contains("is-current"),
+  });
+
+  // The second entry repeats the first until more projects are in. A
+  // project without an image shows the frame's blank canvas.
+  const PROJECT_FUTURA = {
+    name: "Futura",
+    url: "#",
+    authors: "Cole Abrams, Maia Gonzalez, Carolyn Hoa, Lucy Liu",
+    description: SPEAKER_BIO_PLACEHOLDER,
+    image: null,
+  };
+  const projectsCarousel = createCarousel({
+    items: [PROJECT_FUTURA, { ...PROJECT_FUTURA }],
+    render(project) {
+      projectNameText.textContent = project.name;
+      projectLink.href = project.url;
+      projectLink.setAttribute("aria-label", `${project.name} (opens in a new tab)`);
+      projectAuthors.textContent = project.authors;
+      projectDescription.textContent = project.description;
+      if (project.image) projectImage.setAttribute("href", project.image);
+      else projectImage.removeAttribute("href");
+    },
+    content: [projectImage, ...projectDetails.children],
+    prev: projectsPrev,
+    next: projectsNext,
+    isActive: () =>
+      projectsEntered && navProjectsLink.classList.contains("is-current"),
   });
 
   scrollTimeline.eventCallback("onUpdate", () => {
@@ -1473,7 +1505,7 @@
     // ---- Speakers enter: the arch rises into place, the balustrade on
     // both sides rises with it as one piece, and the curtains sweep in.
     .fromTo(
-      speakerStage,
+      [speakerStage, ...speakerRailings],
       { y: 820 },
       {
         y: 0,
@@ -1482,17 +1514,6 @@
         immediateRender: false,
       },
       17.1,
-    )
-    .fromTo(
-      speakerRailings,
-      { y: 340 },
-      {
-        y: 0,
-        duration: 1.5,
-        ease: "power2.out",
-        immediateRender: false,
-      },
-      17.2,
     )
     .fromTo(
       speakerCurtain,
@@ -1555,13 +1576,12 @@
       { autoAlpha: 1, duration: 0.8, ease: "power1.inOut" },
       22.2,
     )
-    // ---- Testimonials exit: the title, medallion, quote, and arrows rise
-    // away while the hall and its mists push in and fade.
+    // ---- Testimonials exit: the title, medallion, quote, and arrows fade
+    // out in place while the hall and its mists push in and fade.
     .fromTo(
       testiCopy,
-      { y: 0, autoAlpha: 1 },
+      { autoAlpha: 1 },
       {
-        y: -140,
         autoAlpha: 0,
         duration: 1.05,
         ease: "power1.in",
@@ -1582,12 +1602,14 @@
       26,
     )
     .to(sectionTestimonials, { autoAlpha: 0, duration: 0.5 }, 27)
-    // ---- Gradient morph: purple to the Projects teal.
+    // ---- Gradient morph: deep purple to the Projects wall violet, so any
+    // wall the sliding arches haven't covered yet reads as wall. (The
+    // hall's dark backdrop lives behind the dinosaur, inside the doorway.)
     .to(
       stageBackdrop,
       {
-        "--sec-top": "#37a9c9",
-        "--sec-bottom": "#017b9d",
+        "--sec-top": "#73678d",
+        "--sec-bottom": "#352f5a",
         duration: 1.2,
         ease: "power1.inOut",
       },
@@ -1598,44 +1620,89 @@
       { autoAlpha: 1, duration: 0.8, ease: "power1.inOut" },
       27.4,
     )
-    // ---- Projects exit: title rises away, frames scale down and fade,
-    // and the carried-over buttons finally drop out of frame.
+    // ---- Projects enter (parallax), like walking past a doorway: the
+    // arches slide in from the left carrying the doorway mask with them,
+    // while the dinosaur inside drifts back against that motion so it
+    // travels only half as far. Both settle together.
     .fromTo(
-      projectFrames,
-      { scale: 1, autoAlpha: 1 },
+      [projectsArches, projectsArchSlabs, projectsDoorway],
+      { x: -820 },
+      { x: 0, duration: 2.15, ease: "power1.out", immediateRender: false },
+      27.1,
+    )
+    .fromTo(
+      projectsDino,
+      { x: 410 },
+      { x: 0, duration: 2.15, ease: "power1.out", immediateRender: false },
+      27.1,
+    )
+    // ---- Projects exit: the doorway leaves the way it came, reversed. The
+    // arches and doorway slide back out to the left with the dinosaur
+    // lagging at half their speed, and the project (frame, details,
+    // arrows) follows them out. The title and the hall around it fade in
+    // place as the backdrop crossfades to Sponsors.
+    .fromTo(
+      [projectsArches, projectsArchSlabs, projectsDoorway],
+      { x: 0 },
+      { x: -820, duration: 1.2, ease: "power1.in", immediateRender: false },
+      31.2,
+    )
+    .fromTo(
+      projectsDino,
+      { x: 0 },
+      { x: 410, duration: 1.2, ease: "power1.in", immediateRender: false },
+      31.2,
+    )
+    .fromTo(
+      [projectFrame, projectDetails, projectsControls],
+      { x: 0 },
       {
-        scale: 0.75,
-        autoAlpha: 0,
+        x: -320,
         duration: 1.05,
         ease: "power1.in",
-        stagger: 0.06,
+        stagger: 0.05,
+        immediateRender: false,
+      },
+      31.2,
+    )
+    // The copy wrapper carries the fade, so it never fights the entrance,
+    // which fades the parts inside it.
+    .fromTo(
+      projectsCopy,
+      { autoAlpha: 1 },
+      {
+        autoAlpha: 0,
+        duration: 1,
+        ease: "power1.in",
+        immediateRender: false,
+      },
+      31.2,
+    )
+    // The walls (with the slabs that slide with the arches) fade as one
+    // group. The frieze and lighting wash blend against those walls, so
+    // they fade out quickly first, before the walls turn see-through, and
+    // from their own resting opacities (18% and 20%), never from 100%.
+    .fromTo(
+      projectsHallOverlays,
+      { autoAlpha: (i) => projectsOverlayOpacity[i] },
+      {
+        autoAlpha: 0,
+        duration: 0.45,
+        ease: "power1.out",
         immediateRender: false,
       },
       31.2,
     )
     .fromTo(
-      projectsTitle,
-      { y: 0, autoAlpha: 1 },
+      projectsWallsGroup,
+      { autoAlpha: 1 },
       {
-        y: -110,
         autoAlpha: 0,
-        duration: 1,
+        duration: 1.2,
         ease: "power1.in",
         immediateRender: false,
       },
-      31.25,
-    )
-    .fromTo(
-      stageButtonEls,
-      { y: 0 },
-      {
-        y: 320,
-        duration: 1,
-        ease: "power1.in",
-        stagger: 0.05,
-        immediateRender: false,
-      },
-      31.3,
+      31.2,
     )
     .to(sectionProjects, { autoAlpha: 0, duration: 0.5 }, 32.2)
     // ---- Gradient morph: teal to the Sponsors burnt orange.
@@ -1800,7 +1867,7 @@
     values: ["#37a9c9", "#017b9d"],
     speakers: ["#ca6330", "#833711"],
     testimonials: ["#1d032c", "#1d032c"],
-    projects: ["#37a9c9", "#017b9d"],
+    projects: ["#73678d", "#352f5a"],
     sponsors: ["#ca6330", "#8f4622"],
     team: ["#37a9c9", "#017b9d"],
     faqs: ["#090912", "#090912"],

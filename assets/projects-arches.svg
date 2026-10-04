@@ -1,0 +1,70 @@
+<svg width="3152" height="982" viewBox="-820 0 3152 982" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Exported from Figma "Past Projects" → bg: the two arches (Group 215 at x 0, Group 216 at
+     x 192, both at y 231). Their openings are cut out so the dinosaur scene behind shows
+     through; they move separately from it for parallax. The canvas extends 820px past the frame
+     on both sides (the length of the slide), matching projects-arch-slabs.svg. -->
+<defs>
+<filter id="room-arch-shadow-a" x="-262.85" y="0" width="551.84" height="797.95" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="13.98" dy="25.17"/>
+<feGaussianBlur stdDeviation="1.39"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="shadow"/>
+<feBlend mode="normal" in="SourceGraphic" in2="shadow" result="shape"/>
+</filter>
+<filter id="room-arch-shadow-b" x="0" y="0" width="549.04" height="795.15" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="13.98" dy="25.17"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="shadow"/>
+<feBlend mode="normal" in="SourceGraphic" in2="shadow" result="shape"/>
+</filter>
+</defs>
+
+
+<!-- Left arch (Group 215). -->
+<g transform="translate(0 231)">
+<g filter="url(#room-arch-shadow-a)">
+<path d="M-169.67 282.87V684.72H-188.02V282.87C-188.02 282.87 -193.42 89.14 4.20 89.14C201.84 89.14 195.73 282.87 195.73 282.87V684.72H178.78V282.87C178.78 282.87 169.85 123.24 4.20 123.24C-161.43 123.24 -169.67 282.87 -169.67 282.87Z" fill="#A28FB6"/>
+<path d="M-156.08 226.47C-156.70 228.02 -157.29 229.56 -157.86 231.09L-178.02 217.12C-177.54 215.53 -177.04 213.93 -176.52 212.31L-156.08 226.47ZM184.12 211.18C184.64 212.79 185.15 214.39 185.63 215.98L166.14 229.48C165.55 227.96 164.94 226.44 164.31 224.89L184.12 211.18ZM148.53 146.74C149.63 148.00 150.70 149.27 151.75 150.55L134.72 176.51C133.64 175.28 132.53 174.06 131.40 172.85L148.53 146.74ZM-122.10 172.14C-123.24 173.34 -124.35 174.56 -125.43 175.78L-142.68 149.49C-141.62 148.22 -140.54 146.97 -139.43 145.72L-122.10 172.14ZM80.05 100.9C81.61 101.44 83.14 102.00 84.66 102.57L77.08 136.01C75.57 135.41 74.04 134.83 72.49 134.27L80.05 100.9ZM-62.77 133.82C-64.32 134.37 -65.86 134.93 -67.37 135.52L-74.95 102.07C-73.43 101.51 -71.89 100.96 -70.33 100.43L-62.77 133.82ZM4.91 123.24H0.01V90.31H4.91V123.24Z" fill="#73678D"/>
+<path d="M4.43 0C239.37 0 269.04 166.08 272.20 191.48V769.98H194.08V272.74C194.08 272.50 196.53 94.43 7.50 94.43C-181.53 94.43 -184.25 272.50 -184.25 272.74V769.98H-262.85V684.93H-262.60V194.72C-262.60 194.72 -249.95 0.00 4.43 0Z" fill="#73678D"/>
+<rect x="272.19" y="300.80" width="79.99" height="34.68" transform="rotate(180 272.19 300.80)" fill="#835887"/>
+<path d="M192.2 300.80L175.25 308.15V279.04L192.2 266.11V300.80Z" fill="#A782AD"/>
+<path d="M193.61 308.44L176.67 315.79L175.25 308.15L192.19 300.80L193.61 308.44Z" fill="#887396"/>
+<path d="M272.19 308.44H193.61L192.20 300.80H272.19V308.44Z" fill="#69466F"/>
+<rect width="83.29" height="101.71" transform="matrix(-1 0 0 1 271.96 668.26)" fill="#835887"/>
+<path d="M188.67 668.26L173.38 649.15V750.87L188.67 769.98V668.26Z" fill="#A782AD"/>
+<path d="M179.26 644.74L173.37 649.15L188.67 668.26L193.61 660.91L179.26 644.74Z" fill="#887396"/>
+<path d="M193.37 660.62L188.67 668.26H271.96V660.62H193.37Z" fill="#69466F"/>
+</g>
+</g>
+
+<!-- Center arch (Group 216). -->
+<g transform="translate(192 231)">
+<g filter="url(#room-arch-shadow-b)">
+<path d="M93.18 282.87V684.72H74.83V282.87C74.83 282.87 69.42 89.14 267.06 89.14C464.69 89.14 458.58 282.87 458.58 282.87V684.72H441.64V282.87C441.64 282.87 432.70 123.24 267.06 123.24C101.41 123.24 93.18 282.87 93.18 282.87Z" fill="#A28FB6"/>
+<path d="M106.76 226.47C106.14 228.02 105.55 229.56 104.99 231.09L84.82 217.12C85.30 215.53 85.80 213.93 86.33 212.31L106.76 226.47ZM446.97 211.18C447.5 212.79 448.00 214.39 448.48 215.98L428.99 229.48C428.41 227.97 427.80 226.44 427.16 224.9L446.97 211.18ZM411.38 146.74C412.48 148.00 413.55 149.27 414.60 150.55L397.57 176.51C396.49 175.28 395.39 174.06 394.25 172.85L411.38 146.74ZM140.74 172.14C139.61 173.34 138.50 174.56 137.42 175.78L120.17 149.49C121.22 148.22 122.30 146.97 123.41 145.72L140.74 172.14ZM342.91 100.9C344.46 101.44 346.00 102.00 347.51 102.58L339.93 136.01C338.43 135.41 336.90 134.83 335.34 134.27L342.91 100.9ZM200.08 133.82C198.52 134.37 196.99 134.93 195.48 135.52L187.9 102.07C189.41 101.51 190.95 100.96 192.51 100.43L200.08 133.82ZM267.76 123.24H262.87V90.31H267.76V123.24Z" fill="#73678D"/>
+<path d="M267.28 0C502.24 0 531.9 166.11 535.06 191.48V769.98H456.93V272.74C456.93 272.47 459.37 94.43 270.35 94.43C81.33 94.43 78.59 272.47 78.59 272.74V769.98H0V684.93H0.24V194.72C0.24 194.72 12.89 3.60e-05 267.28 0Z" fill="#73678D"/>
+<rect width="79.99" height="34.68" transform="matrix(1 0 0 -1 0.01 300.50)" fill="#835887"/>
+<path d="M80.00 300.50L96.94 307.85V278.75L80.00 265.82V300.50Z" fill="#A782AD"/>
+<path d="M78.59 308.15L95.53 315.50L96.94 307.85L80.00 300.50L78.59 308.15Z" fill="#887396"/>
+<path d="M0.01 308.15H78.59L80.00 300.50H0.01V308.15Z" fill="#69466F"/>
+<rect x="535.05" y="300.80" width="79.99" height="34.68" transform="rotate(180 535.05 300.80)" fill="#835887"/>
+<path d="M455.05 300.80L438.11 308.15V279.04L455.05 266.11V300.80Z" fill="#A782AD"/>
+<path d="M456.46 308.44L439.52 315.79L438.11 308.15L455.05 300.80L456.46 308.44Z" fill="#887396"/>
+<path d="M535.05 308.44H456.46L455.05 300.80H535.05V308.44Z" fill="#69466F"/>
+<rect x="0.01" y="668.26" width="83.29" height="101.71" fill="#835887"/>
+<path d="M83.30 668.26L98.59 649.15V750.87L83.30 769.98V668.26Z" fill="#A782AD"/>
+<path d="M92.71 644.74L98.59 649.15L83.30 668.26L78.35 660.91L92.71 644.74Z" fill="#887396"/>
+<path d="M78.59 660.62L83.30 668.26H0.01V660.62H78.59Z" fill="#69466F"/>
+<rect width="83.29" height="101.71" transform="matrix(-1 0 0 1 534.81 668.26)" fill="#835887"/>
+<path d="M451.52 668.26L436.23 649.15V750.87L451.52 769.98V668.26Z" fill="#A782AD"/>
+<path d="M442.11 644.74L436.23 649.15L451.52 668.26L456.46 660.91L442.11 644.74Z" fill="#887396"/>
+<path d="M456.23 660.62L451.52 668.26H534.81V660.62H456.23Z" fill="#69466F"/>
+</g>
+</g>
+</svg>
