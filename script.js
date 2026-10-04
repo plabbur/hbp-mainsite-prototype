@@ -10,6 +10,11 @@
     "(prefers-reduced-motion: reduce)",
   ).matches;
 
+  // Phones and narrow windows: a plain stacked page instead of the
+  // scroll-driven scene (flag set by the inline script in index.html).
+  const staticScroll =
+    document.documentElement.classList.contains("static-scroll");
+
   const SECTION_WIDTH = 1512;
   const SECTION_HEIGHT = 982;
   const sectionFits = document.querySelectorAll(".section-fit");
@@ -38,16 +43,34 @@
     sectionFits.forEach((element) => {
       // Computed (not offset) size: hidden sections have no layout box.
       const styles = getComputedStyle(element);
-      const scale = Math.min(
-        viewportWidth / parseFloat(styles.width),
-        viewportHeight / parseFloat(styles.height),
-      );
+      const artWidth = parseFloat(styles.width);
+      const artHeight = parseFloat(styles.height);
+      let scale;
+      let boxHeight = viewportHeight;
+      if (staticScroll) {
+        // Stacked page: fit the width and let the section grow to the
+        // artboard's height (tall phone artboards scroll; CSS keeps each
+        // section at least one screen tall).
+        const pageWidth = document.documentElement.clientWidth;
+        scale = pageWidth / artWidth;
+        const section = element.closest(".stage-section");
+        boxHeight = artHeight * scale;
+        if (section) {
+          section.style.height = `${boxHeight.toFixed(2)}px`;
+          boxHeight = section.offsetHeight || boxHeight;
+        }
+      } else {
+        scale = Math.min(
+          viewportWidth / artWidth,
+          viewportHeight / artHeight,
+        );
+      }
       element.style.transform =
         `translate(-50%, -50%) scale(${scale.toFixed(5)})`;
       // Letterbox depth in artboard px, so edge art (the About mists) can
-      // stay pinned to the viewport's edges instead of the artboard's.
-      const bleedX = (viewportWidth / scale - parseFloat(styles.width)) / 2;
-      const bleedY = (viewportHeight / scale - parseFloat(styles.height)) / 2;
+      // stay pinned to the section's edges instead of the artboard's.
+      const bleedX = Math.max(0, (viewportWidth / scale - artWidth) / 2);
+      const bleedY = Math.max(0, (boxHeight / scale - artHeight) / 2);
       element.style.setProperty("--bleed-x", `${bleedX.toFixed(2)}px`);
       element.style.setProperty("--bleed-y", `${bleedY.toFixed(2)}px`);
     });
@@ -263,7 +286,7 @@
   const SECTION_COLORS = {
     hero: ["#0b0d21", "#0b0d21"],
     about: ["#15173b", "#060825"],
-    values: ["#37a9c9", "#017b9d"],
+    values: ["#37a9c9", "#024354"],
     speakers: ["#894a3c", "#512309"],
     testimonials: ["#322243", "#251930"],
     projects: ["#37a9c9", "#017b9d"],
@@ -271,11 +294,6 @@
     team: ["#37a9c9", "#017b9d"],
     faqs: ["#090912", "#090912"],
   };
-
-  // Phones and narrow windows: a plain stacked page instead of the
-  // scroll-driven scene (flag set by the inline script in index.html).
-  const staticScroll =
-    document.documentElement.classList.contains("static-scroll");
 
   // Crossing the narrow breakpoint switches between the two page modes,
   // which are built differently, so rebuild the page from scratch.
@@ -298,6 +316,7 @@
       faqs.before(section);
     });
     gsap.set(".faq-divider", { opacity: 1 });
+    fitSceneToViewport();
 
     // The navbar pins to the top of the screen for the whole page.
     document.body.prepend(nav.closest("hbp-navbar") ?? nav);
@@ -1361,7 +1380,7 @@
       stageBackdrop,
       {
         "--sec-top": "#37a9c9",
-        "--sec-bottom": "#017b9d",
+        "--sec-bottom": "#024354",
         duration: 1.2,
         ease: "power1.inOut",
       },

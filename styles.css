@@ -750,9 +750,103 @@ img {
 
 /* ---------- Our values ---------- */
 
+/* Spotlight state, animated by transitions on .values-scene. */
+@property --beam-x {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 58.51px;
+}
+
+@property --beam-y {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: -538px;
+}
+
+@property --beam-on {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --values-dim {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+/* The scene overhangs the artboard by 600px on every side so its mask
+   also covers art that bleeds past the artboard (pillar bases, the beam)
+   in letterboxed viewports; the inner layer shifts back to artboard
+   coordinates. Mask = a uniform --values-dim layer plus the beam
+   triangle, so content inside the beam stays at full opacity while the
+   rest dims to 80% when a pillar is lit. The mask triangle continues the
+   beam's slopes 1.5x further down and fades out with feathered sides, so
+   the lit pillar never shows a hard cut line where the beam ends. */
+.values-scene {
+  --beam-w: 458.99px;
+  --beam-h: 1281px;
+  top: -600px;
+  left: -600px;
+  width: calc(100% + 1200px);
+  height: calc(100% + 1200px);
+  -webkit-mask-image:
+    linear-gradient(
+      rgba(0, 0, 0, var(--values-dim)),
+      rgba(0, 0, 0, var(--values-dim))
+    ),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='f' x2='0' y2='1'%3E%3Cstop offset='.6'/%3E%3Cstop offset='1' stop-opacity='0'/%3E%3C/linearGradient%3E%3Cfilter id='b' x='-.2' y='-.2' width='1.4' height='1.4'%3E%3CfeGaussianBlur stdDeviation='1.8 .5'/%3E%3C/filter%3E%3C/defs%3E%3Cpolygon points='50,0 100,100 0,100' fill='url(%23f)' filter='url(%23b)'/%3E%3C/svg%3E");
+  mask-image:
+    linear-gradient(
+      rgba(0, 0, 0, var(--values-dim)),
+      rgba(0, 0, 0, var(--values-dim))
+    ),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='f' x2='0' y2='1'%3E%3Cstop offset='.6'/%3E%3Cstop offset='1' stop-opacity='0'/%3E%3C/linearGradient%3E%3Cfilter id='b' x='-.2' y='-.2' width='1.4' height='1.4'%3E%3CfeGaussianBlur stdDeviation='1.8 .5'/%3E%3C/filter%3E%3C/defs%3E%3Cpolygon points='50,0 100,100 0,100' fill='url(%23f)' filter='url(%23b)'/%3E%3C/svg%3E");
+  -webkit-mask-size:
+    100% 100%,
+    calc(var(--beam-w) * 1.5) calc(var(--beam-h) * 1.5);
+  mask-size:
+    100% 100%,
+    calc(var(--beam-w) * 1.5) calc(var(--beam-h) * 1.5);
+  -webkit-mask-position:
+    0 0,
+    calc(var(--beam-x) - var(--beam-w) * 0.25 + 600px)
+      calc(var(--beam-y) + 600px);
+  mask-position:
+    0 0,
+    calc(var(--beam-x) - var(--beam-w) * 0.25 + 600px)
+      calc(var(--beam-y) + 600px);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  transition:
+    --beam-x 0.5s cubic-bezier(0.3, 0.7, 0.2, 1),
+    --beam-y 0.5s cubic-bezier(0.3, 0.7, 0.2, 1),
+    --beam-on 0.35s ease,
+    --values-dim 0.35s ease;
+}
+
+.values-scene__inner {
+  position: absolute;
+  top: 600px;
+  left: 600px;
+}
+
+.values-scene__inner > * {
+  position: absolute;
+}
+
+.values-light {
+  top: var(--beam-y);
+  left: var(--beam-x);
+  width: var(--beam-w);
+  height: var(--beam-h);
+  opacity: var(--beam-on);
+  pointer-events: none;
+}
+
 .values-title {
-  top: 150px;
-  left: 624px;
+  top: 142px;
+  left: 623px;
   width: 264px;
   margin: 0;
   color: #fff;
@@ -765,28 +859,33 @@ img {
 }
 
 .pillar-group {
+  width: 285px;
   will-change: transform;
 }
 
 .pillar-group--exploration {
-  top: 290px;
+  top: 212px;
   left: 141px;
-  width: 285px;
-  height: 692px;
+  height: 770px;
 }
 
 .pillar-group--growth {
-  top: 407px;
+  top: 371px;
   left: 614px;
-  width: 285px;
-  height: 575px;
+  height: 611px;
 }
 
 .pillar-group--community {
-  top: 290px;
+  top: 251px;
   left: 1083px;
-  width: 285px;
-  height: 692px;
+  height: 731px;
+}
+
+/* Hover lift lives on its own layer: GSAP owns the group's transform. */
+.pillar-lift {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.45s cubic-bezier(0.3, 0.7, 0.2, 1);
 }
 
 .pillar-top {
@@ -800,15 +899,29 @@ img {
 
 .fossil {
   position: absolute;
-  top: -2px;
-  left: 112px;
-  width: 61px;
+  top: 0;
+  height: auto;
   will-change: transform;
+}
+
+.pillar-group--exploration .fossil {
+  left: 95.47px;
+  width: 94.05px;
+}
+
+.pillar-group--growth .fossil {
+  left: 95.58px;
+  width: 93.83px;
+}
+
+.pillar-group--community .fossil {
+  left: 95.24px;
+  width: 94.53px;
 }
 
 .pillar-copy {
   position: absolute;
-  top: 86.5px;
+  top: 112.06px;
   left: 0;
   display: flex;
   width: 285px;
@@ -816,6 +929,10 @@ img {
   gap: 12px;
   color: #fff;
   text-align: center;
+}
+
+.pillar-group--growth .pillar-copy {
+  top: 116.06px;
 }
 
 .pillar-copy h3 {
@@ -828,7 +945,7 @@ img {
 .pillar-copy p {
   margin: 0;
   font-family: "Merriweather", Georgia, serif;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 300;
   line-height: 1.4;
 }
@@ -840,24 +957,24 @@ img {
 }
 
 .pillar-group--exploration .pillar-img {
-  top: 236px;
-  left: 13px;
+  top: 311.06px;
+  left: 10px;
   width: 265px;
-  height: 909px;
+  height: 908.2px;
 }
 
 .pillar-group--growth .pillar-img {
-  top: 216px;
-  left: 8px;
+  top: 290.06px;
+  left: 7.5px;
   width: 270px;
-  height: 932px;
+  height: 931.7px;
 }
 
 .pillar-group--community .pillar-img {
-  top: 235px;
-  left: 9px;
+  top: 286.06px;
+  left: 10px;
   width: 265px;
-  height: 650px;
+  height: 649.4px;
 }
 
 .vase {
@@ -899,6 +1016,233 @@ img {
   top: 852px;
   left: 1276px;
   width: 103px;
+}
+
+/* Spotlight (large and medium, real hover only): the hovered pillar
+   lifts, the beam swings over it and everything outside the beam dims.
+   Beam offsets keep the Figma beam-to-pillar relationship per pillar. */
+@media (hover: hover) and (min-width: 600px) {
+  html:not(.static-scroll) .pillar-group:hover .pillar-lift {
+    transform: translateY(-16px);
+  }
+
+  html:not(.static-scroll) .values-scene:has(.pillar-group:hover) {
+    --beam-on: 1;
+    --values-dim: 0.8;
+  }
+
+  .values-scene:has(.pillar-group--growth:hover) {
+    --beam-x: 531.5px;
+    --beam-y: -379px;
+  }
+
+  .values-scene:has(.pillar-group--community:hover) {
+    --beam-x: 1000.5px;
+    --beam-y: -499px;
+  }
+}
+
+/* Medium artboard (Figma 1000x982): same three columns, tightened, art
+   at 90%, paired vases. */
+@media (min-width: 600px) and (max-width: 1179.98px) {
+  #values-fit {
+    width: 1000px;
+    height: 982px;
+  }
+
+  .values-scene {
+    --beam-x: -29.38px;
+    --beam-y: -445px;
+    --beam-w: 408.78px;
+    --beam-h: 1141.5px;
+  }
+
+  .values-title {
+    left: 367px;
+  }
+
+  .pillar-group--exploration {
+    top: 213px;
+    left: 32px;
+    height: 769px;
+  }
+
+  .pillar-group--growth {
+    top: 343px;
+    left: 357px;
+    height: 639px;
+  }
+
+  .pillar-group--community {
+    top: 246px;
+    left: 683px;
+    height: 736px;
+  }
+
+  .pillar-group--exploration .fossil {
+    left: 100.18px;
+    width: 84.65px;
+  }
+
+  .pillar-group--growth .fossil {
+    left: 100.28px;
+    width: 84.45px;
+  }
+
+  .pillar-group--community .fossil {
+    left: 99.96px;
+    width: 85.07px;
+  }
+
+  .pillar-copy {
+    top: 108.46px;
+  }
+
+  .pillar-group--growth .pillar-copy {
+    top: 107.06px;
+  }
+
+  .pillar-group--community .pillar-copy {
+    top: 103.46px;
+  }
+
+  .pillar-copy p {
+    padding: 0 16px;
+  }
+
+  .pillar-group--exploration .pillar-img {
+    top: 332.46px;
+    left: 23.25px;
+    width: 238.5px;
+    height: 817.4px;
+  }
+
+  .pillar-group--growth .pillar-img {
+    top: 281.06px;
+    left: 21px;
+    width: 243px;
+    height: 838.5px;
+  }
+
+  .pillar-group--community .pillar-img {
+    top: 302.46px;
+    left: 23.25px;
+    width: 238.5px;
+    height: 584.5px;
+  }
+
+  .vase--1 {
+    top: 821px;
+    left: 48px;
+  }
+
+  .vase--2 {
+    top: 914px;
+    left: 268px;
+  }
+
+  .vase--3 {
+    top: 844px;
+    left: 344px;
+  }
+
+  .vase--4 {
+    top: 804px;
+    left: 589px;
+  }
+
+  .vase--5 {
+    top: 850px;
+    left: 662px;
+  }
+
+  .vase--6 {
+    top: 852px;
+    left: 865px;
+  }
+}
+
+@media (hover: hover) and (min-width: 600px) and (max-width: 1179.98px) {
+  .values-scene:has(.pillar-group--growth:hover) {
+    --beam-x: 295.6px;
+    --beam-y: -315px;
+  }
+
+  .values-scene:has(.pillar-group--community:hover) {
+    --beam-x: 621.6px;
+    --beam-y: -412px;
+  }
+}
+
+/* Small artboard (Figma 402x1244, the stacked phone page): the three
+   values in one column, one pillar rising from the bottom, no vases or
+   spotlight. */
+@media (max-width: 599.98px) {
+  #values-fit {
+    width: 402px;
+    height: 1244px;
+  }
+
+  .values-light,
+  .vase,
+  .pillar-group--exploration .pillar-img,
+  .pillar-group--community .pillar-img {
+    display: none;
+  }
+
+  .values-title {
+    top: 93px;
+    left: 19.7px;
+    width: 362.6px;
+    font-size: 32px;
+  }
+
+  .pillar-group--exploration,
+  .pillar-group--growth,
+  .pillar-group--community {
+    left: 58px;
+    height: auto;
+  }
+
+  .pillar-group--exploration {
+    top: 181px;
+  }
+
+  .pillar-group--growth {
+    top: 502px;
+  }
+
+  .pillar-group--community {
+    top: 798px;
+  }
+
+  .pillar-group--exploration .fossil {
+    left: 107.5px;
+    width: 69.95px;
+  }
+
+  .pillar-group--growth .fossil {
+    left: 107.6px;
+    width: 69.78px;
+  }
+
+  .pillar-group--community .fossil {
+    left: 107.35px;
+    width: 70.3px;
+  }
+
+  .pillar-copy,
+  .pillar-group--growth .pillar-copy {
+    top: 88px;
+  }
+
+  /* Canvas (79, 1091), relative to the growth group at (58, 502). */
+  .pillar-group--growth .pillar-img {
+    top: 589px;
+    left: 21px;
+    width: 243.88px;
+    height: 841.6px;
+  }
 }
 
 /* ---------- Speakers ---------- */
@@ -1773,7 +2117,7 @@ img {
 /* ---------- Stacked phone page (html.static-scroll) ----------
    Phones and narrow windows skip the scroll-driven scene: the hero is a
    single static night frame and script.js moves each stage section into
-   the page flow, where it fills one screen. */
+   the page flow, at least one screen tall. */
 .static-scroll .hero {
   height: 100svh;
 }
@@ -1782,7 +2126,8 @@ img {
   position: relative;
   inset: auto;
   z-index: auto;
-  height: 100svh;
+  /* script.js sets the height from the width-fit artboard. */
+  min-height: 100svh;
   display: block;
   opacity: 1;
   visibility: visible;
