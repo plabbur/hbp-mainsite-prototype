@@ -8,7 +8,10 @@
 // Responsive states (see navbar.css):
 //   >= 1180px  logo, section links and both buttons inline
 //   600-1179px logo, buttons and a menu toggle; links move into the menu
-//   <  600px   logo and menu toggle; links and buttons move into the menu
+//   <  600px   logo and menu toggle; links and the two actions (as plain
+//              menu items) move into the menu
+// The open menu is the Figma "Mobile Menu" frame: a navy overlay with the
+// links stacked top-left and a dinosaur skeleton in the bottom corner.
 (() => {
   const NAV_ITEMS = [
     { section: "about", label: "About us" },
@@ -50,8 +53,9 @@
       const current = this.getAttribute("current");
       this.innerHTML = `
         <nav class="site-nav" id="site-nav" aria-label="Primary">
-          <a class="site-nav__logo" href="#">
-            <img src="./assets/logo.png" alt="HackBeanpot" />
+          <a class="site-nav__logo" href="#" aria-label="HackBeanpot home">
+            <img src="./assets/logo-mark.svg" alt="" />
+            <span>HackBeanpot</span>
           </a>
           <div class="site-nav__right">
             <div class="site-nav__links" id="site-nav-menu">
@@ -61,7 +65,18 @@
                     section === current ? ' class="is-current"' : ""
                   }>${label}</a>`,
               ).join("")}
-              ${actionsMarkup("menu")}
+              ${NAV_ACTIONS.map(
+                ({ label, href }) =>
+                  `<a class="site-nav__menu-action" href="${href}">${label}</a>`,
+              ).join("")}
+              <div class="site-nav__menu-art" aria-hidden="true">
+                <div class="site-nav__menu-art-inner">
+                  <img class="menu-art-dino" src="./assets/menu/dinosaur.svg" alt="" />
+                  <img class="menu-art-glow" src="./assets/menu/glow.svg" alt="" />
+                  <img class="menu-art-eye" src="./assets/menu/eye.svg" alt="" />
+                  <img class="menu-art-wave" src="./assets/menu/wave.svg" alt="" />
+                </div>
+              </div>
             </div>
             ${actionsMarkup("bar")}
             <button
@@ -72,9 +87,7 @@
               aria-label="Open menu"
             >
               <img class="site-nav__toggle-open" src="./assets/icon-menu.svg" alt="" />
-              <svg class="site-nav__toggle-close" viewBox="0 0 40 40" aria-hidden="true">
-                <path d="M11 11 29 29M29 11 11 29" stroke="#fff" stroke-width="2.5" stroke-linecap="round" />
-              </svg>
+              <img class="site-nav__toggle-close" src="./assets/menu/close.svg" alt="" />
             </button>
           </div>
         </nav>`;

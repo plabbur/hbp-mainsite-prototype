@@ -21,15 +21,24 @@ hbp-navbar {
   visibility: hidden;
 }
 
+/* Figma logo lockup: 28px mark + wordmark set in the nav typeface. */
 .site-nav__logo {
   position: relative;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  font-size: 28px;
+  line-height: normal;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
 .site-nav__logo img {
   display: block;
-  width: 163px;
-  height: auto;
+  width: 28px;
+  height: 28px;
 }
 
 .site-nav__right {
@@ -83,8 +92,10 @@ hbp-navbar {
   gap: 12px;
 }
 
-/* The menu copy of the buttons only appears inside the small-screen menu. */
-.site-nav__actions--menu {
+/* Menu-only pieces: the actions as plain menu items (small screens) and
+   the corner artwork. */
+.site-nav__menu-action,
+.site-nav__menu-art {
   display: none;
 }
 
@@ -138,8 +149,7 @@ hbp-navbar {
   cursor: pointer;
 }
 
-.site-nav__toggle img,
-.site-nav__toggle svg {
+.site-nav__toggle img {
   display: block;
   width: 40px;
   height: 40px;
@@ -169,9 +179,9 @@ hbp-navbar {
     display: block;
   }
 
-  /* The links become a full-viewport overlay under the bar. Absolute (not
-     fixed) because GSAP leaves a transform on the nav, which would make a
-     fixed child size to the nav bar instead of the viewport. */
+  /* The links become a full-viewport overlay under the bar (Figma
+     "Expanded Menu" on medium, "Mobile Menu" on small). Absolute, not fixed, because GSAP leaves a transform
+     on the nav, which would make a fixed child size to the nav bar. */
   .site-nav__links {
     position: absolute;
     top: 0;
@@ -180,19 +190,114 @@ hbp-navbar {
     height: 100svh;
     display: none;
     flex-direction: column;
-    justify-content: center;
-    gap: 28px;
-    padding: 96px 32px 48px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 20px;
+    padding: 97px 32px 48px;
     background: linear-gradient(180deg, #15173b, #060825);
+    overflow-x: hidden;
     overflow-y: auto;
+    isolation: isolate;
   }
 
   .site-nav--open .site-nav__links {
     display: flex;
   }
 
+  /* With the menu open, Sponsor us / Apply leave the bar and appear as
+     the last two menu items instead. */
+  .site-nav--open .site-nav__actions--bar {
+    display: none;
+  }
+
+  .site-nav__menu-action {
+    display: block;
+  }
+
+  .site-nav--open .site-nav__toggle-close {
+    width: 32px;
+    height: 32px;
+    margin: 4px;
+  }
+
   .site-nav__links > a {
+    padding-bottom: 0;
+    color: rgba(255, 255, 255, 0.75);
     font-size: 32px;
+    transition: color 0.15s ease;
+  }
+
+  .site-nav__links > a:hover,
+  .site-nav__links > a:focus-visible,
+  .site-nav__links > a.is-current {
+    color: #fff;
+  }
+
+  /* In the menu the current section gets the brush-stroke underline. */
+  .site-nav__links > a::after {
+    bottom: -7px;
+    height: 3px;
+    background: url("../assets/menu/underline.svg") 0 0 / 100% 100% no-repeat;
+  }
+
+  .site-nav__links > a.is-current::after {
+    opacity: 1;
+  }
+
+  /* Dinosaur skeleton, glowing eye and mist wave, placed in a box the
+     size of the Figma frame (1000x982 medium, 402x874 small) pinned to
+     the menu's bottom-left corner. */
+  .site-nav__menu-art {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    display: block;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .site-nav__menu-art-inner {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 1000px;
+    height: 982px;
+  }
+
+  .site-nav__menu-art-inner > img {
+    position: absolute;
+    display: block;
+    max-width: none;
+  }
+
+  .menu-art-dino {
+    top: -18px;
+    left: 277px;
+    width: 1230px;
+    height: 1230px;
+  }
+
+  .menu-art-glow {
+    top: 761.8px;
+    left: 489.8px;
+    width: 70.7px;
+    height: 70.6px;
+    mix-blend-mode: overlay;
+  }
+
+  .menu-art-eye {
+    top: 784.41px;
+    left: 513.45px;
+    width: 22.44px;
+    height: 20.8px;
+    transform: rotate(-179.67deg) scaleY(-1);
+  }
+
+  .menu-art-wave {
+    top: 273px;
+    left: -550px;
+    width: 1508px;
+    height: 1531.2px;
   }
 }
 
@@ -209,12 +314,51 @@ hbp-navbar {
     display: none;
   }
 
-  .site-nav__actions--menu {
-    display: flex;
-    margin-top: 12px;
+  .site-nav__links {
+    padding-right: 20px;
+    padding-left: 20px;
   }
 
   .site-nav__links > a {
     font-size: 28px;
+  }
+
+  .site-nav--open .site-nav__toggle-close {
+    width: 40px;
+    height: 40px;
+    margin: 0;
+  }
+
+  .site-nav__menu-art-inner {
+    width: 402px;
+    height: 874px;
+  }
+
+  .menu-art-dino {
+    top: 349px;
+    left: 51px;
+    width: 648px;
+    height: 648px;
+  }
+
+  .menu-art-glow {
+    top: 759.86px;
+    left: 163.13px;
+    width: 37.21px;
+    height: 37.21px;
+  }
+
+  .menu-art-eye {
+    top: 771.7px;
+    left: 175.54px;
+    width: 11.82px;
+    height: 10.96px;
+  }
+
+  .menu-art-wave {
+    top: 391px;
+    left: -390px;
+    width: 932px;
+    height: 946.34px;
   }
 }

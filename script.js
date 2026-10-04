@@ -15,11 +15,12 @@
   const staticScroll =
     document.documentElement.classList.contains("static-scroll");
 
-  const SECTION_WIDTH = 1512;
-  const SECTION_HEIGHT = 982;
   const sectionFits = document.querySelectorAll(".section-fit");
   const flowCanvases = document.querySelectorAll(".flow-canvas");
-  const faqPanel = document.querySelector(".faq-panel");
+  const heroSmallArt = document.querySelector(".hero-small__art");
+  const mediumQuery = window.matchMedia(
+    "(min-width: 600px) and (max-width: 1179.98px)",
+  );
 
   function fitSceneToViewport() {
     const viewportWidth = window.visualViewport?.width ?? window.innerWidth;
@@ -29,17 +30,28 @@
       viewportHeight / DESIGN_HEIGHT,
     );
 
-    fit.style.transform =
-      `translate(-50%, -50%) scale(${coverScale.toFixed(5)})`;
+    if (mediumQuery.matches) {
+      // Medium (Figma 1000x982): cover-fit a 1000x982 frame, then scale and
+      // nudge the scene so the resting museum lands at Figma's medium spot
+      // (1291 wide at x -144, y 215 when the frame is exactly 1000x982).
+      const frame = Math.max(viewportWidth / 1000, viewportHeight / 982);
+      fit.style.transform =
+        `translate(-50%, -50%) translate(${(23.1 * frame).toFixed(2)}px, ` +
+        `${(-42.8 * frame).toFixed(2)}px) scale(${(1.1582 * frame).toFixed(5)})`;
+    } else {
+      fit.style.transform =
+        `translate(-50%, -50%) scale(${coverScale.toFixed(5)})`;
+    }
+
+    // Small: the static night composition (402x874) cover-fits the hero.
+    const smallScale = Math.max(viewportWidth / 402, viewportHeight / 874);
+    heroSmallArt.style.transform =
+      `translate(-50%, -50%) scale(${smallScale.toFixed(5)})`;
 
     // Contain-fit: the panel gradient fills the viewport, so letterboxing
     // is invisible and section content never gets cropped. Each artboard's
     // size comes from CSS, so responsive sections (About) can swap to a
     // smaller artboard per breakpoint.
-    const sectionScale = Math.min(
-      viewportWidth / SECTION_WIDTH,
-      viewportHeight / SECTION_HEIGHT,
-    );
     sectionFits.forEach((element) => {
       // Computed (not offset) size: hidden sections have no layout box.
       const styles = getComputedStyle(element);
@@ -67,6 +79,8 @@
       }
       element.style.transform =
         `translate(-50%, -50%) scale(${scale.toFixed(5)})`;
+      // Text never grows past its design size (see --tx in styles.css).
+      element.style.setProperty("--tx", Math.min(1, 1 / scale).toFixed(5));
       // Letterbox depth in artboard px, so edge art (the About mists) can
       // stay pinned to the section's edges instead of the artboard's.
       const bleedX = Math.max(0, (viewportWidth / scale - artWidth) / 2);
@@ -75,18 +89,17 @@
       element.style.setProperty("--bleed-y", `${bleedY.toFixed(2)}px`);
     });
 
-    // Post-hero flow sections (FAQs, footer) scale by width alone; their
-    // aspect-ratio CSS keeps the section heights in step.
-    const flowScale = document.documentElement.clientWidth / SECTION_WIDTH;
+    // Post-hero flow artboards (the FAQs art + footer stage) fit the page
+    // width; the artboard width comes from CSS per breakpoint, and the
+    // stage's aspect-ratio keeps its height in step. Zoom, not a transform,
+    // so the art's blend modes still composite with the section behind.
+    const pageWidth = document.documentElement.clientWidth;
     flowCanvases.forEach((element) => {
-      element.style.transform = `scale(${flowScale.toFixed(5)})`;
+      const artWidth = parseFloat(getComputedStyle(element).width);
+      const zoom = pageWidth / artWidth;
+      element.style.zoom = zoom.toFixed(5);
+      element.style.setProperty("--tx", Math.min(1, 1 / zoom).toFixed(5));
     });
-
-    // The illustration must fill the width, but text should render at the
-    // same effective size as the contain-fit stage sections — counter
-    // scale the FAQ panel by the ratio between the two fits.
-    const faqTextScale = Math.min(1, sectionScale / flowScale);
-    faqPanel.style.transform = `scale(${faqTextScale.toFixed(5)})`;
   }
 
   fitSceneToViewport();
@@ -214,7 +227,7 @@
 
     // The museum's ground shadow leans away from the sun, stretching as
     // the sun drops toward the horizon and dissolving once it sets.
-    const sunCenterX = 184.5 + position.x;
+    const sunCenterX = 154.5 + position.x;
     const lean = (756 - sunCenterX) / 28;
     setShadowSkew(lean);
     setShadowX(lean * 2.2);
@@ -248,16 +261,21 @@
   });
 
   // --- FAQs accordion + footer wiring (works with reduced motion too) ---
-  document.querySelectorAll(".faq-item").forEach((item) => {
-    const button = item.querySelector(".faq-q");
-    const answer = item.querySelector(".faq-answer");
-    button.addEventListener("click", () => {
-      const open = item.classList.toggle("is-open");
-      gsap.to(answer, {
-        height: open ? "auto" : 0,
-        duration: reducedMotion ? 0 : 0.45,
-        ease: "power2.inOut",
-      });
+  // Only one answer open at a time: opening one closes the rest.
+  const faqItems = document.querySelectorAll(".faq-item");
+  const setFaqOpen = (item, open) => {
+    if (item.classList.contains("is-open") === open) return;
+    item.classList.toggle("is-open", open);
+    gsap.to(item.querySelector(".faq-answer"), {
+      height: open ? "auto" : 0,
+      duration: reducedMotion ? 0 : 0.45,
+      ease: "power2.inOut",
+    });
+  };
+  faqItems.forEach((item) => {
+    item.querySelector(".faq-q").addEventListener("click", () => {
+      const open = !item.classList.contains("is-open");
+      faqItems.forEach((other) => setFaqOpen(other, other === item && open));
     });
   });
   gsap.set(".faq-item.is-open .faq-answer", { height: "auto" });
@@ -632,9 +650,12 @@
   document
     .querySelector(".team-arrow--prev")
     .addEventListener("click", () => stepTeam(-1));
-  document
-    .querySelector(".team-arrow--next")
-    .addEventListener("click", () => stepTeam(1));
+  const teamNext = document.querySelector(".team-arrow--next");
+  teamNext.addEventListener("click", () => {
+    // The first click retires the "go forward" nudge for good.
+    teamNext.classList.remove("team-arrow--nudge");
+    stepTeam(1);
+  });
 
   // Small: accordion, one swipeable row per team, lead first and the rest
   // shuffled. Directors starts open.
@@ -680,7 +701,9 @@
 
   // Crossing the narrow breakpoint switches between the two page modes,
   // which are built differently, so rebuild the page from scratch.
+  // (Not when the dev toggle has forced the stacked page on.)
   window.matchMedia("(max-width: 599.98px)").addEventListener("change", () => {
+    if (document.documentElement.classList.contains("scroll-anim-off")) return;
     const phone =
       window.matchMedia("(hover: none) and (pointer: coarse)").matches &&
       Math.min(screen.width, screen.height) < 600;
@@ -698,7 +721,6 @@
       section.style.background = `linear-gradient(180deg, ${top}, ${bottom})`;
       faqs.before(section);
     });
-    gsap.set(".faq-divider", { opacity: 1 });
     fitSceneToViewport();
 
     // The navbar pins to the top of the screen for the whole page.
@@ -721,6 +743,17 @@
       event.preventDefault();
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
+
+    // While the hero is under the bar, the small layout hides the logo and
+    // the bar's tint (the MLH badge takes that corner; see styles.css).
+    const markOverHero = () => {
+      nav.classList.toggle(
+        "site-nav--over-hero",
+        hero.getBoundingClientRect().bottom > 80,
+      );
+    };
+    markOverHero();
+    window.addEventListener("scroll", markOverHero, { passive: true });
 
     // Underline the tab for whichever section fills the middle of the screen.
     const setCurrent = (key) => {
@@ -1028,32 +1061,37 @@
   // Later skylines simply fade in over the earlier ones (which stay fully
   // opaque underneath), so buildings never turn translucent mid-fade.
   intro
-    .to(sky, { backgroundColor: "#5760c3", duration: 1.6 }, 0.9)
-    .to(viewport, { "--backdrop-sky": "#5760c3", duration: 1.6 }, 0.9)
-    .to(skyShade, { opacity: 0.1, duration: 1.6 }, 0.9)
+    .to(sky, { backgroundColor: "#7a9fbd", duration: 1.6 }, 0.9)
+    .to(viewport, { "--backdrop-sky": "#7a9fbd", duration: 1.6 }, 0.9)
     .to(starsFar, { opacity: 0.7, duration: 1.6 }, 0.9)
     .to(starsNear, { opacity: 0.34, duration: 1.6 }, 0.9)
-    .to(skylineTwilight, { opacity: 1, duration: 1.4 }, 1)
     .to(bushLayers, { filter: "brightness(0.8)", duration: 1.6 }, 0.9)
     .to(grassLayers, { filter: "brightness(0.72)", duration: 1.6 }, 0.9)
     .to(stoneLayers, { filter: "brightness(0.92)", duration: 1.6 }, 0.9);
 
   intro
-    .to(sky, { backgroundColor: "#0b0d21", duration: 1.5 }, 2.7)
+    .to(sky, { backgroundColor: "#5760c3", duration: 1.5 }, 2.7)
     .to(
       viewport,
       {
-        "--backdrop-sky": "#0b0d21",
+        "--backdrop-sky": "#5760c3",
         "--backdrop-grass": "#2d5827",
         duration: 1.5,
       },
       2.7,
     )
-    .to(skyShade, { opacity: 1, duration: 1.5 }, 2.7)
+    // Night deepens to the lit-state sky as the lights come up.
+    .to(sky, { backgroundColor: "#0b0d21", duration: 1.4 }, 4.4)
+    .to(viewport, { "--backdrop-sky": "#0b0d21", duration: 1.4 }, 4.4)
+    .to(skylineNight, { opacity: 1, duration: 1.4 }, 4.4)
+    .to(skyShade, { opacity: 1, duration: 1.4 }, 4.4)
+    .to(skyShade, { opacity: 0.1, duration: 1.5 }, 2.7)
     .to(starsFar, { opacity: 1, duration: 1.5 }, 2.7)
     .to(starsNear, { opacity: 0.78, duration: 1.5 }, 2.7)
     .to(shootingLayer, { opacity: 1, duration: 1.5 }, 2.7)
-    .to(skylineNight, { opacity: 1, duration: 1.2 }, 2.85)
+    // Figma keeps the teal day skyline through twilight; it turns purple
+    // with the lights-off night, then near-black as night deepens.
+    .to(skylineTwilight, { opacity: 1, duration: 1.4 }, 2.7)
     .to(museumNight, { opacity: 1, duration: 1 }, 3.1)
     .to(bushLayers, { filter: "brightness(0.55)", duration: 1.5 }, 2.7)
     .to(grassLayers, { filter: "brightness(0.44)", duration: 1.5 }, 2.7)

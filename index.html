@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#e1e3ff" />
+    <meta name="theme-color" content="#aedfe3" />
     <title>HackBeanpot Museum Hero Prototype</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -15,12 +15,27 @@
       // Phones (touch-only, short side under 600px) and narrow windows get
       // a plain stacked page instead of the scroll-driven scene. Set before
       // first paint so the stacked layout never flashes the other one.
+      // Dev override (components/dev-tools.js): ?scroll=off / ?scroll=on,
+      // remembered in localStorage, forces the stacked page at any size.
       (() => {
+        const KEY = "hbp:scroll-animations";
+        const param = new URLSearchParams(location.search).get("scroll");
+        try {
+          if (param === "off") localStorage.setItem(KEY, "off");
+          if (param === "on") localStorage.removeItem(KEY);
+        } catch {}
+        let forcedOff = param === "off";
+        try {
+          forcedOff = forcedOff || localStorage.getItem(KEY) === "off";
+        } catch {}
         const narrow = matchMedia("(max-width: 599.98px)").matches;
         const phone =
           matchMedia("(hover: none) and (pointer: coarse)").matches &&
           Math.min(screen.width, screen.height) < 600;
-        if (narrow || phone) {
+        if (forcedOff) {
+          document.documentElement.classList.add("scroll-anim-off");
+        }
+        if (forcedOff || narrow || phone) {
           document.documentElement.classList.add("static-scroll");
         }
       })();
@@ -28,6 +43,7 @@
     <link rel="stylesheet" href="./components/navbar.css" />
     <link rel="stylesheet" href="./styles.css" />
     <script src="./components/navbar.js"></script>
+    <script defer src="./components/dev-tools.js"></script>
     <script
       defer
       src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"
@@ -73,7 +89,7 @@
 
                 <img class="layer sun" src="./assets/sun.svg" alt="" />
 
-                <img class="layer moon" src="./assets/moon.svg" alt="" />
+                <img class="layer moon" src="./assets/moon-logo.svg" alt="" />
 
                 <div class="moon-rig">
                   <div class="mlh-banner-mask">
@@ -187,18 +203,51 @@
                 />
 
                 <div class="hud-intro" id="hud-intro">
-                  <img
-                    class="layer event-title"
-                    src="./assets/hackbeanpot-title.png"
-                    alt=""
-                  />
-                  <img
-                    class="layer sponsor-lockup"
-                    src="./assets/sponsor-lockup.png"
-                    alt=""
-                  />
+                  <p class="layer event-title" aria-hidden="true">HACKBEANPOT</p>
+                  <p class="layer sponsor-lockup lockup">
+                    <span class="lockup__text">Brought to you by</span>
+                    <span class="lockup__logos">
+                      <img class="lockup__amazon" src="./assets/logo-amazon.png" alt="Amazon" />
+                      <img class="lockup__maven" src="./assets/logo-maven.png" alt="Maven AGI" />
+                    </span>
+                  </p>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <!-- Small screens: the static night composition (Figma 402x874),
+               cover-fit by script; replaces the animated scene below 600px. -->
+          <div class="hero-small" aria-hidden="true">
+            <div class="hero-small__art">
+              <img class="hs-stars" src="./assets/hero-small/stars.svg" alt="" style="left:-280.12px;top:-216.25px" />
+              <img class="hs-stars" src="./assets/hero-small/stars.svg" alt="" style="left:-833.28px;top:80.88px" />
+              <img class="hs-stars" src="./assets/hero-small/stars.svg" alt="" style="left:1490.9px;top:150.45px" />
+              <img class="hs-moon" src="./assets/moon-logo.svg" alt="" />
+              <img class="hs-skyline" src="./assets/hero-small/skyline.svg" alt="" />
+              <img class="hs-hill-a" src="./assets/hero-small/hill-a.svg" alt="" />
+              <img class="hs-hill-b" src="./assets/hero-small/hill-b.svg" alt="" />
+              <div class="hs-grass"></div>
+              <img class="hs-museum" src="./assets/museum-night-alpha.png" alt="" />
+              <img class="hs-bushes-4" src="./assets/hero-small/bushes-4.svg" alt="" />
+              <img class="hs-stairs-upper" src="./assets/hero-small/stairs-upper.svg" alt="" />
+              <img class="hs-bush hs-bush--1" src="./assets/hero-small/bush-a.svg" alt="" />
+              <img class="hs-bush hs-bush--2" src="./assets/hero-small/bush-b.svg" alt="" />
+              <img class="hs-bush hs-bush--3" src="./assets/hero-small/bush-c.svg" alt="" />
+              <img class="hs-bush hs-bush--4" src="./assets/hero-small/bush-d.svg" alt="" />
+              <img class="hs-light hs-light--left" src="./assets/hero-small/light-left.svg" alt="" />
+              <img class="hs-light hs-light--right" src="./assets/hero-small/light-right.svg" alt="" />
+              <img class="hs-stairs-main" src="./assets/hero-small/stairs-main.svg" alt="" />
+              <img class="hs-stairs-front" src="./assets/hero-small/stairs-front.svg" alt="" />
+              <p class="hs-title">HACKBEANPOT</p>
+              <p class="hs-lockup lockup">
+                    <span class="lockup__text">Brought to you by</span>
+                    <span class="lockup__logos">
+                      <img class="lockup__amazon" src="./assets/logo-amazon.png" alt="Amazon" />
+                      <img class="lockup__maven" src="./assets/logo-maven.png" alt="Maven AGI" />
+                    </span>
+              </p>
+              <img class="hs-badge" src="./assets/mlh-badge.png" alt="" />
             </div>
           </div>
 
@@ -628,7 +677,7 @@
                     <img src="./assets/team/arrow.svg" alt="" />
                   </button>
                   <button
-                    class="team-arrow team-arrow--next"
+                    class="team-arrow team-arrow--next team-arrow--nudge"
                     type="button"
                     aria-label="Next team members"
                   >
@@ -682,251 +731,270 @@
 
       <!-- FAQs + sock share one continuous gradient; normal page flow
            begins here, after the pinned hero runs out. -->
+      <!-- FAQs + footer (Figma "Footer" frames). The FAQ list flows at real
+           size; below it the stage holds the skeleton art, the dark fade and
+           the footer on an artboard zoomed to the page width by script. -->
       <section class="flow-section flow-section--faqs" id="faqs" aria-label="FAQs">
-        <div class="flow-canvas flow-canvas--faqs">
-          <div class="sock" aria-hidden="true">
-            <div class="sock-base"></div>
-            <div class="sock-float sock-float--fg">
-              <img
-                id="sock-skeleton-fg"
-                src="./assets/sock-skeleton-fg.svg"
-                alt=""
-              />
-            </div>
-            <div class="sock-float sock-float--bg">
-              <img
-                id="sock-skeleton-bg"
-                src="./assets/sock-skeleton-bg.svg"
-                alt=""
-              />
-            </div>
-            <img class="sock-bones sock-bones--left" src="./assets/sock-bones-left.svg" alt="" />
-            <img class="sock-bones sock-bones--right" src="./assets/sock-bones-right.svg" alt="" />
-            <div class="sock-tint sock-tint--burn"></div>
-            <div class="sock-tint sock-tint--light"></div>
-            <img class="sock-glow" id="sock-glow" src="./assets/sock-glow.svg" alt="" />
-            <img class="sock-eye-star" id="sock-eye-star" src="./assets/sock-star.svg" alt="" />
-            <img class="sock-beams" src="./assets/sock-beams.svg" alt="" />
-            <img class="sock-mist" id="sock-mist" src="./assets/sock-mist.svg" alt="" />
-            <img class="sock-twinkle sock-twinkle--1" src="./assets/sock-star.svg" alt="" />
-            <img class="sock-twinkle sock-twinkle--2" src="./assets/sock-star.svg" alt="" />
-            <img class="sock-twinkle sock-twinkle--3" src="./assets/sock-star.svg" alt="" />
-            <img class="sock-twinkle sock-twinkle--4" src="./assets/sock-star.svg" alt="" />
-            <img class="sock-twinkle sock-twinkle--5" src="./assets/sock-star.svg" alt="" />
-            <img class="sock-twinkle sock-twinkle--6" src="./assets/sock-star.svg" alt="" />
-            <img class="sock-twinkle sock-twinkle--7" src="./assets/sock-star.svg" alt="" />
-          </div>
-
           <div class="faq-panel">
             <h2 class="faq-title">FAQs</h2>
 
-            <div class="faq-group">
-              <h3>General</h3>
-              <div class="faq-item is-open">
-                <button class="faq-q" type="button">
-                  <span>When is the hackathon?</span>
-                  <span class="faq-icon" aria-hidden="true"></span>
-                </button>
-                <div class="faq-answer">
-                  <p>
-                    HackBeanpot is a three day long event, beginning on
-                    Friday, February 11th and ending on Sunday, February
-                    13th.
-                  </p>
+            <div class="faq-groups">
+              <div class="faq-group">
+                <h3>General</h3>
+                <div class="faq-item is-open">
+                  <button class="faq-q" type="button">
+                    <span>When is the hackathon?</span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="faq-answer">
+                    <p>
+                      HackBeanpot is a three day long event, beginning on
+                      Friday, February 11th and ending on Sunday, February
+                      13th.
+                    </p>
+                  </div>
+                  <div class="faq-divider"></div>
                 </div>
-                <div class="faq-divider"></div>
+                <div class="faq-item">
+                  <button class="faq-q" type="button">
+                    <span>Am I eligible to attend the hackathon?</span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="faq-answer">
+                    <p>Details are coming soon — stay tuned!</p>
+                  </div>
+                  <div class="faq-divider"></div>
+                </div>
+                <div class="faq-item">
+                  <button class="faq-q" type="button">
+                    <span>Where is the hackathon?</span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="faq-answer">
+                    <p>Details are coming soon — stay tuned!</p>
+                  </div>
+                  <div class="faq-divider"></div>
+                </div>
+                <div class="faq-item">
+                  <button class="faq-q" type="button">
+                    <span>Is this an in-person or virtual hackathon?</span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="faq-answer">
+                    <p>Details are coming soon — stay tuned!</p>
+                  </div>
+                  <div class="faq-divider"></div>
+                </div>
+                <div class="faq-item">
+                  <button class="faq-q" type="button">
+                    <span>How long is the hackathon?</span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="faq-answer">
+                    <p>Details are coming soon — stay tuned!</p>
+                  </div>
+                  <div class="faq-divider"></div>
+                </div>
               </div>
-              <div class="faq-item">
-                <button class="faq-q" type="button">
-                  <span>Am I eligible to attend the hackathon?</span>
-                  <span class="faq-icon" aria-hidden="true"></span>
-                </button>
-                <div class="faq-answer">
-                  <p>Details are coming soon — stay tuned!</p>
+
+              <div class="faq-group">
+                <h3>Event Logistics</h3>
+                <div class="faq-item">
+                  <button class="faq-q" type="button">
+                    <span>Will my travel be reimbursed?</span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="faq-answer">
+                    <p>Details are coming soon — stay tuned!</p>
+                  </div>
+                  <div class="faq-divider"></div>
                 </div>
-                <div class="faq-divider"></div>
+                <div class="faq-item">
+                  <button class="faq-q" type="button">
+                    <span>How do I find a team?</span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="faq-answer">
+                    <p>Details are coming soon — stay tuned!</p>
+                  </div>
+                  <div class="faq-divider"></div>
+                </div>
+                <div class="faq-item">
+                  <button class="faq-q" type="button">
+                    <span>How do teams work?</span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="faq-answer">
+                    <p>Details are coming soon — stay tuned!</p>
+                  </div>
+                  <div class="faq-divider"></div>
+                </div>
+                <div class="faq-item">
+                  <button class="faq-q" type="button">
+                    <span>What are the prizes this year?</span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="faq-answer">
+                    <p>Details are coming soon — stay tuned!</p>
+                  </div>
+                  <div class="faq-divider"></div>
+                </div>
+                <div class="faq-item">
+                  <button class="faq-q" type="button">
+                    <span>Will there be overnight accommodations?</span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="faq-answer">
+                    <p>Details are coming soon — stay tuned!</p>
+                  </div>
+                  <div class="faq-divider"></div>
+                </div>
+                <div class="faq-item">
+                  <button class="faq-q" type="button">
+                    <span>Will food be provided?</span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="faq-answer">
+                    <p>Details are coming soon — stay tuned!</p>
+                  </div>
+                  <div class="faq-divider"></div>
+                </div>
+                <div class="faq-item">
+                  <button class="faq-q" type="button">
+                    <span>Does my project have to be carnival themed?</span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="faq-answer">
+                    <p>Details are coming soon — stay tuned!</p>
+                  </div>
+                  <div class="faq-divider"></div>
+                </div>
               </div>
-              <div class="faq-item">
-                <button class="faq-q" type="button">
-                  <span>Where is the hackathon?</span>
-                  <span class="faq-icon" aria-hidden="true"></span>
-                </button>
-                <div class="faq-answer">
-                  <p>Details are coming soon — stay tuned!</p>
+
+              <div class="faq-group">
+                <h3>Application</h3>
+                <div class="faq-item">
+                  <button class="faq-q" type="button">
+                    <span>How do I apply to HackBeanpot?</span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="faq-answer">
+                    <p>Details are coming soon — stay tuned!</p>
+                  </div>
+                  <div class="faq-divider"></div>
                 </div>
-                <div class="faq-divider"></div>
+                <div class="faq-item">
+                  <button class="faq-q" type="button">
+                    <span>How can I be a mentor or judge?</span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="faq-answer">
+                    <p>Details are coming soon — stay tuned!</p>
+                  </div>
+                  <div class="faq-divider"></div>
+                </div>
+                <div class="faq-item">
+                  <button class="faq-q" type="button">
+                    <span>I applied! When will I hear back?</span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                  </button>
+                  <div class="faq-answer">
+                    <p>Details are coming soon — stay tuned!</p>
+                  </div>
+                  <div class="faq-divider"></div>
+                </div>
               </div>
-              <div class="faq-item">
-                <button class="faq-q" type="button">
-                  <span>Is this an in-person or virtual hackathon?</span>
-                  <span class="faq-icon" aria-hidden="true"></span>
-                </button>
-                <div class="faq-answer">
-                  <p>Details are coming soon — stay tuned!</p>
+            </div>
+          </div>
+
+        <div class="faq-stage">
+          <div class="flow-canvas flow-canvas--stage">
+            <!-- Placement + clip box; the Figma "Sock" frame (1512x959)
+                 inside is zoomed per breakpoint. -->
+            <div class="sock-frame">
+              <div class="sock" aria-hidden="true">
+                <div class="sock-float sock-float--fg">
+                  <img
+                    id="sock-skeleton-fg"
+                    src="./assets/sock-skeleton-fg.svg"
+                    alt=""
+                  />
                 </div>
-                <div class="faq-divider"></div>
-              </div>
-              <div class="faq-item">
-                <button class="faq-q" type="button">
-                  <span>How long is the hackathon?</span>
-                  <span class="faq-icon" aria-hidden="true"></span>
-                </button>
-                <div class="faq-answer">
-                  <p>Details are coming soon — stay tuned!</p>
+                <div class="sock-float sock-float--bg">
+                  <img
+                    id="sock-skeleton-bg"
+                    src="./assets/sock-skeleton-bg.svg"
+                    alt=""
+                  />
                 </div>
-                <div class="faq-divider"></div>
+                <img class="sock-eye-socket" src="./assets/sock-eye-socket.svg" alt="" />
+                <img class="sock-bones sock-bones--left" src="./assets/sock-bones-left.svg" alt="" />
+                <img class="sock-bones sock-bones--right" src="./assets/sock-bones-right.svg" alt="" />
+                <div class="sock-tint sock-tint--burn"></div>
+                <div class="sock-tint sock-tint--light"></div>
+                <img class="sock-glow" id="sock-glow" src="./assets/sock-glow.svg" alt="" />
+                <img class="sock-eye-star" id="sock-eye-star" src="./assets/sock-star.svg" alt="" />
+                <img class="sock-beams" src="./assets/sock-beams.svg" alt="" />
+                <img class="sock-mist" id="sock-mist" src="./assets/sock-mist.svg" alt="" />
+                <img class="sock-twinkle sock-twinkle--1" src="./assets/sock-star.svg" alt="" />
+                <img class="sock-twinkle sock-twinkle--2" src="./assets/sock-star.svg" alt="" />
+                <img class="sock-twinkle sock-twinkle--3" src="./assets/sock-star.svg" alt="" />
+                <img class="sock-twinkle sock-twinkle--4" src="./assets/sock-star.svg" alt="" />
+                <img class="sock-twinkle sock-twinkle--5" src="./assets/sock-star.svg" alt="" />
+                <img class="sock-twinkle sock-twinkle--6" src="./assets/sock-star.svg" alt="" />
+                <img class="sock-twinkle sock-twinkle--7" src="./assets/sock-star.svg" alt="" />
               </div>
             </div>
 
-            <div class="faq-group">
-              <h3>Application</h3>
-              <div class="faq-item">
-                <button class="faq-q" type="button">
-                  <span>How do I apply to HackBeanpot?</span>
-                  <span class="faq-icon" aria-hidden="true"></span>
-                </button>
-                <div class="faq-answer">
-                  <p>Details are coming soon — stay tuned!</p>
-                </div>
-                <div class="faq-divider"></div>
-              </div>
-              <div class="faq-item">
-                <button class="faq-q" type="button">
-                  <span>How can I be a mentor or judge?</span>
-                  <span class="faq-icon" aria-hidden="true"></span>
-                </button>
-                <div class="faq-answer">
-                  <p>Details are coming soon — stay tuned!</p>
-                </div>
-                <div class="faq-divider"></div>
-              </div>
-              <div class="faq-item">
-                <button class="faq-q" type="button">
-                  <span>I applied! When will I hear back?</span>
-                  <span class="faq-icon" aria-hidden="true"></span>
-                </button>
-                <div class="faq-answer">
-                  <p>Details are coming soon — stay tuned!</p>
-                </div>
-                <div class="faq-divider"></div>
-              </div>
-            </div>
+            <!-- Small only: an extra drift of mist and stars above the art. -->
+            <img class="sock-extra-mist" src="./assets/sock-mist.svg" alt="" aria-hidden="true" />
+            <img class="sock-extra-star sock-extra-star--1" src="./assets/sock-star.svg" alt="" />
+            <img class="sock-extra-star sock-extra-star--2" src="./assets/sock-star.svg" alt="" />
+            <img class="sock-extra-star sock-extra-star--3" src="./assets/sock-star.svg" alt="" />
+            <img class="sock-extra-star sock-extra-star--4" src="./assets/sock-star.svg" alt="" />
+            <img class="sock-extra-star sock-extra-star--5" src="./assets/sock-star.svg" alt="" />
 
-            <div class="faq-group">
-              <h3>Event Logistics</h3>
-              <div class="faq-item">
-                <button class="faq-q" type="button">
-                  <span>Will my travel be reimbursed?</span>
-                  <span class="faq-icon" aria-hidden="true"></span>
+            <div class="faq-fade" aria-hidden="true"></div>
+
+            <footer class="site-footer" aria-label="Footer">
+              <div class="footer-left">
+                <button class="footer-btn" type="button" id="back-to-top">
+                  BACK TO TOP
                 </button>
-                <div class="faq-answer">
-                  <p>Details are coming soon — stay tuned!</p>
+                <div class="footer-socials">
+                  <a href="#" aria-label="Instagram">
+                    <img src="./assets/footer-icon-1.svg" alt="" />
+                  </a>
+                  <a href="#" aria-label="LinkedIn">
+                    <img src="./assets/footer-icon-2.svg" alt="" />
+                  </a>
+                  <a href="#" aria-label="TikTok">
+                    <img src="./assets/footer-icon-3.svg" alt="" />
+                  </a>
                 </div>
-                <div class="faq-divider"></div>
+                <p class="footer-nonprofit">
+                  HackBeanpot is a 501(c)(3) non-profit organization.
+                </p>
               </div>
-              <div class="faq-item">
-                <button class="faq-q" type="button">
-                  <span>How do I find a team?</span>
-                  <span class="faq-icon" aria-hidden="true"></span>
-                </button>
-                <div class="faq-answer">
-                  <p>Details are coming soon — stay tuned!</p>
-                </div>
-                <div class="faq-divider"></div>
+              <div class="footer-mail">
+                <h2>Join our mailing list</h2>
+                <p>
+                  Stay up to date with HackBeanpot by signing up for our mailing
+                  list!
+                </p>
+                <form class="footer-form" id="mail-form" novalidate>
+                  <input
+                    type="email"
+                    placeholder="example@email.com"
+                    aria-label="Email address"
+                  />
+                  <button class="footer-submit" type="submit">SUBMIT</button>
+                </form>
               </div>
-              <div class="faq-item">
-                <button class="faq-q" type="button">
-                  <span>How do teams work?</span>
-                  <span class="faq-icon" aria-hidden="true"></span>
-                </button>
-                <div class="faq-answer">
-                  <p>Details are coming soon — stay tuned!</p>
-                </div>
-                <div class="faq-divider"></div>
-              </div>
-              <div class="faq-item">
-                <button class="faq-q" type="button">
-                  <span>What are the prizes this year?</span>
-                  <span class="faq-icon" aria-hidden="true"></span>
-                </button>
-                <div class="faq-answer">
-                  <p>Details are coming soon — stay tuned!</p>
-                </div>
-                <div class="faq-divider"></div>
-              </div>
-              <div class="faq-item">
-                <button class="faq-q" type="button">
-                  <span>Will there be overnight accommodations?</span>
-                  <span class="faq-icon" aria-hidden="true"></span>
-                </button>
-                <div class="faq-answer">
-                  <p>Details are coming soon — stay tuned!</p>
-                </div>
-                <div class="faq-divider"></div>
-              </div>
-              <div class="faq-item">
-                <button class="faq-q" type="button">
-                  <span>Will food be provided?</span>
-                  <span class="faq-icon" aria-hidden="true"></span>
-                </button>
-                <div class="faq-answer">
-                  <p>Details are coming soon — stay tuned!</p>
-                </div>
-                <div class="faq-divider"></div>
-              </div>
-              <div class="faq-item">
-                <button class="faq-q" type="button">
-                  <span>Does my project have to be carnival themed?</span>
-                  <span class="faq-icon" aria-hidden="true"></span>
-                </button>
-                <div class="faq-answer">
-                  <p>Details are coming soon — stay tuned!</p>
-                </div>
-                <div class="faq-divider"></div>
-              </div>
-            </div>
+            </footer>
           </div>
         </div>
       </section>
-
-      <footer class="flow-section site-footer" aria-label="Footer">
-        <div class="flow-canvas flow-canvas--footer">
-          <div class="footer-left">
-            <button class="footer-btn" type="button" id="back-to-top">
-              BACK TO TOP
-            </button>
-            <div class="footer-socials">
-              <a href="#" aria-label="Instagram">
-                <img src="./assets/footer-icon-1.svg" alt="" />
-              </a>
-              <a href="#" aria-label="LinkedIn">
-                <img src="./assets/footer-icon-2.svg" alt="" />
-              </a>
-              <a href="#" aria-label="TikTok">
-                <img src="./assets/footer-icon-3.svg" alt="" />
-              </a>
-            </div>
-            <p class="footer-nonprofit">
-              HackBeanpot is a 501(c)(3) non-profit organization.
-            </p>
-          </div>
-          <div class="footer-mail">
-            <h2>Join our mailing list</h2>
-            <p>
-              Stay up to date with HackBeanpot by signing up for our mailing
-              list!
-            </p>
-            <form class="footer-form" id="mail-form" novalidate>
-              <input
-                type="email"
-                placeholder="example@email.com"
-                aria-label="Email address"
-              />
-              <button class="footer-submit" type="submit">SUBMIT</button>
-            </form>
-          </div>
-        </div>
-      </footer>
     </main>
   </body>
 </html>

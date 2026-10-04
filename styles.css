@@ -1,8 +1,10 @@
 :root {
   --design-width: 1512;
   --design-height: 982;
-  --sky-day: #e1e3ff;
-  --sky-twilight: #5760c3;
+  /* Figma hero keyframes: day, twilight, night (lights off), lit night. */
+  --sky-day: #aedfe3;
+  --sky-twilight: #7a9fbd;
+  --sky-dusk: #5760c3;
   --sky-night: #0b0d21;
   --grass-day: #67bf5a;
   --grass-night: #2d5827;
@@ -176,16 +178,16 @@ img {
 
 .sun {
   z-index: 2;
-  top: 92px;
-  left: 145px;
+  top: 87px;
+  left: 115px;
   width: 79px;
   height: 79px;
   filter: drop-shadow(0 0 12px rgba(255, 245, 166, 0.28));
   will-change: transform, opacity, filter;
 }
 
-/* Faded look comes from brightness, not opacity — the disc must stay
-   fully opaque so it occludes the banner tucked behind it. */
+/* The HackBeanpot-logo moon (Figma "Moon"). The disc must stay fully
+   opaque so it occludes the banner tucked behind it. */
 .moon {
   z-index: 5;
   top: 72px;
@@ -193,7 +195,7 @@ img {
   width: 119px;
   height: 119px;
   opacity: 0;
-  filter: brightness(0.66) drop-shadow(0 0 14px rgba(225, 232, 255, 0.18));
+  filter: drop-shadow(0 0 14px rgba(225, 232, 255, 0.18));
   will-change: transform, opacity;
 }
 
@@ -342,8 +344,12 @@ img {
   left: 243px;
 }
 
+/* The right fixture and beam sit lower than a mirror of the left ones,
+   so (as in Figma) they stack above bushes level 2, under level 1. */
 .light-off--right {
-  left: 1189px;
+  z-index: 12;
+  top: 853px;
+  left: 1135px;
 }
 
 .spotlight {
@@ -360,7 +366,9 @@ img {
 }
 
 .spotlight--right {
-  left: 1113px;
+  z-index: 12;
+  top: 327px;
+  left: 1060px;
   transform: scaleX(-1);
 }
 
@@ -373,7 +381,7 @@ img {
 }
 
 .bushes--one {
-  z-index: 12;
+  z-index: 13;
   top: 787px;
   left: -298px;
   width: 1915px;
@@ -406,12 +414,26 @@ img {
   will-change: opacity;
 }
 
+/* Title and sponsor lockup are live text (Figma: Amarante 64px; Special
+   Gothic 22px). --hud-k scales them per breakpoint, in the scene's own
+   px, so they render at each Figma frame's on-screen size. */
+.hud-intro {
+  --hud-k: 1;
+}
+
 .event-title {
   z-index: 14;
-  top: 22px;
-  left: 561px;
-  width: 390px;
-  height: 51px;
+  top: 21px;
+  left: 559px;
+  width: calc(395px * var(--hud-k));
+  margin: 0;
+  color: #fff;
+  font-family: "Amarante", serif;
+  font-size: calc(64px * var(--hud-k));
+  font-weight: 400;
+  line-height: 1.25;
+  text-align: center;
+  white-space: nowrap;
   opacity: 0;
   will-change: transform, opacity;
 }
@@ -420,12 +442,314 @@ img {
   z-index: 14;
   top: 106px;
   left: 619px;
-  width: 274.681px;
-  height: 29px;
   opacity: 0;
   will-change: transform, opacity;
 }
 
+/* "Brought to you by" + sponsor logos (Figma Group 325). */
+.lockup {
+  --k: var(--hud-k, 1);
+  display: flex;
+  align-items: center;
+  gap: calc(9px * var(--k));
+  margin: 0;
+  color: #fff;
+  font-family: "Special Gothic Condensed One", Arial, sans-serif;
+  font-size: calc(22px * var(--k));
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.lockup__logos {
+  display: flex;
+  align-items: center;
+  gap: calc(10px * var(--k));
+  padding-top: calc(4px * var(--k));
+}
+
+.lockup__amazon {
+  display: block;
+  height: calc(16.56px * var(--k));
+}
+
+.lockup__maven {
+  display: block;
+  height: calc(12.39px * var(--k));
+}
+
+
+/* ---------- Hero: medium (Figma 1000x982 day + lit frames) ----------
+   script.js frames the scene for medium (scene at about 1.16x, see
+   fitSceneToViewport) so the resting museum lands where Figma has it.
+   These overrides, in artboard px, land the moon + hanging MLH badge and
+   the title group on Figma's medium lit-frame positions at that framing. */
+@media (min-width: 600px) and (max-width: 1179.98px) {
+  .moon,
+  .moon-rig {
+    top: 172.1px;
+    left: 350.1px;
+    width: 65.8px;
+    height: 65.8px;
+  }
+
+  .mlh-banner-mask {
+    top: 32.9px;
+    left: -5px;
+    width: 76px;
+  }
+
+  .mlh-banner {
+    top: -2.55px;
+    left: 2.35px;
+    width: 71.1px;
+    height: 162.7px;
+  }
+
+  .mlh-banner__strap {
+    left: 2.95px;
+    width: 65.2px;
+    height: 36.3px;
+  }
+
+  .mlh-banner__badge {
+    top: 36.3px;
+    width: 71.1px;
+    height: 126.4px;
+  }
+
+  /* Above the skyline: medium hangs the moon lower in the sky. */
+  .moon {
+    z-index: 8;
+  }
+
+  .moon-rig {
+    z-index: 7;
+  }
+
+  /* 1 / 0.9009 (resting scene scale at the medium framing). */
+  .hud-intro {
+    --hud-k: 1.11;
+  }
+
+  .event-title {
+    top: 20.13px;
+    left: 532.9px;
+  }
+
+  .sponsor-lockup {
+    top: 115.1px;
+    left: 599.5px;
+  }
+}
+
+/* ---------- Hero: small (Figma 402x874 static night) ---------- */
+.hero-small {
+  display: none;
+}
+
+@media (max-width: 599.98px) {
+  #scene-fit {
+    display: none;
+  }
+
+  .hero-small {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: block;
+    overflow: hidden;
+    background: #0b0d21;
+  }
+
+  /* Cover-fit to the hero by script.js. */
+  .hero-small__art {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 402px;
+    height: 874px;
+    transform: translate(-50%, -50%);
+  }
+
+  .hero-small__art > * {
+    position: absolute;
+    display: block;
+    max-width: none;
+    margin: 0;
+  }
+
+  .hs-stars {
+    width: 1153.37px;
+    height: 596.65px;
+    opacity: 0.27;
+  }
+
+  .hs-moon {
+    top: 321px;
+    left: 304px;
+    width: 88.16px;
+    height: 88.16px;
+  }
+
+  .hs-skyline {
+    top: 331px;
+    left: -129px;
+    width: 717.13px;
+    height: 180.31px;
+  }
+
+  .hs-hill-a {
+    top: 93.12px;
+    left: -725.73px;
+    width: 1205.41px;
+    height: 630.55px;
+    transform: rotate(-34.72deg) scaleY(-1);
+  }
+
+  .hs-hill-b {
+    top: 281.13px;
+    left: -14.24px;
+    width: 683.19px;
+    height: 357.38px;
+    transform: rotate(-160.7deg);
+  }
+
+  .hs-grass {
+    top: 556px;
+    left: -20.41px;
+    width: 455px;
+    height: 346px;
+    background: #2d5827;
+  }
+
+  .hs-museum {
+    top: 422.99px;
+    left: -14.41px;
+    width: 431.1px;
+    height: 150.6px;
+  }
+
+  .hs-bushes-4 {
+    top: 528.54px;
+    left: -12.18px;
+    width: 430.84px;
+    height: 51.75px;
+  }
+
+  .hs-stairs-upper {
+    top: 563.73px;
+    left: 132.65px;
+    width: 138.32px;
+    height: 57.39px;
+  }
+
+  .hs-bush--1 {
+    top: 589.16px;
+    left: 286.46px;
+    width: 182.11px;
+    height: 85.26px;
+    transform: scaleX(-1);
+  }
+
+  .hs-bush--2 {
+    top: 644.17px;
+    left: 324.63px;
+    width: 125.74px;
+    height: 70.73px;
+    transform: scaleX(-1);
+  }
+
+  .hs-bush--3 {
+    top: 589.16px;
+    left: -64.95px;
+    width: 182.11px;
+    height: 85.26px;
+  }
+
+  .hs-bush--4 {
+    top: 645.3px;
+    left: -60.46px;
+    width: 125.74px;
+    height: 70.73px;
+  }
+
+  .hs-light {
+    top: 480.26px;
+    width: 191.88px;
+    height: 200.05px;
+  }
+
+  .hs-light--left {
+    left: -76.18px;
+  }
+
+  .hs-light--right {
+    left: 288.7px;
+    transform: scaleX(-1);
+  }
+
+  .hs-stairs-main {
+    top: 575.16px;
+    left: 37.09px;
+    width: 330.4px;
+    height: 137.08px;
+  }
+
+  .hs-stairs-front {
+    top: 649px;
+    left: -193px;
+    width: 792.59px;
+    height: 328.83px;
+  }
+
+  .hs-title {
+    top: 181px;
+    left: 25px;
+    color: #fff;
+    font-family: "Amarante", serif;
+    font-size: 56.913px;
+    font-weight: 400;
+    line-height: normal;
+    white-space: nowrap;
+  }
+
+  .hs-lockup {
+    --k: 1.029;
+    display: flex;
+    top: 254.34px;
+    left: 60px;
+  }
+
+  .hs-badge {
+    top: -2px;
+    left: 15px;
+    width: 82.4px;
+    height: 146.4px;
+    object-fit: cover;
+  }
+
+  /* Over the small hero the bar is transparent and the badge takes the
+     logo's spot; both return once the hero scrolls away. */
+  .static-scroll .site-nav.site-nav--over-hero {
+    background: transparent;
+    backdrop-filter: none;
+  }
+
+  .site-nav--over-hero .site-nav__logo {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .static-scroll .site-nav {
+    transition: background-color 0.25s ease;
+  }
+
+  .site-nav__logo {
+    transition:
+      opacity 0.25s ease,
+      visibility 0.25s;
+  }
+}
 
 /* ---------- Post-hero stage sections ---------- */
 
@@ -455,7 +779,11 @@ img {
   visibility: hidden;
 }
 
-/* Fixed 1512x982 design canvas, contain-fit to the viewport by script. */
+/* Fixed 1512x982 design canvas, contain-fit to the viewport by script.
+   Text sizes across the stylesheet are multiplied by --tx, which script.js
+   sets on each scaled artboard to min(1, 1 / scale): type keeps its design
+   size when an artboard is enlarged (never grows), but still shrinks with
+   a reduced artboard so it fits its boxes. Outside artboards it is 1. */
 .section-fit {
   position: absolute;
   top: 50%;
@@ -638,7 +966,7 @@ img {
 .about-copy h2 {
   margin: 0;
   font-family: "Amarante", serif;
-  font-size: 50px;
+  font-size: calc(50px * var(--tx, 1));
   font-weight: 400;
   line-height: normal;
 }
@@ -646,7 +974,7 @@ img {
 .about-copy p {
   margin: 0;
   font-family: "Merriweather", Georgia, serif;
-  font-size: 18px;
+  font-size: calc(18px * var(--tx, 1));
   font-weight: 300;
   line-height: 1.4;
 }
@@ -744,7 +1072,7 @@ img {
   }
 
   .about-copy h2 {
-    font-size: 32px;
+    font-size: calc(32px * var(--tx, 1));
   }
 }
 
@@ -851,7 +1179,7 @@ img {
   margin: 0;
   color: #fff;
   font-family: "Amarante", serif;
-  font-size: 50px;
+  font-size: calc(50px * var(--tx, 1));
   font-weight: 400;
   text-align: center;
   white-space: nowrap;
@@ -938,14 +1266,14 @@ img {
 .pillar-copy h3 {
   margin: 0;
   font-family: "Special Gothic Condensed One", Arial, sans-serif;
-  font-size: 24px;
+  font-size: calc(24px * var(--tx, 1));
   font-weight: 400;
 }
 
 .pillar-copy p {
   margin: 0;
   font-family: "Merriweather", Georgia, serif;
-  font-size: 18px;
+  font-size: calc(18px * var(--tx, 1));
   font-weight: 300;
   line-height: 1.4;
 }
@@ -1022,11 +1350,11 @@ img {
    lifts, the beam swings over it and everything outside the beam dims.
    Beam offsets keep the Figma beam-to-pillar relationship per pillar. */
 @media (hover: hover) and (min-width: 600px) {
-  html:not(.static-scroll) .pillar-group:hover .pillar-lift {
+  .pillar-group:hover .pillar-lift {
     transform: translateY(-16px);
   }
 
-  html:not(.static-scroll) .values-scene:has(.pillar-group:hover) {
+  .values-scene:has(.pillar-group:hover) {
     --beam-on: 1;
     --values-dim: 0.8;
   }
@@ -1194,7 +1522,7 @@ img {
     top: 93px;
     left: 19.7px;
     width: 362.6px;
-    font-size: 32px;
+    font-size: calc(32px * var(--tx, 1));
   }
 
   .pillar-group--exploration,
@@ -1268,7 +1596,7 @@ img {
   margin: 0;
   color: #fff;
   font-family: "Amarante", serif;
-  font-size: 50px;
+  font-size: calc(50px * var(--tx, 1));
   font-weight: 400;
   white-space: nowrap;
   will-change: transform, opacity;
@@ -1316,7 +1644,7 @@ img {
 .speaker-info h3 {
   margin: 0;
   font-family: "Special Gothic Condensed One", Arial, sans-serif;
-  font-size: 40px;
+  font-size: calc(40px * var(--tx, 1));
   font-weight: 400;
   line-height: 1.3;
 }
@@ -1325,14 +1653,14 @@ img {
   margin: 0;
   color: #e8b1a5;
   font-family: "Merriweather", Georgia, serif;
-  font-size: 20px;
+  font-size: calc(20px * var(--tx, 1));
   font-weight: 300;
 }
 
 .speaker-bio {
   margin: 20px 0 0;
   font-family: "Merriweather", Georgia, serif;
-  font-size: 18px;
+  font-size: calc(18px * var(--tx, 1));
   font-weight: 300;
   line-height: 1.35;
 }
@@ -1351,7 +1679,7 @@ img {
   margin: 0;
   color: #fdfbfb;
   font-family: "Amarante", serif;
-  font-size: 50px;
+  font-size: calc(50px * var(--tx, 1));
   font-weight: 400;
   text-align: center;
   white-space: nowrap;
@@ -1385,7 +1713,7 @@ img {
 .testi-quote__text {
   margin: 0;
   font-family: "Merriweather", Georgia, serif;
-  font-size: 18px;
+  font-size: calc(18px * var(--tx, 1));
   font-weight: 300;
   line-height: 1.38;
 }
@@ -1393,14 +1721,14 @@ img {
 .testi-quote__name {
   margin: 13px 0 0;
   font-family: "Special Gothic Condensed One", Arial, sans-serif;
-  font-size: 24px;
+  font-size: calc(24px * var(--tx, 1));
 }
 
 .testi-quote__school {
   margin: 0;
   color: rgba(255, 255, 255, 0.78);
   font-family: "Merriweather", Georgia, serif;
-  font-size: 16px;
+  font-size: calc(16px * var(--tx, 1));
   font-weight: 300;
 }
 
@@ -1459,7 +1787,7 @@ img {
   margin: 0;
   color: #fdfbfb;
   font-family: "Amarante", serif;
-  font-size: 50px;
+  font-size: calc(50px * var(--tx, 1));
   font-weight: 400;
   text-align: center;
   white-space: nowrap;
@@ -1495,7 +1823,7 @@ img {
   margin: 0;
   color: #fff;
   font-family: "Amarante", serif;
-  font-size: 50px;
+  font-size: calc(50px * var(--tx, 1));
   font-weight: 400;
   white-space: nowrap;
   will-change: transform, opacity;
@@ -1558,7 +1886,7 @@ img {
   margin: 0;
   color: #fff;
   font-family: "Amarante", serif;
-  font-size: 50px;
+  font-size: calc(50px * var(--tx, 1));
   font-weight: 400;
   text-align: center;
   white-space: nowrap;
@@ -1676,14 +2004,14 @@ img {
 
 .team-name {
   font-family: "Special Gothic Condensed One", Arial, sans-serif;
-  font-size: calc(20.341px * var(--team-scale));
+  font-size: calc((20.341px * var(--team-scale)) * var(--tx, 1));
   line-height: normal;
 }
 
 .team-role {
   color: rgba(255, 255, 255, 0.8);
   font-family: "Merriweather", Georgia, serif;
-  font-size: calc(14.794px * var(--team-scale));
+  font-size: calc((14.794px * var(--team-scale)) * var(--tx, 1));
   font-weight: 300;
   line-height: 1.4;
 }
@@ -1745,6 +2073,36 @@ img {
 
 .team-arrow--next img {
   transform: rotate(90deg);
+}
+
+/* Until the first click, the next arrow nudges forward to hint that the
+   rows can be advanced. Uses `translate` so it composes with the press
+   scale on `transform`. */
+.team-arrow--nudge {
+  animation: team-arrow-nudge 2.4s ease-in-out infinite;
+}
+
+@keyframes team-arrow-nudge {
+  0%,
+  45%,
+  100% {
+    translate: 0 0;
+  }
+
+  12%,
+  32% {
+    translate: 10px 0;
+  }
+
+  22% {
+    translate: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .team-arrow--nudge {
+    animation: none;
+  }
 }
 
 /* Teal skirting strip, checkered floor and two benches. Wider than the
@@ -1866,10 +2224,14 @@ img {
     height: auto !important;
   }
 
+  /* Fills at least the section's one-screen height; the ground is pushed
+     to the bottom so it never floats when every team is closed. */
   .team-mobile {
     --team-scale: 0.727;
     position: relative;
-    display: block;
+    display: flex;
+    flex-direction: column;
+    min-height: 100svh;
     padding-top: 96px;
     color: #fff;
   }
@@ -1877,7 +2239,7 @@ img {
   .team-mobile__title {
     margin: 0 0 35px;
     font-family: "Amarante", serif;
-    font-size: 32px;
+    font-size: calc(32px * var(--tx, 1));
     font-weight: 400;
     text-align: center;
   }
@@ -1899,7 +2261,7 @@ img {
     background: none;
     color: #fff;
     font-family: "Merriweather", Georgia, serif;
-    font-size: 18px;
+    font-size: calc(18px * var(--tx, 1));
     cursor: pointer;
   }
 
@@ -1957,11 +2319,11 @@ img {
   }
 
   .team-acc__row .team-name {
-    font-size: 22px;
+    font-size: calc(22px * var(--tx, 1));
   }
 
   .team-acc__row .team-role {
-    font-size: 16px;
+    font-size: calc(16px * var(--tx, 1));
   }
 
   .team-acc__row .team-linkedin {
@@ -1971,7 +2333,9 @@ img {
 
   .team-mobile__ground {
     position: relative;
+    flex: none;
     height: 104px;
+    margin-top: auto;
     overflow: hidden;
   }
 
@@ -2003,257 +2367,91 @@ img {
   }
 }
 
-/* ---------- FAQs + sock and footer (normal page flow after the hero) ---------- */
-
-/* Fixed-width design canvases scaled to the viewport width by script;
-   aspect-ratio keeps each section's height in step with the scale. */
-.flow-section {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-}
-
+/* ---------- FAQs + footer (normal page flow after the hero) ----------
+   Figma "Footer" frames: the FAQ list flows at real size; below it the
+   stage holds the skeleton art ("Sock"), a dark fade and the footer, laid
+   out on an artboard that script.js zooms to the page width. Zoom (not a
+   transform) keeps the art's blend-mode tints compositing against the
+   section gradient behind them. */
 .flow-section--faqs {
-  aspect-ratio: 1512 / 2164;
-  background: #090912;
-}
-
-.flow-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 1512px;
-  transform-origin: 0 0;
-}
-
-.flow-canvas--faqs {
-  height: 2164px;
-}
-
-.sock {
-  position: absolute;
-  inset: 0;
-}
-
-.sock > *,
-.sock-float {
-  position: absolute;
-}
-
-/* The frame's base gradient lives inside the canvas so the two blended
-   tint layers composite over it (and over the skeletons) exactly as the
-   design's LINEAR_BURN + HARD_LIGHT rectangles do. Stops are unprojected
-   from the Figma gradient transforms. */
-.sock-base {
-  inset: 0;
+  position: relative;
+  overflow: hidden;
   background: linear-gradient(
     180deg,
     #090912 0%,
-    #3842b1 90.67%,
-    #37a9c9 137.6%
+    #3842b1 98%,
+    #37a9c9 148.7%
   );
-}
-
-/* The skeleton group (with its bones, eye star, and glow) sits at 88% of
-   the design scale, anchored bottom-left, opening a gap between it and
-   the mist and stars on the right. */
-.sock-float--fg {
-  top: 1331.2px;
-  left: -198.2px;
-  width: 1188.9px;
-  height: 836px;
-  will-change: transform;
-}
-
-.sock-float--fg img,
-.sock-float--bg img {
-  width: 100%;
-  height: 100%;
-}
-
-.sock-float--bg {
-  top: 1674.9px;
-  left: -56.8px;
-  width: 722.5px;
-  height: 507.8px;
-  will-change: transform;
-}
-
-.sock-bones--left {
-  top: 1836.3px;
-  left: -346.5px;
-  width: 664.4px;
-  height: 591.4px;
-}
-
-.sock-bones--right {
-  top: 1969.3px;
-  left: 19.4px;
-  width: 664.4px;
-  height: 591.4px;
-}
-
-/* Rectangle 1327: LINEAR_BURN at 50% — approximated with multiply at a
-   slightly higher opacity, since CSS has no linear-burn. */
-.sock-tint {
-  inset: 0;
-}
-
-.sock-tint--burn {
-  background: linear-gradient(180deg, #f08854 0%, #070f68 101.4%);
-  mix-blend-mode: multiply;
-  opacity: 0.66;
-}
-
-/* Rectangle 1262: HARD_LIGHT at 70% — CSS supports it exactly; the alpha
-   ramp is unprojected into the section's own y-space. */
-.sock-tint--light {
-  background: linear-gradient(
-    180.8deg,
-    rgba(89, 100, 218, 0.075) 0%,
-    rgba(56, 28, 97, 0.834) 100%
-  );
-  mix-blend-mode: hard-light;
-  opacity: 0.7;
-}
-
-.sock-glow {
-  top: 1804.4px;
-  left: 576.6px;
-  width: 55.4px;
-  height: 55.4px;
-  will-change: transform, opacity;
-}
-
-.sock-eye-star {
-  top: 1821.1px;
-  left: 593.9px;
-  width: 24.5px;
-  height: 22.7px;
-  will-change: transform, opacity;
-}
-
-.sock-beams {
-  top: 942.7px;
-  left: -347.3px;
-  width: 1693px;
-  height: 1659px;
-}
-
-.sock-mist {
-  top: 1830.2px;
-  left: 582.8px;
-  width: 1055px;
-  height: 428px;
-  will-change: transform;
-}
-
-.sock-twinkle {
-  will-change: transform, opacity;
-}
-
-.sock-twinkle--1 {
-  top: 2146.9px;
-  left: 1355.1px;
-  width: 36.8px;
-}
-
-.sock-twinkle--2 {
-  top: 1925px;
-  left: 1373.8px;
-  width: 36.8px;
-}
-
-.sock-twinkle--3 {
-  top: 2135.5px;
-  left: 1394.8px;
-  width: 23.5px;
-}
-
-.sock-twinkle--4 {
-  top: 2079.9px;
-  left: 1116.8px;
-  width: 25.5px;
-}
-
-.sock-twinkle--5 {
-  top: 2006.7px;
-  left: 1473.2px;
-  width: 18.7px;
-}
-
-.sock-twinkle--6 {
-  top: 2097.5px;
-  left: 1152.5px;
-  width: 18.7px;
-}
-
-.sock-twinkle--7 {
-  top: 2056.7px;
-  left: 1274.5px;
-  width: 18.7px;
 }
 
 /* ---------- FAQs accordion ---------- */
 
-/* Counter-scaled by script so text matches the stage sections' effective
-   size; the origin keeps it centered and anchored to its design top. */
+/* Above the art's spill-over tints, as the FAQs layer is in Figma. */
 .faq-panel {
-  position: absolute;
-  top: 64px;
-  left: 433px;
-  width: 646px;
+  position: relative;
+  z-index: 1;
+  width: 1062px;
+  max-width: calc(100% - 160px);
+  margin: 0 auto;
+  padding: 120px 0 60px;
   color: #fff;
-  transform-origin: 50% 0;
 }
 
 .faq-title {
-  margin: 0 0 95px;
+  margin: 0 0 48px;
   font-family: "Amarante", serif;
-  font-size: 50px;
+  font-size: calc(50px * var(--tx, 1));
   font-weight: 400;
   text-align: center;
 }
 
-.faq-group {
-  margin-bottom: 60px;
+/* Large: General and Application stack on the left, Event Logistics on
+   the right (DOM order General, Event Logistics, Application). */
+.faq-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 500px));
+  justify-content: space-between;
+  align-items: start;
+  gap: 60px;
 }
 
 .faq-group h3 {
   margin: 0 0 16px;
   font-family: "Special Gothic Condensed One", Arial, sans-serif;
-  font-size: 28px;
+  font-size: calc(28px * var(--tx, 1));
   font-weight: 400;
+  line-height: 1.4;
   text-transform: uppercase;
 }
 
-.faq-item {
-  margin-bottom: 20px;
+.faq-item + .faq-item {
+  margin-top: 20px;
 }
 
 .faq-q {
   display: flex;
   width: 100%;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: 16px;
   padding: 0;
   border: 0;
   background: none;
   color: #fff;
   font-family: "Merriweather", Georgia, serif;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: calc(18px * var(--tx, 1));
+  font-weight: 400;
+  line-height: normal;
   text-align: left;
   cursor: pointer;
 }
 
-/* Plus that folds to a minus when the row is open. */
+/* 20px plus that folds to a minus when the row is open. */
 .faq-icon {
   position: relative;
   flex: none;
-  width: 14px;
-  height: 14px;
-  margin-right: 3px;
+  width: 20px;
+  height: 20px;
 }
 
 .faq-icon::before,
@@ -2264,15 +2462,15 @@ img {
 }
 
 .faq-icon::before {
-  top: 6px;
-  left: 0;
+  top: 9px;
+  left: 3px;
   width: 14px;
   height: 2px;
 }
 
 .faq-icon::after {
-  top: 0;
-  left: 6px;
+  top: 3px;
+  left: 9px;
   width: 2px;
   height: 14px;
   transition: transform 0.3s ease;
@@ -2288,40 +2486,261 @@ img {
 }
 
 .faq-answer p {
-  margin: 6px 0 16px;
+  margin: 4px 0 0;
   font-family: "Merriweather", Georgia, serif;
-  font-size: 16px;
+  font-size: calc(16px * var(--tx, 1));
   font-weight: 300;
-  line-height: 1.25;
+  line-height: 1.4;
 }
 
+/* The divider only takes space under an open item. */
 .faq-divider {
-  height: 1px;
-  margin-top: 14px;
-  background: rgba(255, 255, 255, 0.4);
+  height: 0;
+  margin-top: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    margin-top 0.3s ease;
 }
 
 .faq-item.is-open .faq-divider {
+  margin-top: 16px;
   opacity: 1;
 }
 
-/* ---------- Footer ---------- */
+/* ---------- Art + footer stage ---------- */
 
-.site-footer {
-  aspect-ratio: 1512 / 289;
-  background: linear-gradient(180deg, #090912 0%, #00005f 100%);
+.faq-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1512 / 1178;
 }
 
-.flow-canvas--footer {
-  height: 289px;
+.flow-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.flow-canvas--stage {
+  width: 1512px;
+  height: 1178px;
+}
+
+.flow-canvas--stage > * {
+  position: absolute;
+}
+
+/* Figma "Sock" frame, placed and zoomed per breakpoint (1, 0.715,
+   0.4173). Layers inside use the frame's own 1512x959 px. It doesn't clip:
+   the tints and beams spill up behind the FAQs (as in Figma) and the
+   section's overflow trims them. */
+.sock-frame {
+  --sock-zoom: 1;
+  top: 26px;
+  left: -1px;
+  width: calc(1512px * var(--sock-zoom));
+  height: calc(959px * var(--sock-zoom));
+}
+
+.sock {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1512px;
+  height: 959px;
+  zoom: var(--sock-zoom);
+}
+
+.sock > * {
+  position: absolute;
+  display: block;
+  max-width: none;
+}
+
+.sock-float img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.sock-float--fg {
+  top: -51.44px;
+  left: -225.22px;
+  width: 1350.86px;
+  height: 949.19px;
+  will-change: transform;
+}
+
+.sock-float--bg {
+  top: 339.2px;
+  left: -64.6px;
+  width: 820.1px;
+  height: 576.2px;
+  will-change: transform;
+}
+
+.sock-eye-socket {
+  top: 492px;
+  left: 660px;
+  width: 50.8px;
+  height: 44.5px;
+}
+
+.sock-bones--left {
+  top: 522.66px;
+  left: -393.7px;
+  width: 754.5px;
+  height: 671px;
+}
+
+.sock-bones--right {
+  top: 673.8px;
+  left: 22.08px;
+  width: 754.5px;
+  height: 671px;
+}
+
+/* Rectangle 1327: LINEAR_BURN at 50% — approximated with multiply at a
+   slightly higher opacity, since CSS has no linear-burn. */
+.sock-tint--burn {
+  top: -1269px;
+  left: -16.9px;
+  width: 2006.9px;
+  height: 2468px;
+  background: linear-gradient(180deg, #f08854, #070f68);
+  mix-blend-mode: multiply;
+  opacity: 0.66;
+}
+
+/* Rectangle 1262: HARD_LIGHT at 70%. */
+.sock-tint--light {
+  top: -1269px;
+  left: 0;
+  width: 1920px;
+  height: 2614px;
+  background: linear-gradient(
+    181.13deg,
+    rgba(154, 173, 216, 0) 28.015%,
+    rgba(93, 104, 230, 0) 28.015%,
+    rgba(49, 13, 70, 0.75) 99.287%
+  );
+  mix-blend-mode: hard-light;
+  opacity: 0.7;
+}
+
+.sock-glow {
+  top: 486.4px;
+  left: 655.15px;
+  width: 62.3px;
+  height: 62.2px;
+  mix-blend-mode: overlay;
+  will-change: transform, opacity;
+}
+
+.sock-eye-star {
+  top: 505.33px;
+  left: 674.89px;
+  width: 27.84px;
+  height: 25.82px;
+  will-change: transform, opacity;
+}
+
+.sock-beams {
+  top: -326.27px;
+  left: -347.29px;
+  width: 1693px;
+  height: 1659px;
+}
+
+.sock-mist {
+  top: 561.24px;
+  left: 582.75px;
+  width: 1054.26px;
+  height: 427.91px;
+  will-change: transform;
+}
+
+.sock-twinkle {
+  height: auto;
+  will-change: transform, opacity;
+}
+
+.sock-twinkle--1 {
+  top: 877.9px;
+  left: 1355.1px;
+  width: 36.8px;
+}
+
+.sock-twinkle--2 {
+  top: 656px;
+  left: 1373.8px;
+  width: 36.8px;
+}
+
+.sock-twinkle--3 {
+  top: 866.5px;
+  left: 1394.8px;
+  width: 23.5px;
+}
+
+.sock-twinkle--4 {
+  top: 810.9px;
+  left: 1116.8px;
+  width: 25.5px;
+}
+
+.sock-twinkle--5 {
+  top: 737.7px;
+  left: 1473.2px;
+  width: 18.7px;
+}
+
+.sock-twinkle--6 {
+  top: 828.5px;
+  left: 1152.5px;
+  width: 18.7px;
+}
+
+.sock-twinkle--7 {
+  top: 787.7px;
+  left: 1274.5px;
+  width: 18.7px;
+}
+
+/* Small only: Group 380's extra mist and stars (stage coordinates). */
+.sock-extra-mist,
+.sock-extra-star {
+  display: none;
+}
+
+.faq-fade {
+  top: 856px;
+  left: -1px;
+  width: 1514px;
+  height: 322px;
+  background: linear-gradient(180deg, rgba(6, 8, 37, 0), #060825 85.559%);
+}
+
+/* ---------- Footer (sits over the bottom of the art) ---------- */
+
+.site-footer {
+  top: 936px;
+  left: 80px;
+  display: flex;
+  width: 1352px;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
 }
 
 .footer-left {
-  position: absolute;
-  top: 72px;
-  left: 80px;
+  display: flex;
+  width: 343px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
 }
 
 .footer-btn {
@@ -2335,11 +2754,12 @@ img {
   );
   color: #fff;
   font-family: "Special Gothic Condensed One", Arial, sans-serif;
-  font-size: 20px;
+  font-size: calc(20px * var(--tx, 1));
   cursor: pointer;
   box-shadow:
     0 0 20px rgba(0, 0, 0, 0.1),
     inset 0 0 20px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
 }
 
 .footer-btn:hover {
@@ -2349,13 +2769,12 @@ img {
 .footer-socials {
   display: flex;
   gap: 8px;
-  margin-top: 16px;
 }
 
 .footer-socials a {
   display: flex;
-  width: 48px;
-  height: 48px;
+  width: 46px;
+  height: 46px;
   align-items: center;
   justify-content: center;
   border: 1px solid rgba(239, 193, 85, 0.1);
@@ -2368,6 +2787,7 @@ img {
   box-shadow:
     0 0 20px rgba(0, 0, 0, 0.1),
     inset 0 0 20px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
 }
 
 .footer-socials a:hover {
@@ -2380,35 +2800,32 @@ img {
 }
 
 .footer-nonprofit {
-  margin: 16px 0 0;
+  margin: 0;
   color: #cecece;
   font-family: "Merriweather", Georgia, serif;
-  font-size: 14px;
-  font-weight: 400;
+  font-size: calc(14px * var(--tx, 1));
+  font-weight: 300;
 }
 
 .footer-mail {
-  position: absolute;
-  top: 70px;
-  left: 1021px;
   width: 411px;
-  color: #fff;
 }
 
 .footer-mail h2 {
   margin: 0;
   font-family: "Special Gothic Condensed One", Arial, sans-serif;
-  font-size: 28px;
+  font-size: calc(28px * var(--tx, 1));
   font-weight: 400;
+  line-height: 1.4;
   text-transform: uppercase;
 }
 
 .footer-mail p {
   margin: 4px 0 0;
   font-family: "Merriweather", Georgia, serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.25;
+  font-size: calc(16px * var(--tx, 1));
+  font-weight: 300;
+  line-height: normal;
 }
 
 .footer-form {
@@ -2418,35 +2835,230 @@ img {
 }
 
 .footer-form input {
-  width: 308px;
-  height: 44px;
-  padding: 0 20px;
-  border: 0;
-  border-radius: 12px;
-  background: #f4f4f4;
-  color: #1a1000;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 12px 16px;
+  border: 1px solid #ffda82;
+  border-radius: 8px;
+  background: rgba(244, 244, 244, 0.2);
+  color: #fff;
   font-family: "Merriweather", Georgia, serif;
-  font-size: 16px;
+  font-size: calc(16px * var(--tx, 1));
+  box-shadow:
+    0 0 20px rgba(0, 0, 0, 0.1),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
 }
 
 .footer-form input::placeholder {
-  color: #5d5d5d;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .footer-submit {
-  height: 46px;
-  padding: 0 20px;
+  flex: none;
+  padding: 10px 20px;
   border: 1px solid #ffda82;
-  border-radius: 12px;
+  border-radius: 8px;
   background: linear-gradient(to top, #e9ac1d, #ffd268);
-  color: #1a1000;
+  color: #833711;
   font-family: "Special Gothic Condensed One", Arial, sans-serif;
-  font-size: 20px;
+  font-size: calc(20px * var(--tx, 1));
   cursor: pointer;
+  box-shadow:
+    0 0 10px rgba(0, 0, 0, 0.1),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
 .footer-submit:hover {
   filter: brightness(1.08);
+}
+
+/* Medium (Figma 1000x2050): one FAQ column; art at 71.5%. */
+@media (max-width: 1179.98px) {
+  .flow-section--faqs {
+    background: linear-gradient(
+      180deg,
+      #090912 0%,
+      #3842b1 90.626%,
+      #37a9c9 137.59%
+    );
+  }
+
+  .faq-panel {
+    width: auto;
+    max-width: none;
+    padding: 85px 32px 0;
+  }
+
+  .faq-title {
+    margin-bottom: 32px;
+  }
+
+  .faq-groups {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .faq-stage {
+    aspect-ratio: 1000 / 958;
+  }
+
+  .flow-canvas--stage {
+    width: 1000px;
+    height: 958px;
+  }
+
+  .sock-frame {
+    --sock-zoom: 0.715;
+    top: 75px;
+    left: -29px;
+  }
+
+  /* Figma stretches the tints to the frame top per breakpoint; these are
+     its medium boxes in sock-local px (Figma px / 0.715). */
+  .sock-tint--burn {
+    top: -1739.9px;
+    left: -16.78px;
+    width: 2007px;
+    height: 2938.5px;
+  }
+
+  .sock-tint--light {
+    top: -1647.6px;
+    width: 1920.3px;
+    height: 2882.5px;
+  }
+
+  .faq-fade {
+    top: 641px;
+    left: 0;
+    width: 1000px;
+  }
+
+  .site-footer {
+    top: 721px;
+    left: 31px;
+    width: 938px;
+  }
+}
+
+/* Small (Figma 402x1943): art at 41.7% with an extra mist drift, and the
+   footer stacks mailing list first. */
+@media (max-width: 599.98px) {
+  .faq-panel {
+    padding: 39px 20px 0;
+  }
+
+  .faq-title {
+    margin-bottom: 40px;
+    font-size: calc(32px * var(--tx, 1));
+  }
+
+  .faq-stage {
+    aspect-ratio: 402 / 799;
+  }
+
+  .flow-canvas--stage {
+    width: 402px;
+    height: 799px;
+  }
+
+  .sock-frame {
+    --sock-zoom: 0.4173;
+    top: 197px;
+    left: -1px;
+  }
+
+  /* Small tint boxes in sock-local px (Figma px / 0.4173). */
+  .sock-tint--burn {
+    top: -3503.5px;
+    left: -16.8px;
+    width: 2005.8px;
+    height: 4701.7px;
+  }
+
+  .sock-tint--light {
+    top: -3503.5px;
+    width: 1919.5px;
+    height: 4847.8px;
+  }
+
+  .sock-extra-mist,
+  .sock-extra-star {
+    display: block;
+    height: auto;
+  }
+
+  .sock-extra-mist {
+    top: 8px;
+    left: -70px;
+    width: 557px;
+  }
+
+  .sock-extra-star--1 {
+    top: 58.07px;
+    left: 347.96px;
+    width: 19.44px;
+  }
+
+  .sock-extra-star--2 {
+    top: 169.3px;
+    left: 359.05px;
+    width: 12.41px;
+  }
+
+  .sock-extra-star--3 {
+    top: 139.93px;
+    left: 212.14px;
+    width: 13.49px;
+  }
+
+  .sock-extra-star--4 {
+    top: 149.22px;
+    left: 231.03px;
+    width: 9.9px;
+  }
+
+  .sock-extra-star--5 {
+    top: 127.63px;
+    left: 295.49px;
+    width: 9.9px;
+  }
+
+  .faq-fade {
+    top: 150px;
+    left: -197px;
+    width: 1514px;
+    height: 662px;
+  }
+
+  .site-footer {
+    top: 510px;
+    left: 20px;
+    width: 362px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 40px;
+  }
+
+  .footer-mail {
+    order: -1;
+    width: auto;
+  }
+
+  .footer-left {
+    display: grid;
+    width: auto;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+
+  .footer-left .footer-btn {
+    justify-self: start;
+  }
+
+  .footer-nonprofit {
+    grid-column: 1 / -1;
+  }
 }
 
 /* ---------- Stacked phone page (html.static-scroll) ----------
@@ -2470,8 +3082,15 @@ img {
 
 .static-scroll .site-nav {
   position: fixed;
-  background: rgba(6, 8, 37, 0.72);
-  backdrop-filter: blur(8px);
+}
+
+/* Only the small layout gets a tinted bar; wider screens keep the
+   transparent navbar even on the stacked page. */
+@media (max-width: 599.98px) {
+  .static-scroll .site-nav {
+    background: rgba(6, 8, 37, 0.72);
+    backdrop-filter: blur(8px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
