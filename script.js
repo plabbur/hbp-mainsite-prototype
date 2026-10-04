@@ -741,7 +741,7 @@
     speakers: ["#ca6330", "#833711"],
     testimonials: ["#1d032c", "#1d032c"],
     projects: ["#73678d", "#352f5a"],
-    sponsors: ["#ca6330", "#8f4622"],
+    sponsors: ["#34416b", "#080a27"],
     team: ["#37a9c9", "#024354"],
     faqs: ["#090912", "#090912"],
   };
@@ -2001,32 +2001,53 @@
       { autoAlpha: 1, duration: 0.8, ease: "power1.inOut" },
       16.9,
     )
-    // ---- Speakers enter: the arch rises into place, the balustrade on
-    // both sides rises with it as one piece, and the curtains sweep in.
-    .fromTo(
-      [speakerStage, ...speakerRailings],
-      { y: 820 },
-      {
-        y: 0,
-        duration: 2.15,
-        ease: "power1.out",
-        immediateRender: false,
-      },
-      17.1,
-    )
+    // ---- Speakers enter: the curtains sweep in first; once they're in
+    // place, the arch rises from the bottom (on medium it fades in where it
+    // stands) while the balustrade fades up gently in front of it, both
+    // settling just before the text appears (19.35).
     .fromTo(
       speakerCurtain,
       { x: 620 },
       {
         x: 0,
-        duration: 1.9,
+        duration: 1.1,
         ease: "power2.out",
         immediateRender: false,
       },
-      17.15,
+      16.9,
     )
-    // ---- Speakers exit: arch, railing, and text rise away; the curtains
-    // pull back to the right.
+    // Rendered immediately so the arch and railing stay hidden while the
+    // curtains come in, instead of showing before their fade starts.
+    // Large: the arch rises from below. Medium: it fades in where it stands.
+    .fromTo(
+      speakerStage,
+      {
+        y: () => (mediumQuery.matches ? 0 : 820),
+        autoAlpha: () => (mediumQuery.matches ? 0 : 1),
+      },
+      {
+        y: 0,
+        autoAlpha: 1,
+        duration: 1.25,
+        ease: "power2.out",
+        immediateRender: true,
+      },
+      18.0,
+    )
+    .fromTo(
+      speakerRailings,
+      { y: 60, autoAlpha: 0 },
+      {
+        y: 0,
+        autoAlpha: 1,
+        duration: 1.3,
+        ease: "power1.out",
+        immediateRender: true,
+      },
+      18.0,
+    )
+    // ---- Speakers exit: arch and text rise away; the balustrade reverses
+    // its entrance (sinks and fades), then the curtains pull back right.
     .fromTo(
       [speakerStage, speakerCopy],
       { y: 0, autoAlpha: 1 },
@@ -2044,9 +2065,9 @@
       speakerRailings,
       { y: 0, autoAlpha: 1 },
       {
-        y: -140,
+        y: 60,
         autoAlpha: 0,
-        duration: 1.1,
+        duration: 0.55,
         ease: "power1.in",
         immediateRender: false,
       },
@@ -2055,8 +2076,8 @@
     .fromTo(
       speakerCurtain,
       { x: 0 },
-      { x: 620, duration: 1, ease: "power1.in", immediateRender: false },
-      20.9,
+      { x: 620, duration: 0.5, ease: "power1.in", immediateRender: false },
+      21.4,
     )
     .to(sectionSpeakers, { autoAlpha: 0, duration: 0.5 }, 21.9)
     // ---- Gradient morph: rust to the Testimonials deep purple.
@@ -2355,18 +2376,6 @@
     projects: { dwell: 29.6, enterStart: 27.4, exitEnd: 32.4, landing: 27.55 },
     sponsors: { dwell: 34.6, enterStart: 32.6, exitEnd: 37.6, landing: 32.75 },
     team: { dwell: 39.8, enterStart: 37.8, exitEnd: 42.8, landing: 37.95 },
-  };
-  // Dwell-state backdrop colors per section, for the jump overlay.
-  const SECTION_COLORS = {
-    hero: ["#0b0d21", "#0b0d21"],
-    about: ["#322243", "#251930"],
-    values: ["#37a9c9", "#017b9d"],
-    speakers: ["#ca6330", "#833711"],
-    testimonials: ["#1d032c", "#1d032c"],
-    projects: ["#73678d", "#352f5a"],
-    sponsors: ["#34416b", "#080a27"],
-    team: ["#37a9c9", "#017b9d"],
-    faqs: ["#090912", "#090912"],
   };
   const navBackdrop = document.querySelector("#stage-backdrop-nav");
   let navScrollTween = null;

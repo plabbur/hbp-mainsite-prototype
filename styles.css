@@ -1592,15 +1592,33 @@ img {
   width: 214px;
 }
 
+/* The curtain wrapper sits at the canvas origin and slides as one piece;
+   each breakpoint shows its own arrangement inside. */
 .speaker-curtain {
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  will-change: transform;
+}
+
+.speaker-curtain > img {
+  position: absolute;
+}
+
+.speaker-curtain__lg {
   top: 0;
   left: 5px;
   width: 1509px;
   height: 982px;
-  will-change: transform;
 }
 
-/* The arch holding the current speaker's photo; slides on arrow presses. */
+.speaker-curtain__md-top,
+.speaker-curtain__md-side {
+  display: none;
+}
+
+/* The arch holding the current speaker's photo. */
 .speaker-stage {
   top: 184px;
   left: 127px;
@@ -1613,6 +1631,14 @@ img {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+/* The gold base the arch stands on, and the railing's continuation and
+   floor (medium artboard only). */
+.speaker-base,
+.speaker-railing--extend,
+.speaker-floor {
+  display: none;
 }
 
 .speaker-copy {
@@ -1726,6 +1752,115 @@ img {
   cursor: default;
 }
 
+/* Medium artboard (Figma 1000x982): the arch at 74% on a gold base at the
+   left, one railing across the bottom, the copy in a narrower column to
+   its right, and the curtains re-arranged down the right side. */
+@media (min-width: 600px) and (max-width: 1179.98px) {
+  #speakers-fit {
+    width: 1000px;
+    height: 982px;
+  }
+
+  .speaker-railing--right,
+  .speaker-railing--extend {
+    top: 743px;
+    left: -6px;
+    width: 791.2px;
+    height: 239.4px;
+  }
+
+  .speaker-railing--extend {
+    display: block;
+    left: -797px;
+  }
+
+  .speaker-railing--left {
+    display: none;
+  }
+
+  /* Below the railing, a floor in its gold runs down to the screen's bottom
+     edge when the artboard is letterboxed (--bleed-y is that depth). */
+  .speaker-floor {
+    display: block;
+    top: 982px;
+    left: calc(-6px - var(--bleed-x, 0px));
+    width: calc(1006px + 2 * var(--bleed-x, 0px));
+    height: var(--bleed-y, 0px);
+    background: #e9ac1d;
+  }
+
+  /* When letterboxed, the top swag pins to the screen's top edge and the
+     side drapes stretch from the top edge to the bottom. */
+  .speaker-curtain__lg {
+    display: none;
+  }
+
+  .speaker-curtain__md-top,
+  .speaker-curtain__md-side {
+    display: block;
+    top: calc(-1 * var(--bleed-y, 0px));
+    left: 0;
+    width: 1500px;
+  }
+
+  .speaker-curtain__md-top {
+    height: 982px;
+  }
+
+  .speaker-curtain__md-side {
+    height: calc(982px + 2 * var(--bleed-y, 0px));
+  }
+
+  .speaker-stage {
+    top: 83px;
+    left: 30px;
+    width: 388.7px;
+    height: 590.8px;
+  }
+
+  .speaker-base {
+    display: block;
+    position: absolute;
+    top: 582px;
+    left: -7px;
+    width: 402px;
+    height: 42px;
+  }
+
+  .speakers-title {
+    top: 200px;
+    left: 455px;
+  }
+
+  .speaker-info {
+    top: 279px;
+    left: 455px;
+    width: 390px;
+  }
+
+  /* Text keeps its design size even when the artboard scales up. */
+  .speaker-name {
+    font-size: calc(40px * var(--tx, 1));
+  }
+
+  .speaker-role {
+    font-size: calc(20px * var(--tx, 1));
+  }
+
+  .speaker-bio {
+    font-size: calc(18px * var(--tx, 1));
+  }
+
+  .speakers-title {
+    font-size: calc(50px * var(--tx, 1));
+  }
+
+  .speaker-controls {
+    top: 617px;
+    left: 455px;
+  }
+}
+
 /* ---------- Hacker testimonials ---------- */
 
 .testi-scene {
@@ -1735,6 +1870,16 @@ img {
 }
 
 .testi-scene > * {
+  position: absolute;
+}
+
+/* Art that differs at medium swaps its source through <picture>; the
+   wrapper stays out of layout so the img keeps its own box. */
+.testi-scene picture {
+  display: contents;
+}
+
+.testi-scene > picture > img {
   position: absolute;
 }
 
@@ -1859,6 +2004,54 @@ img {
   gap: 9px;
   pointer-events: auto;
   will-change: transform, opacity;
+}
+
+/* Medium (Figma MD "Hacker Testimonials", 1000x982): the same hall and
+   copy shifted left to centre on the narrower frame, with the mists and
+   sparkles redrawn for it (the -md assets swapped in by <picture>). */
+@media (min-width: 600px) and (max-width: 1179.98px) {
+  #section-testimonials .section-fit {
+    width: 1000px;
+    height: 982px;
+  }
+
+  .testi-hall__arches {
+    top: 138px;
+    left: -683px;
+    width: 2366px;
+    height: 904px;
+  }
+
+  .testi-hall__paws {
+    top: 837px;
+    left: 495px;
+    width: 171px;
+    height: 205px;
+  }
+
+  .testi-mist--right {
+    top: 85.53px;
+    left: 490.14px;
+    width: 510px;
+    height: 842px;
+  }
+
+  .testi-stars {
+    width: 1000px;
+  }
+
+  .testi-title {
+    left: 254px;
+  }
+
+  .testi-medallion {
+    left: 347.7px;
+  }
+
+  .testi-quote,
+  .testi-controls {
+    left: 299px;
+  }
 }
 
 /* ---------- Past projects ---------- */
@@ -2043,6 +2236,50 @@ img {
   will-change: transform, opacity;
 }
 
+/* Medium (Figma MD "Past Projects", 1000x982): the doorway, walls, and
+   arches shift 212px left; the project frame narrows to 356px and its
+   details wrap beneath it. */
+@media (min-width: 600px) and (max-width: 1179.98px) {
+  #section-projects .section-fit {
+    width: 1000px;
+    height: 982px;
+  }
+
+  .projects-doorway,
+  .projects-arches {
+    left: -1032px;
+  }
+
+  .projects-walls {
+    left: -212px;
+  }
+
+  .projects-title {
+    top: 154px;
+    left: 80px;
+  }
+
+  /* 508px of frame art at large, 356px here (the SVG includes 3px of
+     shadow to the left). */
+  .project-frame {
+    top: 239px;
+    left: 564.9px;
+    width: 358.8px;
+    height: 202.5px;
+  }
+
+  .project-details {
+    top: 471px;
+    left: 567px;
+    width: 356px;
+  }
+
+  .projects-controls {
+    top: 846px;
+    left: 567px;
+  }
+}
+
 /* ---------- Sponsors ---------- */
 
 /* The gallery (statues in tall windows, a marble border, warm glows):
@@ -2172,6 +2409,49 @@ img {
 .sponsors-cta__contact a:hover,
 .sponsors-cta__contact a:focus-visible {
   color: #fff;
+}
+
+/* Medium (Figma MD "Sponsors", 1000x982): the gallery is recomposed for
+   the narrower frame (Figma's render of it, sponsors-bg-md.png at 4x,
+   scaled to 2x), and the frames shrink to fit. */
+@media (min-width: 600px) and (max-width: 1179.98px) {
+  #section-sponsors .section-fit {
+    width: 1000px;
+    height: 982px;
+  }
+
+  .sponsors-bg {
+    background-image: url("./assets/sponsors-bg-md.jpg");
+    background-size: 1000px 982px;
+  }
+
+  .sponsors-title {
+    left: 335px;
+  }
+
+  .sponsor-frame--gold {
+    top: 269px;
+    width: 255px;
+    height: 171px;
+  }
+
+  .sponsor-frame--silver {
+    top: 494px;
+    width: 182px;
+    height: 122px;
+  }
+
+  .sponsor-frame--1 { left: 57px; }
+  .sponsor-frame--2 { left: 372px; }
+  .sponsor-frame--3 { left: 688px; }
+  .sponsor-frame--4 { left: 177px; }
+  .sponsor-frame--5 { left: 402px; }
+  .sponsor-frame--6 { left: 627px; }
+
+  .sponsors-cta {
+    top: 680px;
+    left: 200px;
+  }
 }
 
 /* ---------- Meet the team ---------- */

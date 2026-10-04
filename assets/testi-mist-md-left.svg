@@ -1,0 +1,45 @@
+<svg width="760" height="982" viewBox="0 0 760 982" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Medium layout. Exported from Figma (MD): upper-left swirl (Vector 264) and lower-left swirl
+     (Vector 265, at y 554). Billows like testi-mist-left.svg. -->
+<style>
+.billow {
+  transform-box: fill-box;
+  animation: billow ease-in-out infinite alternate;
+}
+.billow--top {
+  transform-origin: 0% 0%;
+  animation-duration: 9s;
+}
+.billow--bottom {
+  transform-origin: 0% 100%;
+  animation-duration: 7s;
+  animation-delay: -3s;
+}
+@keyframes billow {
+  0% { opacity: 1; transform: translate(0, 0) scale(1, 1) skewX(0deg); }
+  50% { opacity: 0.85; transform: translate(10px, 4px) scale(1.04, 1.025) skewX(1.5deg); }
+  100% { opacity: 1; transform: translate(-6px, 8px) scale(1.06, 1.01) skewX(-1deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .billow { animation: none; }
+}
+</style>
+<defs>
+<linearGradient id="mist-tl" x1="-53.9011" y1="-62.3216" x2="469.991" y2="164.078" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FFE3B2" stop-opacity="0.9"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="mist-bl" x1="-107.539" y1="537.83" x2="538.666" y2="168.281" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FFE3B2" stop-opacity="0.9"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</linearGradient>
+</defs>
+<g class="billow billow--top">
+<path d="M253.833 334.819C316.762 323.305 347.792 433.281 355.42 466.215C351.617 458.529 322.913 401.783 259.022 431.64C225.334 447.383 150.683 404.412 122.686 397.431C94.6898 390.451 -9.10346 435.769 -50.8132 419.992C-108.686 398.1 -186.471 332.592 -183.912 355.238L-226.548 0.215463C-231.287 10.8842 -259.259 -39.0316 -132.079 -20.9107C26.8964 1.74045 40.4074 123.411 72.1201 210.96C92.0437 265.963 175.172 349.212 253.833 334.819Z" fill="url(#mist-tl)"/>
+</g>
+<g transform="translate(0 554.03)">
+<g class="billow billow--bottom">
+<path d="M185.269 46.7904C316.295 -17.3087 366.703 1.30578 372.026 6.65249C365.288 15.9635 320.59 25.6153 293.394 50.0231C259.399 80.5329 236.961 149.445 224.737 232.098C203.029 378.88 93.3913 381.488 51.8304 458.647L-260.955 438.224C-241.866 388.549 -170.909 303.913 -65.5667 262.223C125.648 186.548 21.4868 126.914 185.269 46.7904Z" fill="url(#mist-bl)"/>
+</g>
+</g>
+</svg>

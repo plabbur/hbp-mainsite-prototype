@@ -1,0 +1,18 @@
+<svg width="1500" height="982" viewBox="0 0 1500 982" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Exported from Figma (MD) "Speakers": the drapes down the right of the 1000x982 medium frame
+     (Ellipse 264, 266, 267, 268). The page stretches them to the screen's full height, so they
+     always run from the top swag to the bottom edge. The canvas runs 500px past the frame's
+     right edge for screens wider than the artboard. -->
+<g transform="translate(774.5 195.4)">
+<path d="M3.53 801.92C-4.17 704.29 0.74 606.10 18.00 512.97C35.26 419.83 64.53 333.57 104.14 259.10C143.74 184.64 192.91 123.43 248.83 78.97C304.74 34.51 366.32 7.68 430.04 9.20e-05L488.75 743.42L3.53 801.92Z" fill="#A52C28"/>
+</g>
+<g transform="translate(845.5 182.9)">
+<path d="M5.44 810.28C-4.13 712.78 -1.04 614.48 14.53 521.00C30.12 427.51 57.89 340.67 96.26 265.43C134.63 190.19 182.86 128.02 238.18 82.48C293.50 36.93 354.83 8.91 418.68 3.83e-05L491.62 742.42L5.44 810.28Z" fill="#71120F"/>
+</g>
+<g transform="translate(839.8 352.6)">
+<path d="M14.84 836.61C-0.90 739.63 -4.16 641.07 5.26 546.54C14.69 452.02 36.62 363.38 69.79 285.69C102.97 208.00 146.74 142.79 198.61 93.77C250.48 44.75 309.43 12.88 372.10 -4.81e-05L492.05 738.46L14.84 836.61Z" fill="#A52C28"/>
+</g>
+<g transform="translate(898.9 187.2)">
+<path d="M11.99 828.49C-2.18 731.59 -3.81 633.30 7.22 539.22C18.25 445.14 41.72 357.12 76.29 280.19C110.86 203.26 155.85 138.92 208.69 90.84C261.53 42.76 321.18 11.89 384.25 5.25e-05L492.24 737.88L11.99 828.49Z" fill="#71120F"/>
+</g>
+</svg>

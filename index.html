@@ -470,29 +470,42 @@
             id="section-speakers"
             aria-label="Speakers"
           >
-            <div class="section-fit">
+            <div class="section-fit" id="speakers-fit">
               <div class="section-canvas">
                 <img
                   class="speaker-railing speaker-railing--right"
                   src="./assets/speaker-railing.svg"
                   alt=""
                 />
+                <!-- Medium only: continues the railing off to the left on
+                     screens wider than the artboard, and a floor below it
+                     down to the screen's bottom edge. -->
                 <img
-                  class="speaker-curtain"
-                  id="speaker-curtain"
-                  src="./assets/speaker-curtain.svg"
+                  class="speaker-railing speaker-railing--extend"
+                  src="./assets/speaker-railing.svg"
                   alt=""
                 />
+                <div class="speaker-railing speaker-floor"></div>
+                <!-- The curtains; arranged differently on the medium artboard,
+                     where the top swag and side drapes reach the screen's
+                     edges. -->
+                <div class="speaker-curtain" id="speaker-curtain">
+                  <img class="speaker-curtain__lg" src="./assets/speaker-curtain.svg" alt="" />
+                  <img class="speaker-curtain__md-top" src="./assets/speaker-curtain-md-top.svg" alt="" />
+                  <img class="speaker-curtain__md-side" src="./assets/speaker-curtain-md-side.svg" alt="" />
+                </div>
                 <img
                   class="speaker-railing speaker-railing--left"
                   src="./assets/speaker-railing-left.svg"
                   alt=""
                 />
 
-                <!-- The arch slides on arrow presses; its window holds the
-                     current speaker's photo. Inline so the plinths can
-                     overlap the photo's lower corners, as in the design. -->
+                <!-- The arch; its window holds the current speaker's photo.
+                     Inline so the plinths can overlap the photo's lower
+                     corners, as in the design. On medium screens it stands
+                     on a gold base. -->
                 <div class="speaker-stage" id="speaker-stage">
+                  <img class="speaker-base" src="./assets/speaker-plinth.svg" alt="" />
                   <svg
                     class="speaker-arch"
                     viewBox="0 0 525 798"
@@ -613,36 +626,51 @@
                 <!-- A hall of arches recedes behind the testimonial, with a
                      trail of paw prints down its floor. -->
                 <div class="testi-hall" id="testi-hall">
-                  <img
-                    class="testi-hall__arches"
-                    src="./assets/testi-hall.svg"
-                    alt=""
-                  />
-                  <img
-                    class="testi-hall__paws"
-                    src="./assets/testi-paws.svg"
-                    alt=""
-                  />
+                  <picture>
+                    <source media="(min-width: 600px) and (max-width: 1179.98px)" srcset="./assets/testi-hall-md.svg" />
+                    <img
+                      class="testi-hall__arches"
+                      src="./assets/testi-hall.svg"
+                      alt=""
+                    />
+                  </picture>
+                  <picture>
+                    <source media="(min-width: 600px) and (max-width: 1179.98px)" srcset="./assets/testi-paws-md.svg" />
+                    <img
+                      class="testi-hall__paws"
+                      src="./assets/testi-paws.svg"
+                      alt=""
+                    />
+                  </picture>
                 </div>
 
-                <img
-                  class="testi-mist testi-mist--left"
-                  id="testi-mist-left"
-                  src="./assets/testi-mist-left.svg"
-                  alt=""
-                />
-                <img
-                  class="testi-stars"
-                  id="testi-stars"
-                  src="./assets/testi-stars.svg"
-                  alt=""
-                />
-                <img
-                  class="testi-mist testi-mist--right"
-                  id="testi-mist-right"
-                  src="./assets/testi-mist-right.svg"
-                  alt=""
-                />
+                <picture>
+                  <source media="(min-width: 600px) and (max-width: 1179.98px)" srcset="./assets/testi-mist-md-left.svg" />
+                  <img
+                    class="testi-mist testi-mist--left"
+                    id="testi-mist-left"
+                    src="./assets/testi-mist-left.svg"
+                    alt=""
+                  />
+                </picture>
+                <picture>
+                  <source media="(min-width: 600px) and (max-width: 1179.98px)" srcset="./assets/testi-stars-md.svg" />
+                  <img
+                    class="testi-stars"
+                    id="testi-stars"
+                    src="./assets/testi-stars.svg"
+                    alt=""
+                  />
+                </picture>
+                <picture>
+                  <source media="(min-width: 600px) and (max-width: 1179.98px)" srcset="./assets/testi-mist-md-right.svg" />
+                  <img
+                    class="testi-mist testi-mist--right"
+                    id="testi-mist-right"
+                    src="./assets/testi-mist-right.svg"
+                    alt=""
+                  />
+                </picture>
                 </div>
 
                 <!-- Title, medallion, quote, and arrows enter together; the
