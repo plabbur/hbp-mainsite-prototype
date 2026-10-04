@@ -1545,8 +1545,14 @@ img {
 
 /* ---------- Meet the team ---------- */
 
+/* Frames are drawn in their Figma pixel sizes and scaled per layout by
+   --team-scale (large 1, medium 0.9, phone accordion 0.727). */
+#team-fit {
+  --team-scale: 1;
+}
+
 .team-title {
-  top: 64px;
+  top: 103px;
   left: 586px;
   width: 340px;
   margin: 0;
@@ -1559,40 +1565,35 @@ img {
   will-change: transform, opacity;
 }
 
-/* Marquee rows: the inner strip holds three copies of a randomized cycle
-   and is translated by exactly one cycle width for a seamless loop. The
-   wide left offset keeps frames flowing past the letterbox bleed on very
-   wide viewports. */
+/* Two rows; each track holds three copies of the row's random order and
+   is stepped by the arrow buttons (script.js), re-centring into the
+   middle copy after each move so the rows loop forever. */
 .team-row {
-  position: absolute;
-  left: -1200px;
-  height: 370px;
+  height: 303.64px;
   will-change: transform, opacity;
 }
 
 .team-row--top {
-  top: 160px;
+  --team-gap: 74px;
+  top: 191px;
+  left: 97px;
 }
 
 .team-row--bottom {
-  top: 540px;
+  --team-gap: 83px;
+  top: 541.4px;
+  left: -502px;
 }
 
-/* Gaps run 24px tighter than the design's frame-to-frame spacing because
-   each export carries a 12px transparent pad on every side. */
 .team-row__inner {
   position: absolute;
   top: 0;
   left: 0;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   height: 100%;
-  gap: 56px;
+  gap: calc(var(--team-gap) * var(--team-scale));
   will-change: transform;
-}
-
-.team-row--bottom .team-row__inner {
-  gap: 66px;
 }
 
 .team-slot {
@@ -1600,72 +1601,406 @@ img {
   flex: none;
   flex-direction: column;
   align-items: center;
-  margin: 0 0 var(--lift, 0px);
+  width: calc(var(--w) * var(--team-scale) * 1px);
+  margin: 0;
+  gap: calc(11.095px * var(--team-scale));
+}
+
+.team-frame-box {
+  position: relative;
+  width: calc(var(--w) * var(--team-scale) * 1px);
+  height: calc(var(--h) * var(--team-scale) * 1px);
+}
+
+/* Frame art in Figma coordinates; every layer is absolutely placed. */
+.tf {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(var(--w) * 1px);
+  height: calc(var(--h) * 1px);
+  transform: scale(var(--team-scale));
+  transform-origin: 0 0;
+}
+
+.tf > * {
+  position: absolute;
+  display: block;
+  max-width: none;
+}
+
+.tf-window {
+  overflow: hidden;
+}
+
+.tf-window img {
+  position: absolute;
+  display: block;
+  max-width: none;
+}
+
+.tf-window .tf-cover {
+  object-fit: cover;
 }
 
 .team-slot figcaption {
-  margin-top: 14px;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(1.849px * var(--team-scale));
   color: #fff;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.team-name-line {
+  display: flex;
+  align-items: center;
+  gap: calc(8px * var(--team-scale));
+}
+
+/* Members without a `linkedin` URL link to the LinkedIn home page. */
+.team-linkedin {
+  display: block;
+  flex: none;
+  width: calc(16px * var(--team-scale));
+  height: calc(16px * var(--team-scale));
+  opacity: 0.55;
+}
+
+.team-linkedin img {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .team-name {
-  display: block;
   font-family: "Special Gothic Condensed One", Arial, sans-serif;
-  font-size: 22px;
-  line-height: 29px;
+  font-size: calc(20.341px * var(--team-scale));
+  line-height: normal;
 }
 
 .team-role {
-  display: block;
   color: rgba(255, 255, 255, 0.8);
   font-family: "Merriweather", Georgia, serif;
-  font-size: 14px;
+  font-size: calc(14.794px * var(--team-scale));
   font-weight: 300;
-  line-height: 18px;
+  line-height: 1.4;
 }
 
-/* Exported sizes carry a 12px transparent pad; sized to the design scale. */
-.team-slot--maia img {
-  width: 373px;
+.team-nav {
+  inset: 0;
+  pointer-events: none;
+  will-change: opacity;
 }
 
-.team-slot--zahra img {
-  width: 262px;
+.team-arrow {
+  position: absolute;
+  top: 493px;
+  display: grid;
+  width: 74px;
+  height: 74px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #ffda82;
+  border-radius: 50%;
+  background: linear-gradient(0deg, #e9ac1d, #ffd268);
+  box-shadow:
+    0 0 10px rgba(0, 0, 0, 0.1),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: filter 0.15s ease, transform 0.15s ease;
 }
 
-.team-slot--carolyn img {
-  width: 218px;
+.team-arrow:hover {
+  filter: brightness(1.06);
 }
 
-.team-slot--lucy img {
-  width: 206px;
+.team-arrow:active {
+  transform: scale(0.95);
 }
 
-.team-slot--cole img {
-  width: 256px;
+.team-arrow:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
 }
 
-.team-slot--maia {
-  --lift: 12px;
+.team-arrow img {
+  width: 49px;
+  height: 49px;
 }
 
-.team-slot--lucy {
-  --lift: 16px;
+.team-arrow--prev {
+  left: 40px;
 }
 
-.team-slot--carolyn {
-  --lift: 4px;
+.team-arrow--prev img {
+  transform: rotate(-90deg);
 }
 
-/* Checkered museum floor pinned to the bottom edge; wider than the canvas
-   so it survives wide-viewport letterboxing, and taller than the visible
-   sliver so it can ride up in during the entrance. */
-.team-floor {
+.team-arrow--next {
+  left: 1398px;
+}
+
+.team-arrow--next img {
+  transform: rotate(90deg);
+}
+
+/* Teal skirting strip, checkered floor and two benches. Wider than the
+   canvas so letterboxed viewports still see floor at the sides. */
+/* Full-canvas layer stacked after the arrows: let clicks through. */
+.team-ground {
+  inset: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.team-ground > * {
+  position: absolute;
+  display: block;
+}
+
+.team-ground__strip {
   top: 912px;
   left: -352px;
   width: 2217px;
-  will-change: transform, opacity;
+  height: 35px;
+  background: #017b9d;
+}
+
+.team-ground__floor {
+  top: 947px;
+  left: -352px;
+  width: 2217px;
+  height: 239px;
+}
+
+.team-ground__bench {
+  top: 876px;
+  width: 506px;
+  height: 115.08px;
+}
+
+.team-ground__bench--a {
+  left: 220px;
+}
+
+.team-ground__bench--b {
+  left: 786px;
+}
+
+.team-mobile {
+  display: none;
+}
+
+/* Medium artboard (Figma 1000x982): frames at 90%, rows and buttons
+   re-placed. */
+@media (min-width: 600px) and (max-width: 1179.98px) {
+  #team-fit {
+    --team-scale: 0.9;
+    width: 1000px;
+    height: 982px;
+  }
+
+  .team-title {
+    top: 97px;
+    left: 330px;
+  }
+
+  .team-row {
+    height: 273.3px;
+  }
+
+  .team-row--top {
+    top: 204px;
+    left: -111px;
+  }
+
+  .team-row--bottom {
+    top: 542.4px;
+    left: -710px;
+  }
+
+  .team-arrow {
+    top: 506px;
+  }
+
+  .team-arrow--next {
+    left: 886px;
+  }
+
+  .team-ground__strip {
+    top: 922px;
+    height: 26px;
+  }
+
+  .team-ground__floor {
+    top: 948px;
+  }
+
+  .team-ground__bench {
+    top: 890px;
+    width: 415.86px;
+    height: 94.58px;
+  }
+
+  .team-ground__bench--a {
+    left: 56px;
+  }
+
+  .team-ground__bench--b {
+    left: 510.14px;
+  }
+}
+
+/* Small (Figma 402x874, the stacked phone page): the carousel gives way
+   to a team-by-team accordion in normal flow, so the section grows with
+   whichever team is open. */
+@media (max-width: 599.98px) {
+  #team-fit {
+    display: none;
+  }
+
+  .static-scroll main > #section-team {
+    height: auto !important;
+  }
+
+  .team-mobile {
+    --team-scale: 0.727;
+    position: relative;
+    display: block;
+    padding-top: 96px;
+    color: #fff;
+  }
+
+  .team-mobile__title {
+    margin: 0 0 35px;
+    font-family: "Amarante", serif;
+    font-size: 32px;
+    font-weight: 400;
+    text-align: center;
+  }
+
+  .team-mobile__teams {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-bottom: 64px;
+  }
+
+  .team-acc__head {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    border: 0;
+    background: none;
+    color: #fff;
+    font-family: "Merriweather", Georgia, serif;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  .team-acc__head img {
+    width: 20px;
+    height: 20px;
+    transform: rotate(-90deg);
+    transition: transform 0.3s ease;
+  }
+
+  .team-acc.is-open .team-acc__head img {
+    transform: none;
+  }
+
+  /* Height animates via the 0fr -> 1fr grid-row trick. */
+  .team-acc__panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.35s ease;
+  }
+
+  .team-acc.is-open .team-acc__panel {
+    grid-template-rows: 1fr;
+  }
+
+  .team-acc__clip {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* One swipeable row with every member of the team. */
+  .team-acc__row {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    padding: 0 20px 8px;
+    overflow-x: auto;
+    scroll-padding: 0 20px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .team-acc__row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .team-acc__row .team-slot {
+    min-width: 170px;
+    gap: 12px;
+    scroll-snap-align: start;
+  }
+
+  .team-acc__row .team-name-line {
+    gap: 8px;
+  }
+
+  .team-acc__row .team-name {
+    font-size: 22px;
+  }
+
+  .team-acc__row .team-role {
+    font-size: 16px;
+  }
+
+  .team-acc__row .team-linkedin {
+    width: 16px;
+    height: 16px;
+  }
+
+  .team-mobile__ground {
+    position: relative;
+    height: 104px;
+    overflow: hidden;
+  }
+
+  .team-mobile__ground > * {
+    position: absolute;
+  }
+
+  .team-mobile__ground .team-ground__strip {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 35px;
+  }
+
+  .team-mobile__ground .team-ground__floor {
+    top: 35px;
+    left: 50%;
+    width: 1443px;
+    height: auto;
+    transform: translateX(-50%);
+  }
+
+  .team-mobile__ground .team-ground__bench {
+    top: 18px;
+    left: 50%;
+    width: 350px;
+    height: 79.6px;
+    transform: translateX(-50%);
+  }
 }
 
 /* ---------- FAQs + sock and footer (normal page flow after the hero) ---------- */

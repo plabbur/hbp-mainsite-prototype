@@ -163,6 +163,7 @@
   const teamTitle = document.querySelector("#team-title");
   const teamRows = gsap.utils.toArray(".team-row");
   const teamFloor = document.querySelector("#team-floor");
+  const teamNav = document.querySelector("#team-nav");
   const navTeamLink = document.querySelector('[data-section="team"]');
   const navFaqsLink = document.querySelector('[data-section="faqs"]');
   const museumShadow = document.querySelector("#museum-shadow");
@@ -281,6 +282,388 @@
     });
   });
 
+  // --- Meet the team ---
+  // Roster from the Figma "Our Team" board. The first person in each team
+  // is its lead; Directors are both Co-Directors. Photo boxes are in each
+  // frame style's window coordinates (x, y, w, h); `crop` reproduces a
+  // Figma image-fill crop (percent size and offset) when it isn't a plain
+  // cover fit.
+  const TEAMS = [
+    {
+      key: "directors",
+      label: "Directors",
+      style: "directors",
+      members: [
+        { name: "Angie Che", photo: "angie-che.jpg" },
+        { name: "Susan Chen", photo: "susan-chen.jpg" },
+      ],
+    },
+    {
+      key: "tech",
+      label: "Tech",
+      style: "tech",
+      members: [
+        { name: "Aditya Pathak", photo: "aditya-pathak.jpg" },
+        { name: "Andre Coullard", photo: "andre-coullard.jpg" },
+        { name: "Mehana Nagarur", photo: "mehana-nagarur.jpg" },
+        { name: "Michael Zhang", photo: "michael-zhang.jpg" },
+        { name: "Phaedra Sanon", photo: "phaedra-sanon.jpg" },
+        { name: "Shreeya A.", photo: "shreeya-a.png" },
+        { name: "Yurika Kan", photo: "yurika-kan.jpg" },
+      ],
+    },
+    {
+      key: "design",
+      label: "Design",
+      style: "design",
+      members: [
+        { name: "Zahra Wibisana", photo: "zahra-wibisana.jpg" },
+        {
+          name: "Carolyn Hoa",
+          photo: "carolyn-hoa.jpg",
+          box: [-53.28, -35, 261, 279],
+          crop: [111.37, 185.62, -0.02, -55.94],
+        },
+        { name: "Cole Abrams", photo: "cole-abrams.jpg" },
+        { name: "Maia Gonzalez", photo: "maia-gonzalez.jpg" },
+        { name: "Lucy Liu", photo: "lucy-liu.jpg" },
+      ],
+    },
+    {
+      key: "marketing",
+      label: "Marketing",
+      style: "marketing",
+      members: [
+        { name: "Rai Makaraju", photo: "rai-makaraju.jpg", box: [-3.27, -21.71, 172, 262] },
+        { name: "Dalton Burkhart", photo: "dalton-burkhart.jpg", box: [-7.86, -9.71, 181, 276] },
+        { name: "Clio Leung", photo: "clio-leung.jpg", box: [-2.44, 0.29, 171, 260] },
+        { name: "Shayaan Hussain", photo: "shayaan-hussain.jpg", box: [-2.02, -1.71, 167, 254] },
+        { name: "Isabel Yeow", photo: "isabel-yeow.jpg", box: [-0.61, -25.71, 166, 253] },
+        { name: "Camila Carrillo", photo: "camila-carrillo.jpg", box: [-30.19, -10.71, 226, 226] },
+        { name: "Justin Xu", photo: "justin-xu.jpg", box: [-22.77, -2.71, 209, 209] },
+      ],
+    },
+    {
+      key: "sponsorship",
+      label: "Sponsorship",
+      style: "sponsorship",
+      members: [
+        { name: "Jolin Yang", photo: "jolin-yang.jpg", box: [-1.36, -10.18, 286, 192] },
+        { name: "Esha Kanakapura", photo: "esha-kanakapura.jpg", box: [-1.63, -10.18, 286, 192] },
+        {
+          name: "Amogh Athimamula",
+          photo: "amogh-athimamula.jpg",
+          box: [-0.91, -10.18, 286, 192],
+          crop: [100, 148.96, 0, -3.79],
+        },
+        { name: "Tanvi Agarwal", photo: "tanvi-agarwal.jpg", box: [-1.18, -10.18, 286, 192] },
+        { name: "Gauri Rajesh", photo: "gauri-rajesh.jpg", box: [-1.45, -10.18, 286, 192] },
+        {
+          name: "Seifer Mathias",
+          photo: "seifer-mathias.jpg",
+          box: [-1.45, -10.18, 286, 192],
+          crop: [100, 148.96, 0, -10.34],
+        },
+      ],
+    },
+    {
+      key: "operations",
+      label: "Operations",
+      style: "operations",
+      members: [
+        { name: "Nicole Ni", photo: "nicole-ni.jpg", box: [-32.4, -4.87, 203, 203] },
+        { name: "Lyanne Xu", photo: "lyanne-xu.jpg", box: [-29.84, -7.87, 208, 208] },
+        { name: "Nicholas Chen", photo: "nicholas-chen.jpg", box: [-62.73, -2.87, 276, 199] },
+        { name: "Agrima Jain", photo: "agrima-jain.jpg", box: [-62.18, -1.87, 275, 198] },
+        { name: "Rithika Ravichandran", photo: "rithika-ravichandran.jpg", box: [-67.62, -0.87, 275, 198] },
+      ],
+    },
+  ];
+
+  const TEAM_ASSETS = "./assets/team/";
+  const px = (x, y, w, h) =>
+    `left:${x}px;top:${y}px;width:${w}px;height:${h}px;`;
+  const art = (file, x, y, w, h, extra = "") =>
+    `<img src="${TEAM_ASSETS}${file}" alt="" style="${px(x, y, w, h)}${extra}" />`;
+  const fill = (color, x, y, w, h, extra = "") =>
+    `<span style="${px(x, y, w, h)}background:${color};${extra}"></span>`;
+
+  // Each frame style: Figma size, photo window (with its own clipping),
+  // the default photo box, and the frame layers drawn under / over it.
+  const TEAM_STYLES = {
+    directors: {
+      size: [200.444, 220],
+      window: [20.37, 20.37, 158.074, 178.444],
+      photo: [0, 0, 158.074, 178.444],
+      over:
+        art("directors-frame.svg", -0.12, -0.14, 200.83, 220.4) +
+        art("directors-intersect.svg", 13.73, 13.45, 173.05, 193.23),
+    },
+    design: {
+      size: [198.333, 240],
+      window: [14.17, 35, 170, 170],
+      windowStyle: "border-radius:50%;background:#512309;",
+      photo: [-7.5, -3.33, 184.166, 184.166],
+      under:
+        art("design-top.svg", 66.4, 0.25, 65.53, 26.42) +
+        art("design-bottom.svg", 66.4, 213.33, 65.53, 26.42, "transform:rotate(180deg);") +
+        art("design-ring.svg", 0, 20.83, 198.333, 198.333),
+      over:
+        art("design-dot.svg", 95.83, 19.17, 6.667, 6.667) +
+        art("design-dot.svg", 95.83, 214.17, 6.667, 6.667),
+    },
+    tech: {
+      size: [171.525, 220],
+      window: [14.92, 14.91, 141.695, 190.17],
+      windowStyle: "border:2.131px solid #973f13;box-sizing:border-box;",
+      photo: [0, 0, 137.433, 185.908],
+      under:
+        fill("#ca6330", 0, 0, 171.525, 220) +
+        fill(
+          "#a24e25",
+          5.86,
+          5.86,
+          159.806,
+          208.281,
+          "border:2.131px solid #973f13;box-sizing:border-box;",
+        ) +
+        [
+          [0, 0, -45],
+          [0, 204.75, 45],
+          [156.27, 0, 45],
+          [156.27, 204.75, -45],
+        ]
+          .map(([x, y, angle]) =>
+            fill(
+              "#973f13",
+              x - 0.53 + 7.36,
+              y - 0.53 - 2.58,
+              1.598,
+              21.477,
+              `transform:rotate(${angle}deg);`,
+            ),
+          )
+          .join(""),
+    },
+    sponsorship: {
+      size: [317.273, 220],
+      window: [16.36, 28.18, 283.636, 170.909],
+      windowStyle: "background:#060825;",
+      photo: [-1.36, -10.18, 286, 192],
+      // Rectangle 141's 10.909px outside stroke frames the photo's left
+      // and right edges (top and bottom sit under the wood bars).
+      under:
+        art("sponsorship-crest.svg", 105.45, 0, 106.364, 21.818) +
+        fill("#512309", 6.36, 17.27, 304.545, 192.727),
+      over:
+        fill("#512309", 1.82, 12.73, 313.636, 14.545, "border-radius:0.9px;") +
+        fill("#512309", 1.82, 200, 313.636, 14.545, "border-radius:0.9px;") +
+        fill("#491f08", 0, 7.27, 317.273, 10, "border-radius:0.9px;") +
+        fill("#491f08", 0, 210, 317.273, 10, "border-radius:0.9px;"),
+    },
+    operations: {
+      size: [153.445, 220],
+      window: [7.4, 13.87, 138.655, 193.193],
+      windowStyle: "background:#cedcfc;",
+      photo: [0, 0, 138.655, 193.193],
+      under:
+        art("operations-top.svg", 7.4, 0, 86.891, 27.731) +
+        art("operations-top.svg", 59.16, 0, 86.891, 27.731) +
+        art("operations-base.svg", 14.79, 203.36, 123.865, 16.639) +
+        fill("#094600", 0, 6.47, 153.445, 207.983),
+    },
+    marketing: {
+      size: [180.583, 220],
+      window: [7.69, 9.71, 165.009, 201.667],
+      windowStyle:
+        `-webkit-mask:url(${TEAM_ASSETS}marketing-mask.svg) 0 0/100% 100% no-repeat;` +
+        `mask:url(${TEAM_ASSETS}marketing-mask.svg) 0 0/100% 100% no-repeat;`,
+      photo: [0, 0, 165.009, 201.667],
+      under: art("marketing-frame.svg", -6.72, -0.05, 187.42, 225.83),
+    },
+  };
+
+  const teamRole = (team, index) => {
+    if (team.key === "directors") return "Co-Director";
+    return index === 0 ? `${team.label} Lead` : team.label;
+  };
+
+  const TEAM_PEOPLE = TEAMS.flatMap((team) =>
+    team.members.map((member, index) => ({
+      ...member,
+      team: team.key,
+      style: team.style,
+      role: teamRole(team, index),
+      lead: index === 0,
+    })),
+  );
+
+  const shuffle = (list) => {
+    const copy = [...list];
+    for (let index = copy.length - 1; index > 0; index -= 1) {
+      const swap = Math.floor(Math.random() * (index + 1));
+      [copy[index], copy[swap]] = [copy[swap], copy[index]];
+    }
+    return copy;
+  };
+
+  // Reorder so no frame style repeats back to back (best effort,
+  // including across the loop seam).
+  const spreadStyles = (list) => {
+    const pool = [...list];
+    const out = [];
+    while (pool.length) {
+      const previous = out[out.length - 1];
+      const isLast = pool.length === 1;
+      let pick = pool.findIndex(
+        (person) =>
+          person.style !== previous?.style &&
+          (!isLast || person.style !== out[0]?.style),
+      );
+      if (pick === -1) pick = 0;
+      out.push(pool.splice(pick, 1)[0]);
+    }
+    return out;
+  };
+
+  const frameMarkup = (person) => {
+    const style = TEAM_STYLES[person.style];
+    const [w, h] = style.size;
+    const [wx, wy, ww, wh] = style.window;
+    const [x, y, pw, ph] = person.box ?? style.photo;
+    let photo;
+    if (person.crop) {
+      const [cw, ch, cl, ct] = person.crop;
+      photo =
+        `<span style="${px(x, y, pw, ph)}position:absolute;overflow:hidden;">` +
+        `<img src="${TEAM_ASSETS}photos/${person.photo}" alt="" ` +
+        `style="position:absolute;left:${cl}%;top:${ct}%;width:${cw}%;height:${ch}%;max-width:none;" /></span>`;
+    } else {
+      photo =
+        `<img class="tf-cover" src="${TEAM_ASSETS}photos/${person.photo}" alt="" ` +
+        `style="${px(x, y, pw, ph)}" />`;
+    }
+    return (
+      `<div class="team-frame-box" style="--w:${w};--h:${h};">` +
+      `<div class="tf tf--${person.style}">` +
+      (style.under ?? "") +
+      `<div class="tf-window" style="${px(wx, wy, ww, wh)}${style.windowStyle ?? ""}">${photo}</div>` +
+      (style.over ?? "") +
+      `</div></div>`
+    );
+  };
+
+  const slotMarkup = (person) => {
+    const name =
+      `<span class="team-name-line"><span class="team-name">${person.name}</span>` +
+      `<a class="team-linkedin" href="${person.linkedin ?? "https://www.linkedin.com/"}" ` +
+      `target="_blank" rel="noopener noreferrer" aria-label="${person.name} on LinkedIn">` +
+      `<img src="${TEAM_ASSETS}linkedin.svg" alt="" /></a></span>`;
+    return (
+      `<figure class="team-slot team-slot--${person.style}" style="--w:${TEAM_STYLES[person.style].size[0]};">` +
+      frameMarkup(person) +
+      `<figcaption>${name}<span class="team-role">${person.role}</span></figcaption>` +
+      `</figure>`
+    );
+  };
+
+  // Large/medium: deal a random order into two rows, each rendered three
+  // times over so the track can loop.
+  const TEAM_COPIES = 3;
+  const TEAM_STEP = 3;
+  const order = shuffle(TEAM_PEOPLE);
+  const teamRowsData = [
+    spreadStyles(order.filter((_, index) => index % 2 === 0)),
+    spreadStyles(order.filter((_, index) => index % 2 === 1)),
+  ];
+  const teamTracks = ["#team-row-top", "#team-row-bottom"].map(
+    (selector, rowIndex) => {
+      const row = document.querySelector(selector);
+      const inner = row.querySelector(".team-row__inner");
+      const people = teamRowsData[rowIndex];
+      inner.innerHTML = Array.from({ length: TEAM_COPIES }, () =>
+        people.map((person) => slotMarkup(person)).join(""),
+      ).join("");
+      return { row, inner, people, index: people.length };
+    },
+  );
+
+  // Track offset (in artboard px) of slot `index`, from the layout's
+  // current scale and gap so it stays right across breakpoints.
+  const trackOffset = (track, index) => {
+    const styles = getComputedStyle(track.inner);
+    const scale = parseFloat(styles.getPropertyValue("--team-scale")) || 1;
+    const gap = parseFloat(styles.columnGap) || 0;
+    let offset = 0;
+    for (let slot = 0; slot < index; slot += 1) {
+      const person = track.people[slot % track.people.length];
+      offset += TEAM_STYLES[person.style].size[0] * scale + gap;
+    }
+    return -offset;
+  };
+  const placeTracks = () =>
+    teamTracks.forEach((track) =>
+      gsap.set(track.inner, { x: trackOffset(track, track.index) }),
+    );
+  placeTracks();
+  window.addEventListener("resize", placeTracks, { passive: true });
+
+  let teamStepping = false;
+  const stepTeam = (direction) => {
+    if (teamStepping) return;
+    teamStepping = true;
+    teamTracks.forEach((track, trackIndex) => {
+      track.index += direction * TEAM_STEP;
+      gsap.to(track.inner, {
+        x: trackOffset(track, track.index),
+        duration: 0.65,
+        ease: "power2.inOut",
+        onComplete: () => {
+          // Re-centre into the middle copy; identical slots, no jump.
+          const count = track.people.length;
+          if (track.index >= count * 2) track.index -= count;
+          if (track.index < count) track.index += count;
+          gsap.set(track.inner, { x: trackOffset(track, track.index) });
+          if (trackIndex === teamTracks.length - 1) teamStepping = false;
+        },
+      });
+    });
+  };
+  document
+    .querySelector(".team-arrow--prev")
+    .addEventListener("click", () => stepTeam(-1));
+  document
+    .querySelector(".team-arrow--next")
+    .addEventListener("click", () => stepTeam(1));
+
+  // Small: accordion, one swipeable row per team, lead first and the rest
+  // shuffled. Directors starts open.
+  document.querySelector("#team-mobile-teams").innerHTML = TEAMS.map((team) => {
+    const people = TEAM_PEOPLE.filter((person) => person.team === team.key);
+    const ordered = [people[0], ...shuffle(people.slice(1))];
+    const open = team.key === "directors";
+    return (
+      `<section class="team-acc${open ? " is-open" : ""}">` +
+      `<button class="team-acc__head" type="button" aria-expanded="${open}" aria-controls="team-acc-${team.key}">` +
+      `<span>${team.label}</span><img src="${TEAM_ASSETS}chevron.svg" alt="" /></button>` +
+      `<div class="team-acc__panel" id="team-acc-${team.key}"><div class="team-acc__clip">` +
+      `<div class="team-acc__row">${ordered.map((person) => slotMarkup(person)).join("")}</div>` +
+      `</div></div></section>`
+    );
+  }).join("");
+  // Only one team open at a time: opening one closes the others.
+  const teamHeads = document.querySelectorAll(".team-acc__head");
+  teamHeads.forEach((head) => {
+    head.addEventListener("click", () => {
+      const open = !head.parentElement.classList.contains("is-open");
+      teamHeads.forEach((other) => {
+        const isTarget = other === head && open;
+        other.parentElement.classList.toggle("is-open", isTarget);
+        other.setAttribute("aria-expanded", String(isTarget));
+      });
+    });
+  });
+
   // Dwell-state backdrop colors per section, for the jump overlay and
   // the stacked phone page.
   const SECTION_COLORS = {
@@ -291,7 +674,7 @@
     testimonials: ["#322243", "#251930"],
     projects: ["#37a9c9", "#017b9d"],
     sponsors: ["#ca6330", "#8f4622"],
-    team: ["#37a9c9", "#017b9d"],
+    team: ["#37a9c9", "#024354"],
     faqs: ["#090912", "#090912"],
   };
 
@@ -405,67 +788,6 @@
   gsap.set([starsFar, starsNear], { scale: 1.15, transformOrigin: "50% 50%" });
   gsap.to(starsFar, { rotation: 360, duration: 420, repeat: -1, ease: "none" });
   gsap.to(starsNear, { rotation: -360, duration: 300, repeat: -1, ease: "none" });
-
-  // --- Meet the team marquee rows ---
-  // Each row cycles a randomized order of the five completed frame assets
-  // (never the same frame twice in a row, including across the loop seam).
-  // The top row drifts right, the bottom row left, looping seamlessly.
-  const TEAM_MEMBERS = [
-    { id: "maia", name: "Maia Gonzales", role: "Designer", width: 373 },
-    { id: "zahra", name: "Zahra Wibisana", role: "Design Lead", width: 262 },
-    { id: "carolyn", name: "Carolyn Hoa", role: "Designer", width: 218 },
-    { id: "lucy", name: "Lucy Liu", role: "Designer", width: 206 },
-    { id: "cole", name: "Cole Abrams", role: "Designer", width: 256 },
-  ];
-
-  const makeTeamSequence = (length) => {
-    const sequence = [];
-    for (let index = 0; index < length; index += 1) {
-      const previous = sequence[index - 1];
-      // The final slot also can't match the first, since the cycle repeats.
-      const last = index === length - 1 ? sequence[0] : null;
-      const options = TEAM_MEMBERS.filter(
-        (member) => member !== previous && member !== last,
-      );
-      sequence.push(gsap.utils.random(options));
-    }
-    return sequence;
-  };
-
-  const buildTeamRow = (row, gap, movesRight) => {
-    const inner = row.querySelector(".team-row__inner");
-    const sequence = makeTeamSequence(8);
-    const cycleWidth =
-      sequence.reduce((sum, member) => sum + member.width, 0) +
-      sequence.length * gap;
-
-    const COPIES = 3;
-    for (let copy = 0; copy < COPIES; copy += 1) {
-      sequence.forEach((member) => {
-        const slot = document.createElement("figure");
-        slot.className = `team-slot team-slot--${member.id}`;
-        slot.innerHTML =
-          `<img src="./assets/team-frame-${member.id}.png" alt="${member.name}" />` +
-          `<figcaption><span class="team-name">${member.name}</span>` +
-          `<span class="team-role">${member.role}</span></figcaption>`;
-        inner.appendChild(slot);
-      });
-    }
-
-    gsap.fromTo(
-      inner,
-      { x: movesRight ? -cycleWidth : 0 },
-      {
-        x: movesRight ? 0 : -cycleWidth,
-        duration: cycleWidth / 44,
-        ease: "none",
-        repeat: -1,
-      },
-    );
-  };
-
-  buildTeamRow(document.querySelector("#team-row-top"), 56, true);
-  buildTeamRow(document.querySelector("#team-row-bottom"), 66, false);
 
   // --- FAQs sock ambient animations ---
 
@@ -955,7 +1277,11 @@
     gsap.set(sectionTestimonials, {
       display: T >= 21.7 && T <= 27.5 ? "block" : "none",
     });
-    gsap.set(stageButtons, { display: T >= 21.9 ? "block" : "none" });
+    // Shown from Testimonials through Projects; after the Projects exit
+    // drops them (~32.3) they'd otherwise linger in letterboxed viewports.
+    gsap.set(stageButtons, {
+      display: T >= 21.9 && T < 32.4 ? "block" : "none",
+    });
     gsap.set(sectionProjects, {
       display: T >= 26.9 && T <= 32.7 ? "block" : "none",
     });
@@ -1240,12 +1566,13 @@
     .to(sponsorStone, { rotation: 0.7, duration: 0.3, ease: "sine.inOut" }, 1.53)
     .to(sponsorStone, { rotation: 0, duration: 0.3, ease: "sine.out" }, 1.83);
 
-  // Meet the team entrance: title rises in, the marquee rows fade up into
-  // their drift, and the checkered floor slides up from the bottom edge.
+  // Meet the team entrance: title rises in, the rows fade up, the arrow
+  // buttons appear, and the floor and benches slide up from the bottom.
   let teamEntered = false;
 
   gsap.set(teamTitle, { autoAlpha: 0, y: 26 });
   gsap.set(teamRows, { autoAlpha: 0, y: 24 });
+  gsap.set(teamNav, { autoAlpha: 0 });
   gsap.set(teamFloor, { y: 90 });
 
   const teamEnter = gsap.timeline({ paused: true });
@@ -1260,6 +1587,7 @@
       { autoAlpha: 1, y: 0, duration: 0.6, ease: "power2.out", stagger: 0.15 },
       0.15,
     )
+    .to(teamNav, { autoAlpha: 1, duration: 0.5, ease: "power1.out" }, 0.4)
     .to(teamFloor, { y: 0, duration: 0.7, ease: "power3.out" }, 0.1);
 
   // Speakers: the info text pops in only when its frame has settled.
@@ -1688,7 +2016,7 @@
       stageBackdrop,
       {
         "--sec-top": "#37a9c9",
-        "--sec-bottom": "#017b9d",
+        "--sec-bottom": "#024354",
         duration: 1.2,
         ease: "power1.inOut",
       },
@@ -1699,8 +2027,8 @@
       { autoAlpha: 1, duration: 0.8, ease: "power1.inOut" },
       37.8,
     )
-    // ---- Meet the Team exit: rows and title rise and fade while the
-    // floor drops out below, still drifting as they go.
+    // ---- Meet the Team exit: rows and title rise and fade, the arrows
+    // fade out, and the floor drops away below.
     .fromTo(
       teamRows,
       { y: 0, autoAlpha: 1 },
@@ -1725,6 +2053,17 @@
         immediateRender: false,
       },
       41.65,
+    )
+    .fromTo(
+      teamNav,
+      { autoAlpha: 1 },
+      {
+        autoAlpha: 0,
+        duration: 0.6,
+        ease: "power1.in",
+        immediateRender: false,
+      },
+      41.6,
     )
     .fromTo(
       teamFloor,
