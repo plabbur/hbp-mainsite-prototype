@@ -109,10 +109,23 @@
   const speakerPrev = document.querySelector(".speaker-arrow--prev");
   const speakerNext = document.querySelector(".speaker-arrow--next");
   const sectionTestimonials = document.querySelector("#section-testimonials");
-  const testiMist = document.querySelector("#testi-mist");
+  const testiScene = document.querySelector("#testi-scene");
+  const testiHall = document.querySelector("#testi-hall");
+  const testiMistLeft = document.querySelector("#testi-mist-left");
+  const testiMistRight = document.querySelector("#testi-mist-right");
+  const testiStars = document.querySelector("#testi-stars");
+  const testiCopy = document.querySelector("#testi-copy");
   const testiTitle = document.querySelector("#testi-title");
-  const testiCenter = document.querySelector("#testi-center");
-  const testiPillars = gsap.utils.toArray(".testi-pillar");
+  const testiMedallion = document.querySelector("#testi-medallion");
+  const testiPhoto = document.querySelector("#testi-photo");
+  const testiPhotoLabel = document.querySelector("#testi-photo-label");
+  const testiQuote = document.querySelector("#testi-quote");
+  const testiQuoteText = testiQuote.querySelector(".testi-quote__text");
+  const testiQuoteName = testiQuote.querySelector(".testi-quote__name");
+  const testiQuoteSchool = testiQuote.querySelector(".testi-quote__school");
+  const testiControls = document.querySelector("#testi-controls");
+  const testiPrev = document.querySelector(".testi-arrow--prev");
+  const testiNext = document.querySelector(".testi-arrow--next");
   const stageButtons = document.querySelector("#stage-buttons");
   const stageButtonEls = gsap.utils.toArray(".stage-button");
   const navAboutLink = document.querySelector('[data-section="about"]');
@@ -842,7 +855,7 @@
     gsap.set(sectionTestimonials, {
       display: T >= 21.7 && T <= 27.5 ? "block" : "none",
     });
-    gsap.set(stageButtons, { display: T >= 21.9 ? "block" : "none" });
+    gsap.set(stageButtons, { display: T >= 26.9 ? "block" : "none" });
     gsap.set(sectionProjects, {
       display: T >= 26.9 && T <= 32.7 ? "block" : "none",
     });
@@ -887,7 +900,7 @@
     } else if (T < 18.7 && speakersTextShown) {
       speakersTextShown = false;
       speakersTextIn.pause(0);
-      resetSpeakers();
+      speakersCarousel.reset();
     }
     if (T >= 22.45 && !testimonialsEntered) {
       testimonialsEntered = true;
@@ -895,14 +908,15 @@
     } else if (T < 21.6 && testimonialsEntered) {
       testimonialsEntered = false;
       testimonialsEnter.pause(0);
+      testimonialsCarousel.reset();
     }
     if (T >= 27.65 && !projectsEntered) {
       projectsEntered = true;
       projectsEnter.play();
-      // "Reset" the carried-over buttons: a quick re-pop back to default.
+      // The Projects buttons pop in with the section.
       gsap.fromTo(
         stageButtonEls,
-        { scale: 0.8, autoAlpha: 0.4 },
+        { scale: 0.8, autoAlpha: 0 },
         {
           scale: 1,
           autoAlpha: 1,
@@ -1035,13 +1049,18 @@
     )
     .set(vases, { x: 0, rotation: 0 }, 0.9);
 
-  // Testimonials entrance, in the prompted order: center content, then the
-  // mist breathes in, then the pillars rise while the buttons pop in.
+  // Testimonials entrance: the hall of arches fades up, the mists drift in
+  // from both sides and the sparkles come out, then the title, medallion,
+  // quote, and arrows arrive together.
   let testimonialsEntered = false;
+  const testiCopyParts = [testiTitle, testiMedallion, testiQuote, testiControls];
 
-  gsap.set(testiCenter, { autoAlpha: 0, y: 30 });
-  gsap.set(testiMist, { autoAlpha: 0 });
-  gsap.set(testiPillars, { y: 480 });
+  gsap.set(testiHall, { autoAlpha: 0, scale: 1.04, transformOrigin: "50% 60%" });
+  gsap.set(testiMistLeft, { autoAlpha: 0, x: -260 });
+  gsap.set(testiMistRight, { autoAlpha: 0, x: 260 });
+  gsap.set(testiStars, { autoAlpha: 0 });
+  gsap.set(testiCopyParts, { autoAlpha: 0, y: 18 });
+  // The Projects buttons stay hidden until Projects enters.
   gsap.set(stageButtonEls, {
     autoAlpha: 0,
     scale: 0.8,
@@ -1050,23 +1069,27 @@
 
   const testimonialsEnter = gsap.timeline({ paused: true });
   testimonialsEnter
-    .to(testiCenter, { autoAlpha: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0)
-    .to(testiMist, { autoAlpha: 1, duration: 0.8, ease: "power1.out" }, 0.5)
     .to(
-      testiPillars,
-      { y: 0, duration: 0.9, ease: "power3.out", stagger: 0.15 },
-      0.85,
+      testiHall,
+      { autoAlpha: 1, scale: 1, duration: 0.9, ease: "power2.out" },
+      0,
     )
     .to(
-      stageButtonEls,
+      [testiMistLeft, testiMistRight],
+      { autoAlpha: 1, x: 0, duration: 1.1, ease: "power3.out" },
+      0.1,
+    )
+    .to(testiStars, { autoAlpha: 1, duration: 0.8, ease: "power1.out" }, 0.4)
+    .to(
+      testiCopyParts,
       {
         autoAlpha: 1,
-        scale: 1,
-        duration: 0.5,
-        ease: "back.out(2)",
+        y: 0,
+        duration: 0.55,
+        ease: "power2.out",
         stagger: 0.12,
       },
-      1.1,
+      0.45,
     );
 
   // Projects entrance: title rises in, the frames scale into place from
@@ -1157,84 +1180,120 @@
     stagger: 0.18,
   });
 
-  // Speakers carousel: the arrows swap which speaker is shown. The arch and
-  // text block stay put; only the photo and details crossfade in place.
-  const SPEAKERS = [
-    {
-      name: "Sue Harnett",
-      role: "Founder of Rewriting the Code",
-      bio:
-        "Sue Harnett is the Founder & CEO of Rewriting the Code, the " +
-        "nonprofit she launched in 2017 that has grown into a global " +
-        "community of 38,000+ university and early-career women in tech, " +
-        "offering mentorship, education, and career-readiness programs. She " +
-        "will be speaking about women in technology, and the value of " +
-        "community, teamwork, and thoughtful leadership!",
-      photo: "./assets/speaker-photo-placeholder.jpg",
-    },
-    {
-      name: "Jessica Cao",
-      role: "Founder of Rewriting the Code",
-      bio:
-        "Sue Harnett is the Founder & CEO of Rewriting the Code, the " +
-        "nonprofit she launched in 2017 that has grown into a global " +
-        "community of 38,000+ university and early-career women in tech, " +
-        "offering mentorship, education, and career-readiness programs. She " +
-        "will be speaking about women in technology, and the value of " +
-        "community, teamwork, and thoughtful leadership!",
-      photo: "./assets/speaker-photo-placeholder.jpg",
-    },
-  ];
-  let speakerIndex = 0;
-  let speakerSwap = null;
+  // Carousels (Speakers, Testimonials): the arrows step through the items.
+  // The layout stays put; only the item's content crossfades in place.
+  // Prev/next disable at the ends, and the left/right arrow keys work
+  // while the section is current and its content has entered.
+  function createCarousel({ items, render, content, prev, next, isActive }) {
+    let index = 0;
+    let swap = null;
 
-  function renderSpeaker(index) {
-    const speaker = SPEAKERS[index];
-    speakerName.textContent = speaker.name;
-    speakerRole.textContent = speaker.role;
-    speakerBio.textContent = speaker.bio;
-    speakerPhoto.setAttribute("href", speaker.photo);
-    speakerPrev.disabled = index === 0;
-    speakerNext.disabled = index === SPEAKERS.length - 1;
-  }
-
-  const speakerContent = [speakerPhoto, speakerName, speakerRole, speakerBio];
-
-  function showSpeaker(index) {
-    if (speakerSwap || index < 0 || index >= SPEAKERS.length) return;
-    speakerIndex = index;
-    if (reducedMotion) {
-      renderSpeaker(index);
-      return;
+    function update() {
+      render(items[index]);
+      prev.disabled = index === 0;
+      next.disabled = index === items.length - 1;
     }
-    speakerSwap = gsap
-      .timeline({ onComplete: () => (speakerSwap = null) })
-      .to(speakerContent, { opacity: 0, duration: 0.25, ease: "power1.in" })
-      .add(() => renderSpeaker(index))
-      .to(speakerContent, {
-        opacity: 1,
-        duration: 0.4,
-        ease: "power1.out",
-        stagger: 0.04,
-      });
+
+    function show(target) {
+      if (swap || target < 0 || target >= items.length) return;
+      index = target;
+      if (reducedMotion) {
+        update();
+        return;
+      }
+      swap = gsap
+        .timeline({ onComplete: () => (swap = null) })
+        .to(content, { opacity: 0, duration: 0.25, ease: "power1.in" })
+        .add(update)
+        .to(content, {
+          opacity: 1,
+          duration: 0.4,
+          ease: "power1.out",
+          stagger: 0.04,
+        });
+    }
+
+    prev.addEventListener("click", () => show(index - 1));
+    next.addEventListener("click", () => show(index + 1));
+    window.addEventListener("keydown", (event) => {
+      if (navJumping || !isActive()) return;
+      if (event.key === "ArrowLeft") show(index - 1);
+      if (event.key === "ArrowRight") show(index + 1);
+    });
+
+    return {
+      // Back to the first item whenever the section replays from scratch.
+      reset() {
+        swap?.kill();
+        swap = null;
+        index = 0;
+        gsap.set(content, { opacity: 1 });
+        update();
+      },
+    };
   }
 
-  // Back to the first speaker whenever the section replays from scratch.
-  function resetSpeakers() {
-    speakerSwap?.kill();
-    speakerSwap = null;
-    speakerIndex = 0;
-    gsap.set(speakerContent, { opacity: 1 });
-    renderSpeaker(0);
-  }
+  const SPEAKER_BIO_PLACEHOLDER =
+    "Sue Harnett is the Founder & CEO of Rewriting the Code, the " +
+    "nonprofit she launched in 2017 that has grown into a global " +
+    "community of 38,000+ university and early-career women in tech, " +
+    "offering mentorship, education, and career-readiness programs. She " +
+    "will be speaking about women in technology, and the value of " +
+    "community, teamwork, and thoughtful leadership!";
+  const speakersCarousel = createCarousel({
+    items: [
+      {
+        name: "Sue Harnett",
+        role: "Founder of Rewriting the Code",
+        bio: SPEAKER_BIO_PLACEHOLDER,
+        photo: "./assets/speaker-photo-placeholder.jpg",
+      },
+      {
+        name: "Jessica Cao",
+        role: "Founder of Rewriting the Code",
+        bio: SPEAKER_BIO_PLACEHOLDER,
+        photo: "./assets/speaker-photo-placeholder.jpg",
+      },
+    ],
+    render(speaker) {
+      speakerName.textContent = speaker.name;
+      speakerRole.textContent = speaker.role;
+      speakerBio.textContent = speaker.bio;
+      speakerPhoto.setAttribute("href", speaker.photo);
+    },
+    content: [speakerPhoto, speakerName, speakerRole, speakerBio],
+    prev: speakerPrev,
+    next: speakerNext,
+    isActive: () =>
+      speakersTextShown && navSpeakersLink.classList.contains("is-current"),
+  });
 
-  speakerPrev.addEventListener("click", () => showSpeaker(speakerIndex - 1));
-  speakerNext.addEventListener("click", () => showSpeaker(speakerIndex + 1));
-  window.addEventListener("keydown", (event) => {
-    if (navJumping || !speakersTextShown) return;
-    if (!navSpeakersLink.classList.contains("is-current")) return;
-    if (event.key === "ArrowLeft") showSpeaker(speakerIndex - 1);
-    if (event.key === "ArrowRight") showSpeaker(speakerIndex + 1);
+  // The second entry repeats the first until more testimonials are in.
+  const TESTIMONIAL_JIMIN = {
+    quote:
+      "\u201cI joined the astronaut bootcamp event in 2021, and I wanted to " +
+      "highlight my great experience there. I was able to connect with " +
+      "friendly people, learn about web development through workshops, " +
+      "and have free pizza for lunch!\u201d",
+    name: "Jimin Kim",
+    school: "Northeastern 22\u2019",
+    photo: "./assets/testi-photo-jimin.jpg",
+  };
+  const testimonialsCarousel = createCarousel({
+    items: [TESTIMONIAL_JIMIN, { ...TESTIMONIAL_JIMIN }],
+    render(testimonial) {
+      testiQuoteText.textContent = testimonial.quote;
+      testiQuoteName.textContent = testimonial.name;
+      testiQuoteSchool.textContent = testimonial.school;
+      testiPhoto.setAttribute("href", testimonial.photo);
+      testiPhotoLabel.textContent = `Portrait of ${testimonial.name}`;
+    },
+    content: [testiPhoto, testiQuoteText, testiQuoteName, testiQuoteSchool],
+    prev: testiPrev,
+    next: testiNext,
+    isActive: () =>
+      testimonialsEntered &&
+      navTestimonialsLink.classList.contains("is-current"),
   });
 
   scrollTimeline.eventCallback("onUpdate", () => {
@@ -1480,12 +1539,12 @@
       20.9,
     )
     .to(sectionSpeakers, { autoAlpha: 0, duration: 0.5 }, 21.9)
-    // ---- Gradient morph: rust to the Testimonials purple.
+    // ---- Gradient morph: rust to the Testimonials deep purple.
     .to(
       stageBackdrop,
       {
-        "--sec-top": "#322243",
-        "--sec-bottom": "#251930",
+        "--sec-top": "#1d032c",
+        "--sec-bottom": "#1d032c",
         duration: 1.2,
         ease: "power1.inOut",
       },
@@ -1496,24 +1555,10 @@
       { autoAlpha: 1, duration: 0.8, ease: "power1.inOut" },
       22.2,
     )
-    // ---- Testimonials exit: pillars drop out like the About candles,
-    // center content and title rise away, mist drifts left. The buttons
-    // deliberately stay put for the next section.
+    // ---- Testimonials exit: the title, medallion, quote, and arrows rise
+    // away while the hall and its mists push in and fade.
     .fromTo(
-      testiPillars,
-      { y: 0, autoAlpha: 1 },
-      {
-        y: 430,
-        autoAlpha: 0.4,
-        duration: 1.1,
-        ease: "power1.in",
-        stagger: 0.08,
-        immediateRender: false,
-      },
-      26,
-    )
-    .fromTo(
-      testiCenter,
+      testiCopy,
       { y: 0, autoAlpha: 1 },
       {
         y: -140,
@@ -1522,28 +1567,14 @@
         ease: "power1.in",
         immediateRender: false,
       },
-      26.05,
+      26,
     )
     .fromTo(
-      testiTitle,
-      { y: 0, autoAlpha: 1 },
+      testiScene,
+      { scale: 1, autoAlpha: 1 },
       {
-        y: -110,
-        autoAlpha: 0,
-        duration: 1,
-        ease: "power1.in",
-        immediateRender: false,
-      },
-      26.1,
-    )
-    .fromTo(
-      testiMist,
-      { x: 0, scale: 1, autoAlpha: 1 },
-      {
-        x: -420,
         scale: 1.08,
         autoAlpha: 0,
-        transformOrigin: "40% 50%",
         duration: 1.2,
         ease: "power1.in",
         immediateRender: false,
@@ -1768,7 +1799,7 @@
     about: ["#322243", "#251930"],
     values: ["#37a9c9", "#017b9d"],
     speakers: ["#ca6330", "#833711"],
-    testimonials: ["#322243", "#251930"],
+    testimonials: ["#1d032c", "#1d032c"],
     projects: ["#37a9c9", "#017b9d"],
     sponsors: ["#ca6330", "#8f4622"],
     team: ["#37a9c9", "#017b9d"],

@@ -949,7 +949,9 @@ img {
   will-change: transform, opacity;
 }
 
-.speaker-arrow {
+/* Round gold arrow buttons, shared by the Speakers and Testimonials
+   carousels. */
+.round-arrow {
   display: grid;
   place-items: center;
   width: 48px;
@@ -958,6 +960,9 @@ img {
   border: 0;
   border-radius: 24px;
   background: linear-gradient(180deg, #e9ac1d 0%, #ffd268 100%);
+  box-shadow:
+    0 0 13px rgba(0, 0, 0, 0.1),
+    inset 0 0 13px rgba(255, 255, 255, 0.1);
   cursor: pointer;
   transition:
     transform 0.2s ease,
@@ -965,39 +970,103 @@ img {
     opacity 0.2s ease;
 }
 
-.speaker-arrow img {
+.round-arrow img {
   width: 32px;
   height: 32px;
 }
 
-.speaker-arrow--prev img {
+.round-arrow--prev img {
   transform: rotate(180deg);
 }
 
-.speaker-arrow:hover:not(:disabled) {
+.round-arrow:hover:not(:disabled) {
   filter: brightness(1.08);
   transform: translateY(-2px);
 }
 
-.speaker-arrow:focus-visible {
+.round-arrow:focus-visible {
   outline: 2px solid #fdfbfb;
   outline-offset: 3px;
 }
 
-.speaker-arrow:disabled {
+.round-arrow:disabled {
   opacity: 0.42;
   cursor: default;
 }
 
 /* ---------- Hacker testimonials ---------- */
 
-.testi-mist {
+.testi-scene {
+  inset: 0;
+  transform-origin: 50% 60%;
+  will-change: transform, opacity;
+}
+
+.testi-scene > * {
+  position: absolute;
+}
+
+/* The hall of arches behind the testimonial, cropped to the frame. */
+.testi-hall {
   inset: 0;
   will-change: transform, opacity;
 }
 
+.testi-hall__arches {
+  position: absolute;
+  top: 148px;
+  left: 0;
+  width: 1512px;
+  height: 834px;
+}
+
+.testi-hall__paws {
+  position: absolute;
+  top: 849px;
+  left: 761px;
+  width: 171px;
+  height: 133px;
+}
+
+.testi-mist,
+.testi-stars {
+  will-change: transform, opacity;
+}
+
+/* Both mist files carry extra canvas toward the center so the billowing
+   swirls (animated inside the SVGs) never clip. */
+.testi-mist--left {
+  top: 0;
+  left: 0;
+  width: 760px;
+  height: 982px;
+}
+
+.testi-mist--right {
+  top: 240.1px;
+  left: 790.4px;
+  width: 722px;
+  height: 742px;
+}
+
+.testi-stars {
+  inset: 0;
+  width: 1512px;
+  height: 982px;
+}
+
+.testi-copy {
+  inset: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.testi-copy > * {
+  position: absolute;
+}
+
 .testi-title {
-  top: 160px;
+  top: 142px;
   left: 510px;
   width: 491px;
   margin: 0;
@@ -1005,33 +1074,26 @@ img {
   font-family: "Amarante", serif;
   font-size: 50px;
   font-weight: 400;
+  line-height: 63px;
   text-align: center;
   white-space: nowrap;
   will-change: transform, opacity;
 }
 
-.testi-center {
-  top: 356px;
-  left: 337px;
-  width: 838.6px;
-  height: 348px;
+.testi-medallion {
+  top: 251px;
+  left: 603.7px;
+  width: 295px;
+  height: 354px;
   will-change: transform, opacity;
 }
 
-.testi-medallion {
-  position: absolute;
-  top: -5px;
-  left: -5px;
-  width: 298px;
-  height: 358px;
-}
-
 .testi-quote {
-  position: absolute;
-  top: 79.5px;
-  left: 339.6px;
-  width: 499px;
+  top: 627px;
+  left: 555px;
+  width: 401px;
   color: #fff;
+  will-change: transform, opacity;
 }
 
 .testi-quote__text {
@@ -1039,13 +1101,14 @@ img {
   font-family: "Merriweather", Georgia, serif;
   font-size: 18px;
   font-weight: 300;
-  line-height: 1.38;
+  line-height: 1.4;
 }
 
 .testi-quote__name {
   margin: 13px 0 0;
   font-family: "Special Gothic Condensed One", Arial, sans-serif;
   font-size: 24px;
+  line-height: 31px;
 }
 
 .testi-quote__school {
@@ -1054,24 +1117,16 @@ img {
   font-family: "Merriweather", Georgia, serif;
   font-size: 16px;
   font-weight: 300;
+  line-height: 20px;
 }
 
-.testi-pillar {
+.testi-controls {
+  top: 848px;
+  left: 555px;
+  display: flex;
+  gap: 9px;
+  pointer-events: auto;
   will-change: transform, opacity;
-}
-
-.testi-pillar--left {
-  top: 639px;
-  left: 91px;
-  width: 188px;
-  height: 466px;
-}
-
-.testi-pillar--right {
-  top: 455px;
-  left: 1218px;
-  width: 250px;
-  height: 715px;
 }
 
 /* Persistent circular arrow buttons; they outlive the Testimonials

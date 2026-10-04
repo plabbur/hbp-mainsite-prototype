@@ -484,19 +484,19 @@
 
                 <div class="speaker-controls" id="speaker-controls">
                   <button
-                    class="speaker-arrow speaker-arrow--prev"
+                    class="round-arrow round-arrow--prev speaker-arrow--prev"
                     type="button"
                     aria-label="Previous speaker"
                     disabled
                   >
-                    <img src="./assets/speaker-arrow.svg" alt="" />
+                    <img src="./assets/round-arrow.svg" alt="" />
                   </button>
                   <button
-                    class="speaker-arrow speaker-arrow--next"
+                    class="round-arrow speaker-arrow--next"
                     type="button"
                     aria-label="Next speaker"
                   >
-                    <img src="./assets/speaker-arrow.svg" alt="" />
+                    <img src="./assets/round-arrow.svg" alt="" />
                   </button>
                 </div>
                 </div>
@@ -511,22 +511,98 @@
           >
             <div class="section-fit">
               <div class="section-canvas">
-                <div class="testi-mist" id="testi-mist">
-                  <img class="mist mist--a" src="./assets/mist-a.svg" alt="" />
-                  <img class="mist mist--b" src="./assets/mist-b.svg" alt="" />
+                <!-- Backdrop: the scroll exit moves this wrapper; the
+                     entrance animates the pieces inside it. -->
+                <div class="testi-scene" id="testi-scene">
+                <!-- A hall of arches recedes behind the testimonial, with a
+                     trail of paw prints down its floor. -->
+                <div class="testi-hall" id="testi-hall">
+                  <img
+                    class="testi-hall__arches"
+                    src="./assets/testi-hall.svg"
+                    alt=""
+                  />
+                  <img
+                    class="testi-hall__paws"
+                    src="./assets/testi-paws.svg"
+                    alt=""
+                  />
                 </div>
 
-                <h2 class="testi-title" id="testi-title">
-                  HACKER TESTIMONIALS
-                </h2>
+                <img
+                  class="testi-mist testi-mist--left"
+                  id="testi-mist-left"
+                  src="./assets/testi-mist-left.svg"
+                  alt=""
+                />
+                <img
+                  class="testi-stars"
+                  id="testi-stars"
+                  src="./assets/testi-stars.svg"
+                  alt=""
+                />
+                <img
+                  class="testi-mist testi-mist--right"
+                  id="testi-mist-right"
+                  src="./assets/testi-mist-right.svg"
+                  alt=""
+                />
+                </div>
 
-                <div class="testi-center" id="testi-center">
-                  <img
+                <!-- Title, medallion, quote, and arrows enter together; the
+                     scroll exit moves this wrapper, the arrows only swap
+                     the photo and quote in place. -->
+                <div class="testi-copy" id="testi-copy">
+                  <h2 class="testi-title" id="testi-title">
+                    HACKER TESTIMONIALS
+                  </h2>
+
+                  <svg
                     class="testi-medallion"
-                    src="./assets/testi-medallion-alpha.png"
-                    alt="Portrait of Jimin Kim"
-                  />
-                  <div class="testi-quote">
+                    id="testi-medallion"
+                    viewBox="0 0 295 354"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    role="img"
+                    aria-labelledby="testi-photo-label"
+                  >
+                    <title id="testi-photo-label">Portrait of Jimin Kim</title>
+                    <defs>
+                      <filter id="testi-medallion-shadow" x="0" y="0" width="295" height="354" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+                        <feOffset dx="-9.56441" dy="9.56441" />
+                        <feComposite in2="hardAlpha" operator="out" />
+                        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+                        <feBlend mode="normal" in2="BackgroundImageFix" result="shadow" />
+                        <feBlend mode="normal" in="SourceGraphic" in2="shadow" result="shape" />
+                      </filter>
+                      <clipPath id="testi-photo-clip">
+                        <circle cx="151.836" cy="172.16" r="121.2" />
+                      </clipPath>
+                    </defs>
+                    <g filter="url(#testi-medallion-shadow)">
+                      <path d="M105.08 38.2578H198.59C198.877 38.2578 198.938 37.8083 198.66 37.7387C192.374 36.1667 174.179 31.0125 165.342 22.1178C159.006 15.7399 153.237 3.16651 152.055 0.503076C151.97 0.31073 151.7 0.31073 151.615 0.503076C150.433 3.16651 144.664 15.7399 138.328 22.1178C129.491 31.0125 111.296 36.1667 105.01 37.7387C104.732 37.8083 104.793 38.2578 105.08 38.2578Z" fill="#E9AC1D" />
+                      <path d="M198.59 306.061H105.08C104.793 306.061 104.732 306.51 105.01 306.58C111.296 308.152 129.491 313.306 138.328 322.201C144.664 328.579 150.433 341.152 151.614 343.815C151.7 344.008 151.97 344.008 152.055 343.815C153.237 341.152 159.005 328.579 165.342 322.201C174.178 313.306 192.374 308.152 198.66 306.58C198.938 306.51 198.876 306.061 198.59 306.061Z" fill="#E9AC1D" />
+                      <circle cx="151.836" cy="172.159" r="142.271" fill="#E9AC1D" />
+                      <circle cx="151.836" cy="172.16" r="121.947" fill="#512309" />
+                      <image
+                        class="testi-photo"
+                        id="testi-photo"
+                        href="./assets/testi-photo-jimin.jpg"
+                        x="29.889"
+                        y="50.213"
+                        width="243.893"
+                        height="243.893"
+                        preserveAspectRatio="xMidYMid slice"
+                        clip-path="url(#testi-photo-clip)"
+                      />
+                      <circle cx="151.835" cy="32.2793" r="4.78222" fill="#71120F" />
+                      <circle cx="151.835" cy="312.038" r="4.78222" fill="#71120F" />
+                    </g>
+                  </svg>
+
+                  <div class="testi-quote" id="testi-quote" aria-live="polite">
                     <p class="testi-quote__text">
                       &ldquo;I joined the astronaut bootcamp event in 2021,
                       and I wanted to highlight my great experience there. I
@@ -537,18 +613,25 @@
                     <p class="testi-quote__name">Jimin Kim</p>
                     <p class="testi-quote__school">Northeastern 22&rsquo;</p>
                   </div>
-                </div>
 
-                <img
-                  class="testi-pillar testi-pillar--left"
-                  src="./assets/testi-pillar-left.svg"
-                  alt=""
-                />
-                <img
-                  class="testi-pillar testi-pillar--right"
-                  src="./assets/testi-pillar-right.svg"
-                  alt=""
-                />
+                  <div class="testi-controls" id="testi-controls">
+                    <button
+                      class="round-arrow round-arrow--prev testi-arrow--prev"
+                      type="button"
+                      aria-label="Previous testimonial"
+                      disabled
+                    >
+                      <img src="./assets/round-arrow.svg" alt="" />
+                    </button>
+                    <button
+                      class="round-arrow testi-arrow--next"
+                      type="button"
+                      aria-label="Next testimonial"
+                    >
+                      <img src="./assets/round-arrow.svg" alt="" />
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
