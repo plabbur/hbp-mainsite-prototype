@@ -258,7 +258,95 @@
     });
   });
 
-  if (reducedMotion) {
+  // Dwell-state backdrop colors per section, for the jump overlay and
+  // the stacked phone page.
+  const SECTION_COLORS = {
+    hero: ["#0b0d21", "#0b0d21"],
+    about: ["#15173b", "#060825"],
+    values: ["#37a9c9", "#017b9d"],
+    speakers: ["#894a3c", "#512309"],
+    testimonials: ["#322243", "#251930"],
+    projects: ["#37a9c9", "#017b9d"],
+    sponsors: ["#ca6330", "#8f4622"],
+    team: ["#37a9c9", "#017b9d"],
+    faqs: ["#090912", "#090912"],
+  };
+
+  // Phones and narrow windows: a plain stacked page instead of the
+  // scroll-driven scene (flag set by the inline script in index.html).
+  const staticScroll =
+    document.documentElement.classList.contains("static-scroll");
+
+  // Crossing the narrow breakpoint switches between the two page modes,
+  // which are built differently, so rebuild the page from scratch.
+  window.matchMedia("(max-width: 599.98px)").addEventListener("change", () => {
+    const phone =
+      window.matchMedia("(hover: none) and (pointer: coarse)").matches &&
+      Math.min(screen.width, screen.height) < 600;
+    const wantsStatic = phone || window.innerWidth < 600;
+    if (wantsStatic !== staticScroll) window.location.reload();
+  });
+
+  const setUpStaticPage = () => {
+    // The stage sections leave the pinned hero viewport and stack in the
+    // page flow, each on its own resting-state gradient.
+    const faqs = document.querySelector("#faqs");
+    const sections = gsap.utils.toArray(".stage-section");
+    sections.forEach((section) => {
+      const [top, bottom] = SECTION_COLORS[section.id.replace("section-", "")];
+      section.style.background = `linear-gradient(180deg, ${top}, ${bottom})`;
+      faqs.before(section);
+    });
+    gsap.set(".faq-divider", { opacity: 1 });
+
+    // The navbar pins to the top of the screen for the whole page.
+    document.body.prepend(nav.closest("hbp-navbar") ?? nav);
+
+    const targets = {
+      ...Object.fromEntries(
+        sections.map((section) => [section.id.replace("section-", ""), section]),
+      ),
+      faqs,
+    };
+    const links = gsap.utils.toArray(".site-nav__links > a[data-section]");
+    links.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        targets[link.dataset.section]?.scrollIntoView({ behavior: "smooth" });
+      });
+    });
+    document.querySelector(".site-nav__logo").addEventListener("click", (event) => {
+      event.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    // Underline the tab for whichever section fills the middle of the screen.
+    const setCurrent = (key) => {
+      nav.classList.toggle("site-nav--sectioned", Boolean(key));
+      links.forEach((link) => {
+        link.classList.toggle("is-current", link.dataset.section === key);
+      });
+    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // The hero maps to no tab.
+            const key = Object.keys(targets).find(
+              (name) => targets[name] === entry.target,
+            );
+            setCurrent(key ?? null);
+          }
+        });
+      },
+      { rootMargin: "-50% 0px -50% 0px" },
+    );
+    [hero, ...Object.values(targets)].forEach((target) =>
+      observer.observe(target),
+    );
+  };
+
+  if (reducedMotion || staticScroll) {
     gsap.set(sky, { backgroundColor: "#0b0d21" });
     gsap.set(viewport, {
       "--backdrop-sky": "#0b0d21",
@@ -289,6 +377,7 @@
       scale: 0.77784,
       transformOrigin: "0 0",
     });
+    if (staticScroll) setUpStaticPage();
     return;
   }
 
@@ -1673,18 +1762,6 @@
     projects: { dwell: 29.6, enterStart: 27.4, exitEnd: 32.4, landing: 27.55 },
     sponsors: { dwell: 34.6, enterStart: 32.6, exitEnd: 37.6, landing: 32.75 },
     team: { dwell: 39.8, enterStart: 37.8, exitEnd: 42.8, landing: 37.95 },
-  };
-  // Dwell-state backdrop colors per section, for the jump overlay.
-  const SECTION_COLORS = {
-    hero: ["#0b0d21", "#0b0d21"],
-    about: ["#15173b", "#060825"],
-    values: ["#37a9c9", "#017b9d"],
-    speakers: ["#894a3c", "#512309"],
-    testimonials: ["#322243", "#251930"],
-    projects: ["#37a9c9", "#017b9d"],
-    sponsors: ["#ca6330", "#8f4622"],
-    team: ["#37a9c9", "#017b9d"],
-    faqs: ["#090912", "#090912"],
   };
   const navBackdrop = document.querySelector("#stage-backdrop-nav");
   let navScrollTween = null;

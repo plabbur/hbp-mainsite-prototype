@@ -1770,6 +1770,30 @@ img {
   filter: brightness(1.08);
 }
 
+/* ---------- Stacked phone page (html.static-scroll) ----------
+   Phones and narrow windows skip the scroll-driven scene: the hero is a
+   single static night frame and script.js moves each stage section into
+   the page flow, where it fills one screen. */
+.static-scroll .hero {
+  height: 100svh;
+}
+
+.static-scroll main > .stage-section {
+  position: relative;
+  inset: auto;
+  z-index: auto;
+  height: 100svh;
+  display: block;
+  opacity: 1;
+  visibility: visible;
+}
+
+.static-scroll .site-nav {
+  position: fixed;
+  background: rgba(6, 8, 37, 0.72);
+  backdrop-filter: blur(8px);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero {
     height: 100svh;
