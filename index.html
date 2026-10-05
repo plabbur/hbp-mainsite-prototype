@@ -470,7 +470,7 @@
             id="section-speakers"
             aria-label="Speakers"
           >
-            <div class="section-fit" id="speakers-fit">
+            <div class="section-fit" id="speakers-fit" data-grow=".speaker-bio">
               <div class="section-canvas">
                 <img
                   class="speaker-railing speaker-railing--right"
@@ -493,6 +493,7 @@
                   <img class="speaker-curtain__lg" src="./assets/speaker-curtain.svg" alt="" />
                   <img class="speaker-curtain__md-top" src="./assets/speaker-curtain-md-top.svg" alt="" />
                   <img class="speaker-curtain__md-side" src="./assets/speaker-curtain-md-side.svg" alt="" />
+                  <img class="speaker-curtain__sm" src="./assets/speaker-curtain-sm.svg" alt="" />
                 </div>
                 <img
                   class="speaker-railing speaker-railing--left"
@@ -571,6 +572,11 @@
                   </svg>
                 </div>
 
+                <!-- Small only: the gold band across the arch's foot that
+                     holds the name and arrows, with scallops below it. -->
+                <div class="speaker-band"></div>
+                <img class="speaker-scallop" src="./assets/speaker-scallop-sm.svg" alt="" />
+
                 <!-- Title, details, and arrows enter together; the scroll
                      exit moves this wrapper so it never fights the
                      entrance or the content swap. -->
@@ -627,6 +633,7 @@
                      trail of paw prints down its floor. -->
                 <div class="testi-hall" id="testi-hall">
                   <picture>
+                    <source media="(max-width: 599.98px)" srcset="./assets/testi-hall-sm.svg" />
                     <source media="(min-width: 600px) and (max-width: 1179.98px)" srcset="./assets/testi-hall-md.svg" />
                     <img
                       class="testi-hall__arches"
@@ -635,6 +642,7 @@
                     />
                   </picture>
                   <picture>
+                    <source media="(max-width: 599.98px)" srcset="./assets/testi-paws-sm.svg" />
                     <source media="(min-width: 600px) and (max-width: 1179.98px)" srcset="./assets/testi-paws-md.svg" />
                     <img
                       class="testi-hall__paws"
@@ -645,6 +653,7 @@
                 </div>
 
                 <picture>
+                  <source media="(max-width: 599.98px)" srcset="./assets/testi-mist-sm-top.svg" />
                   <source media="(min-width: 600px) and (max-width: 1179.98px)" srcset="./assets/testi-mist-md-left.svg" />
                   <img
                     class="testi-mist testi-mist--left"
@@ -654,6 +663,7 @@
                   />
                 </picture>
                 <picture>
+                  <source media="(max-width: 599.98px)" srcset="./assets/testi-stars-sm.svg" />
                   <source media="(min-width: 600px) and (max-width: 1179.98px)" srcset="./assets/testi-stars-md.svg" />
                   <img
                     class="testi-stars"
@@ -663,6 +673,7 @@
                   />
                 </picture>
                 <picture>
+                  <source media="(max-width: 599.98px)" srcset="./assets/testi-mist-sm-right.svg" />
                   <source media="(min-width: 600px) and (max-width: 1179.98px)" srcset="./assets/testi-mist-md-right.svg" />
                   <img
                     class="testi-mist testi-mist--right"
@@ -765,7 +776,7 @@
             id="section-projects"
             aria-label="Past projects"
           >
-            <div class="section-fit">
+            <div class="section-fit" data-grow=".projects-controls">
               <div class="section-canvas">
                 <!-- Backdrop: the doorway slides in and out; the walls,
                      frieze, and lighting stay put and fade on exit. -->
@@ -811,6 +822,12 @@
                     alt=""
                   />
                   <div class="projects-lighting" id="projects-lighting"></div>
+                  <!-- Small only: a sketch on a clipboard in the corner. -->
+                  <img
+                    class="projects-sketch"
+                    src="./assets/project-sm-sketch.png"
+                    alt=""
+                  />
                 </div>
 
                 <!-- Title, frame, details, and arrows fade in together; the

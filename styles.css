@@ -1618,6 +1618,10 @@ img {
   display: none;
 }
 
+.speaker-curtain__sm {
+  display: none;
+}
+
 /* The arch holding the current speaker's photo. */
 .speaker-stage {
   top: 184px;
@@ -1638,6 +1642,12 @@ img {
 .speaker-base,
 .speaker-railing--extend,
 .speaker-floor {
+  display: none;
+}
+
+/* The gold band and scallops across the arch's foot (small only). */
+.speaker-band,
+.speaker-scallop {
   display: none;
 }
 
@@ -1861,6 +1871,128 @@ img {
   }
 }
 
+/* Small artboard (Figma SM "Speakers", 402x874): the arch fills the width,
+   cropped at the gold band that carries the name and arrows; the bio runs
+   below it, and the curtain hangs from the top edge. No railings. */
+@media (max-width: 599.98px) {
+  #speakers-fit {
+    width: 402px;
+    height: 874px;
+  }
+
+  .speaker-railing,
+  .speaker-curtain__lg {
+    display: none;
+  }
+
+  /* Here the curtain hangs in front of the arch, behind the copy. */
+  .speaker-curtain {
+    z-index: 1;
+  }
+
+  .speaker-copy {
+    z-index: 2;
+  }
+
+  .speaker-curtain__sm {
+    display: block;
+    top: calc(-1 * var(--bleed-y, 0px));
+    left: 0;
+    width: 402px;
+    height: 522px;
+  }
+
+  /* The arch at 91%, cut off at the band's bottom edge. */
+  .speaker-stage {
+    top: -58px;
+    left: -37px;
+    width: 478.1px;
+    height: 671px;
+    overflow: hidden;
+  }
+
+  .speaker-arch {
+    height: 726.8px;
+  }
+
+  .speaker-band {
+    display: block;
+    top: 497px;
+    left: 0;
+    width: 402px;
+    height: 116px;
+    background: linear-gradient(286deg, #e9ac1d 19%, #ffd268 92%);
+  }
+
+  .speaker-scallop {
+    display: block;
+    top: 593px;
+    left: 0;
+    width: 402px;
+    height: 50px;
+  }
+
+  .speakers-title {
+    top: 20px;
+    left: 20px;
+    width: 362px;
+    font-size: calc(32px * var(--tx, 1));
+    line-height: 40px;
+    text-align: center;
+  }
+
+  /* The name and role sit on the band between the arrows; the bio below. */
+  .speaker-info {
+    inset: 0;
+    width: auto;
+  }
+
+  .speaker-info > * {
+    position: absolute;
+  }
+
+  .speaker-name {
+    top: 509px;
+    left: 67.5px;
+    width: 267px;
+    background: linear-gradient(97deg, #8f5801, #6b4100);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-size: calc(32px * var(--tx, 1));
+    line-height: 42px;
+    text-align: center;
+  }
+
+  .speaker-role {
+    top: 555px;
+    left: 67.5px;
+    width: 267px;
+    margin: 0;
+    color: #8f5801;
+    font-size: calc(18px * var(--tx, 1));
+    font-weight: 400;
+    line-height: 23px;
+    text-align: center;
+  }
+
+  .speaker-bio {
+    top: 654px;
+    left: 20px;
+    width: 362px;
+    margin: 0;
+    font-size: calc(18px * var(--tx, 1));
+    line-height: 1.4;
+  }
+
+  .speaker-controls {
+    top: 531px;
+    left: 15.5px;
+    width: 371px;
+    justify-content: space-between;
+  }
+}
+
 /* ---------- Hacker testimonials ---------- */
 
 .testi-scene {
@@ -2054,6 +2186,80 @@ img {
   }
 }
 
+/* Small (Figma SM "Hacker Testimonials", 402x874): the hall, mists, and
+   sparkles redrawn for the narrow frame (the -sm assets swapped in by
+   <picture>). The paw trail and the right mist lie over the copy, so the
+   backdrop wrappers stop forming their own layers here. */
+@media (max-width: 599.98px) {
+  #section-testimonials .section-fit {
+    width: 402px;
+    height: 874px;
+  }
+
+  .testi-scene,
+  .testi-hall {
+    will-change: auto;
+  }
+
+  .testi-hall__arches {
+    top: 140.5px;
+    left: 0;
+    width: 402px;
+    height: 734px;
+  }
+
+  .testi-hall__paws {
+    top: 712px;
+    left: 191px;
+    z-index: 2;
+    width: 171px;
+    height: 162px;
+  }
+
+  .testi-mist--left {
+    width: 402px;
+    height: 260px;
+  }
+
+  .testi-mist--right {
+    top: 344.1px;
+    left: 13.5px;
+    z-index: 3;
+    width: 389px;
+    height: 530px;
+    pointer-events: none;
+  }
+
+  .testi-stars {
+    width: 402px;
+    height: 874px;
+  }
+
+  .testi-title {
+    top: 20px;
+    left: 20px;
+    width: 362px;
+    font-size: calc(32px * var(--tx, 1));
+    line-height: 40px;
+  }
+
+  .testi-medallion {
+    top: 102px;
+    left: 49.4px;
+  }
+
+  .testi-quote {
+    top: 478.3px;
+    left: 20px;
+    width: 362.6px;
+  }
+
+  .testi-controls {
+    top: 724.3px;
+    left: 20px;
+  }
+}
+
 /* ---------- Past projects ---------- */
 
 .projects-scene {
@@ -2236,6 +2442,10 @@ img {
   will-change: transform, opacity;
 }
 
+.projects-sketch {
+  display: none;
+}
+
 /* Medium (Figma MD "Past Projects", 1000x982): the doorway, walls, and
    arches shift 212px left; the project frame narrows to 356px and its
    details wrap beneath it. */
@@ -2277,6 +2487,79 @@ img {
   .projects-controls {
     top: 846px;
     left: 567px;
+  }
+}
+
+/* Small (Figma SM "Past Projects", 402x874): no hall, just the section's
+   gradient and a clipboard sketch in the corner. The frame, details, and
+   arrows stack in flow (Figma's 32px auto layout), so a long description
+   pushes the arrows down instead of under them. */
+@media (max-width: 599.98px) {
+  #section-projects .section-fit {
+    width: 402px;
+    height: 874px;
+  }
+
+  .projects-doorway,
+  .projects-walls-group,
+  .projects-arches,
+  .projects-frieze,
+  .projects-lighting {
+    display: none;
+  }
+
+  .projects-sketch {
+    display: block;
+    top: 622px;
+    left: 140px;
+    width: 262px;
+    height: 252px;
+  }
+
+  .projects-title {
+    top: 20px;
+    left: 20px;
+    width: 362px;
+    font-size: calc(32px * var(--tx, 1));
+    line-height: 40px;
+    text-align: center;
+  }
+
+  .projects-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    padding: 82px 25px 0;
+  }
+
+  .project-frame,
+  .project-details,
+  .projects-controls {
+    position: relative;
+    top: auto;
+    left: auto;
+  }
+
+  /* 358px of frame art (the SVG adds its shadow to the left and below). */
+  .project-frame {
+    flex: none;
+    width: 360.8px;
+    height: 203.6px;
+    margin: 0 0 -2.3px -2.1px;
+  }
+
+  .project-details {
+    width: 358px;
+  }
+
+  .project-authors {
+    margin-top: 6px;
+  }
+
+  .project-description {
+    max-width: none;
+    margin-top: 12px;
   }
 }
 
@@ -2451,6 +2734,68 @@ img {
   .sponsors-cta {
     top: 680px;
     left: 200px;
+  }
+}
+
+/* Small (Figma SM "Sponsors", 402x874): the gallery recomposed again
+   (Figma's render of its "bg" frame, cropped to the phone frame, at 2x),
+   the frames in a two-one-two-one stack, and a tighter call to action. */
+@media (max-width: 599.98px) {
+  #section-sponsors .section-fit {
+    width: 402px;
+    height: 874px;
+  }
+
+  .sponsors-bg {
+    background-image: url("./assets/sponsors-bg-sm.jpg");
+    background-size: 402px 874px;
+  }
+
+  .sponsors-title {
+    top: 84px;
+    left: 20px;
+    width: 362px;
+    font-size: calc(32px * var(--tx, 1));
+    line-height: 40px;
+  }
+
+  .sponsor-frame--gold,
+  .sponsor-frame--silver {
+    width: 140.1px;
+    height: 93.8px;
+  }
+
+  .sponsor-frame--1,
+  .sponsor-frame--2 { top: 156px; }
+  .sponsor-frame--3 { top: 289.8px; }
+  .sponsor-frame--4,
+  .sponsor-frame--5 { top: 437.5px; }
+  .sponsor-frame--6 { top: 571.3px; }
+
+  .sponsor-frame--1,
+  .sponsor-frame--4 { left: 34.6px; }
+  .sponsor-frame--2,
+  .sponsor-frame--5 { left: 227.7px; }
+  .sponsor-frame--3,
+  .sponsor-frame--6 { left: 131.2px; }
+
+  .sponsors-cta {
+    top: 710px;
+    left: 55.2px;
+    width: 292px;
+  }
+
+  .sponsors-cta__lead {
+    font-size: 18px;
+    line-height: 23px;
+  }
+
+  .sponsors-cta__button {
+    margin-top: 16px;
+  }
+
+  .sponsors-cta__contact {
+    margin-top: 16px;
   }
 }
 
@@ -3661,6 +4006,15 @@ img {
   display: block;
   opacity: 1;
   visibility: visible;
+}
+
+/* These artboards run edge to edge, so the section is exactly the artboard's
+   height: a one-screen minimum would letterbox them with bare bands. */
+.static-scroll main > #section-speakers,
+.static-scroll main > #section-testimonials,
+.static-scroll main > #section-projects,
+.static-scroll main > #section-sponsors {
+  min-height: 0;
 }
 
 .static-scroll .site-nav {

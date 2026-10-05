@@ -56,7 +56,7 @@
       // Computed (not offset) size: hidden sections have no layout box.
       const styles = getComputedStyle(element);
       const artWidth = parseFloat(styles.width);
-      const artHeight = parseFloat(styles.height);
+      let artHeight = parseFloat(styles.height);
       let scale;
       let boxHeight = viewportHeight;
       if (staticScroll) {
@@ -65,6 +65,20 @@
         // section at least one screen tall).
         const pageWidth = document.documentElement.clientWidth;
         scale = pageWidth / artWidth;
+        // Artboards whose copy can run past the design (a long bio)
+        // lengthen to fit it: data-grow names the last element, which
+        // keeps 32 artboard px of room below it.
+        if (element.dataset.grow && element.getClientRects().length) {
+          element.style.height = "";
+          const designHeight = parseFloat(getComputedStyle(element).height);
+          const last = element.querySelector(element.dataset.grow);
+          const canvasTop = element.getBoundingClientRect().top;
+          const shown = element.getBoundingClientRect().width / artWidth;
+          const end =
+            (last.getBoundingClientRect().bottom - canvasTop) / shown + 32;
+          artHeight = Math.max(designHeight, Math.ceil(end));
+          element.style.height = `${artHeight}px`;
+        }
         const section = element.closest(".stage-section");
         boxHeight = artHeight * scale;
         if (section) {
@@ -103,6 +117,8 @@
   }
 
   fitSceneToViewport();
+  // Copy that grows an artboard is measured again once the fonts are in.
+  document.fonts?.ready.then(fitSceneToViewport);
   window.addEventListener("resize", fitSceneToViewport, { passive: true });
   window.visualViewport?.addEventListener("resize", fitSceneToViewport, {
     passive: true,
@@ -758,14 +774,21 @@
     if (wantsStatic !== staticScroll) window.location.reload();
   });
 
+  // Small artboards whose own fill differs from the section's gradient.
+  const STATIC_BACKGROUNDS = {
+    speakers: "linear-gradient(180deg, #f08854 0%, #d08000 78.8%)",
+  };
+
   const setUpStaticPage = () => {
     // The stage sections leave the pinned hero viewport and stack in the
     // page flow, each on its own resting-state gradient.
     const faqs = document.querySelector("#faqs");
     const sections = gsap.utils.toArray(".stage-section");
     sections.forEach((section) => {
-      const [top, bottom] = SECTION_COLORS[section.id.replace("section-", "")];
-      section.style.background = `linear-gradient(180deg, ${top}, ${bottom})`;
+      const key = section.id.replace("section-", "");
+      const [top, bottom] = SECTION_COLORS[key];
+      section.style.background =
+        STATIC_BACKGROUNDS[key] ?? `linear-gradient(180deg, ${top}, ${bottom})`;
       faqs.before(section);
     });
     fitSceneToViewport();
@@ -828,6 +851,157 @@
     );
   };
 
+  // Set once the scroll-driven scene below is built.
+  let sceneBuilt = false;
+
+  // Carousels (Speakers, Testimonials): the arrows step through the items.
+  // The layout stays put; only the item's content crossfades in place.
+  // Prev/next disable at the ends, and the left/right arrow keys work
+  // while the section is current and its content has entered. Set up
+  // before the stacked-page / reduced-motion return so the arrows work
+  // there too (the arrow keys only drive the scroll-driven scene).
+  function createCarousel({ items, render, content, prev, next, isActive }) {
+    let index = 0;
+    let swap = null;
+
+    function update() {
+      render(items[index]);
+      // A longer bio can lengthen a stacked-page artboard.
+      if (staticScroll) fitSceneToViewport();
+      prev.disabled = index === 0;
+      next.disabled = index === items.length - 1;
+    }
+
+    function show(target) {
+      if (swap || target < 0 || target >= items.length) return;
+      index = target;
+      if (reducedMotion) {
+        update();
+        return;
+      }
+      swap = gsap
+        .timeline({ onComplete: () => (swap = null) })
+        .to(content, { opacity: 0, duration: 0.25, ease: "power1.in" })
+        .add(update)
+        .to(content, {
+          opacity: 1,
+          duration: 0.4,
+          ease: "power1.out",
+          stagger: 0.04,
+        });
+    }
+
+    prev.addEventListener("click", () => show(index - 1));
+    next.addEventListener("click", () => show(index + 1));
+    window.addEventListener("keydown", (event) => {
+      if (!sceneBuilt || navJumping || !isActive()) return;
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      event.preventDefault();
+      show(event.key === "ArrowLeft" ? index - 1 : index + 1);
+    });
+
+    return {
+      // Back to the first item whenever the section replays from scratch.
+      reset() {
+        swap?.kill();
+        swap = null;
+        index = 0;
+        gsap.set(content, { opacity: 1 });
+        update();
+      },
+    };
+  }
+
+  const SPEAKER_BIO_PLACEHOLDER =
+    "Sue Harnett is the Founder & CEO of Rewriting the Code, the " +
+    "nonprofit she launched in 2017 that has grown into a global " +
+    "community of 38,000+ university and early-career women in tech, " +
+    "offering mentorship, education, and career-readiness programs. She " +
+    "will be speaking about women in technology, and the value of " +
+    "community, teamwork, and thoughtful leadership!";
+  const speakersCarousel = createCarousel({
+    items: [
+      {
+        name: "Sue Harnett",
+        role: "Founder of Rewriting the Code",
+        bio: SPEAKER_BIO_PLACEHOLDER,
+        photo: "./assets/speaker-photo-placeholder.jpg",
+      },
+      {
+        name: "Jessica Cao",
+        role: "Founder of Rewriting the Code",
+        bio: SPEAKER_BIO_PLACEHOLDER,
+        photo: "./assets/speaker-photo-placeholder.jpg",
+      },
+    ],
+    render(speaker) {
+      speakerName.textContent = speaker.name;
+      speakerRole.textContent = speaker.role;
+      speakerBio.textContent = speaker.bio;
+      speakerPhoto.setAttribute("href", speaker.photo);
+    },
+    content: [speakerPhoto, speakerName, speakerRole, speakerBio],
+    prev: speakerPrev,
+    next: speakerNext,
+    isActive: () =>
+      speakersTextShown && navSpeakersLink.classList.contains("is-current"),
+  });
+
+  // The second entry repeats the first until more testimonials are in.
+  const TESTIMONIAL_JIMIN = {
+    quote:
+      "\u201cI joined the astronaut bootcamp event in 2021, and I wanted to " +
+      "highlight my great experience there. I was able to connect with " +
+      "friendly people, learn about web development through workshops, " +
+      "and have free pizza for lunch!\u201d",
+    name: "Jimin Kim",
+    school: "Northeastern 22\u2019",
+    photo: "./assets/testi-photo-jimin.jpg",
+  };
+  const testimonialsCarousel = createCarousel({
+    items: [TESTIMONIAL_JIMIN, { ...TESTIMONIAL_JIMIN }],
+    render(testimonial) {
+      testiQuoteText.textContent = testimonial.quote;
+      testiQuoteName.textContent = testimonial.name;
+      testiQuoteSchool.textContent = testimonial.school;
+      testiPhoto.setAttribute("href", testimonial.photo);
+      testiPhotoLabel.textContent = `Portrait of ${testimonial.name}`;
+    },
+    content: [testiPhoto, testiQuoteText, testiQuoteName, testiQuoteSchool],
+    prev: testiPrev,
+    next: testiNext,
+    isActive: () =>
+      testimonialsEntered &&
+      navTestimonialsLink.classList.contains("is-current"),
+  });
+
+  // The second entry repeats the first until more projects are in. A
+  // project without an image shows the frame's blank canvas.
+  const PROJECT_FUTURA = {
+    name: "Futura",
+    url: "#",
+    authors: "Cole Abrams, Maia Gonzalez, Carolyn Hoa, Lucy Liu",
+    description: SPEAKER_BIO_PLACEHOLDER,
+    image: null,
+  };
+  const projectsCarousel = createCarousel({
+    items: [PROJECT_FUTURA, { ...PROJECT_FUTURA }],
+    render(project) {
+      projectNameText.textContent = project.name;
+      projectLink.href = project.url;
+      projectLink.setAttribute("aria-label", `${project.name} (opens in a new tab)`);
+      projectAuthors.textContent = project.authors;
+      projectDescription.textContent = project.description;
+      if (project.image) projectImage.setAttribute("href", project.image);
+      else projectImage.removeAttribute("href");
+    },
+    content: [projectImage, ...projectDetails.children],
+    prev: projectsPrev,
+    next: projectsNext,
+    isActive: () =>
+      projectsEntered && navProjectsLink.classList.contains("is-current"),
+  });
+
   if (reducedMotion || staticScroll) {
     gsap.set(sky, { backgroundColor: "#0b0d21" });
     gsap.set(viewport, {
@@ -862,6 +1036,7 @@
     if (staticScroll) setUpStaticPage();
     return;
   }
+  sceneBuilt = true;
 
   // The stars drift continuously, independent of scrolling. The slight
   // up-scale keeps the rotating field covering the frame corners.
@@ -1669,150 +1844,6 @@
     duration: 0.55,
     ease: "power2.out",
     stagger: 0.18,
-  });
-
-  // Carousels (Speakers, Testimonials): the arrows step through the items.
-  // The layout stays put; only the item's content crossfades in place.
-  // Prev/next disable at the ends, and the left/right arrow keys work
-  // while the section is current and its content has entered.
-  function createCarousel({ items, render, content, prev, next, isActive }) {
-    let index = 0;
-    let swap = null;
-
-    function update() {
-      render(items[index]);
-      prev.disabled = index === 0;
-      next.disabled = index === items.length - 1;
-    }
-
-    function show(target) {
-      if (swap || target < 0 || target >= items.length) return;
-      index = target;
-      if (reducedMotion) {
-        update();
-        return;
-      }
-      swap = gsap
-        .timeline({ onComplete: () => (swap = null) })
-        .to(content, { opacity: 0, duration: 0.25, ease: "power1.in" })
-        .add(update)
-        .to(content, {
-          opacity: 1,
-          duration: 0.4,
-          ease: "power1.out",
-          stagger: 0.04,
-        });
-    }
-
-    prev.addEventListener("click", () => show(index - 1));
-    next.addEventListener("click", () => show(index + 1));
-    window.addEventListener("keydown", (event) => {
-      if (navJumping || !isActive()) return;
-      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
-      event.preventDefault();
-      show(event.key === "ArrowLeft" ? index - 1 : index + 1);
-    });
-
-    return {
-      // Back to the first item whenever the section replays from scratch.
-      reset() {
-        swap?.kill();
-        swap = null;
-        index = 0;
-        gsap.set(content, { opacity: 1 });
-        update();
-      },
-    };
-  }
-
-  const SPEAKER_BIO_PLACEHOLDER =
-    "Sue Harnett is the Founder & CEO of Rewriting the Code, the " +
-    "nonprofit she launched in 2017 that has grown into a global " +
-    "community of 38,000+ university and early-career women in tech, " +
-    "offering mentorship, education, and career-readiness programs. She " +
-    "will be speaking about women in technology, and the value of " +
-    "community, teamwork, and thoughtful leadership!";
-  const speakersCarousel = createCarousel({
-    items: [
-      {
-        name: "Sue Harnett",
-        role: "Founder of Rewriting the Code",
-        bio: SPEAKER_BIO_PLACEHOLDER,
-        photo: "./assets/speaker-photo-placeholder.jpg",
-      },
-      {
-        name: "Jessica Cao",
-        role: "Founder of Rewriting the Code",
-        bio: SPEAKER_BIO_PLACEHOLDER,
-        photo: "./assets/speaker-photo-placeholder.jpg",
-      },
-    ],
-    render(speaker) {
-      speakerName.textContent = speaker.name;
-      speakerRole.textContent = speaker.role;
-      speakerBio.textContent = speaker.bio;
-      speakerPhoto.setAttribute("href", speaker.photo);
-    },
-    content: [speakerPhoto, speakerName, speakerRole, speakerBio],
-    prev: speakerPrev,
-    next: speakerNext,
-    isActive: () =>
-      speakersTextShown && navSpeakersLink.classList.contains("is-current"),
-  });
-
-  // The second entry repeats the first until more testimonials are in.
-  const TESTIMONIAL_JIMIN = {
-    quote:
-      "\u201cI joined the astronaut bootcamp event in 2021, and I wanted to " +
-      "highlight my great experience there. I was able to connect with " +
-      "friendly people, learn about web development through workshops, " +
-      "and have free pizza for lunch!\u201d",
-    name: "Jimin Kim",
-    school: "Northeastern 22\u2019",
-    photo: "./assets/testi-photo-jimin.jpg",
-  };
-  const testimonialsCarousel = createCarousel({
-    items: [TESTIMONIAL_JIMIN, { ...TESTIMONIAL_JIMIN }],
-    render(testimonial) {
-      testiQuoteText.textContent = testimonial.quote;
-      testiQuoteName.textContent = testimonial.name;
-      testiQuoteSchool.textContent = testimonial.school;
-      testiPhoto.setAttribute("href", testimonial.photo);
-      testiPhotoLabel.textContent = `Portrait of ${testimonial.name}`;
-    },
-    content: [testiPhoto, testiQuoteText, testiQuoteName, testiQuoteSchool],
-    prev: testiPrev,
-    next: testiNext,
-    isActive: () =>
-      testimonialsEntered &&
-      navTestimonialsLink.classList.contains("is-current"),
-  });
-
-  // The second entry repeats the first until more projects are in. A
-  // project without an image shows the frame's blank canvas.
-  const PROJECT_FUTURA = {
-    name: "Futura",
-    url: "#",
-    authors: "Cole Abrams, Maia Gonzalez, Carolyn Hoa, Lucy Liu",
-    description: SPEAKER_BIO_PLACEHOLDER,
-    image: null,
-  };
-  const projectsCarousel = createCarousel({
-    items: [PROJECT_FUTURA, { ...PROJECT_FUTURA }],
-    render(project) {
-      projectNameText.textContent = project.name;
-      projectLink.href = project.url;
-      projectLink.setAttribute("aria-label", `${project.name} (opens in a new tab)`);
-      projectAuthors.textContent = project.authors;
-      projectDescription.textContent = project.description;
-      if (project.image) projectImage.setAttribute("href", project.image);
-      else projectImage.removeAttribute("href");
-    },
-    content: [projectImage, ...projectDetails.children],
-    prev: projectsPrev,
-    next: projectsNext,
-    isActive: () =>
-      projectsEntered && navProjectsLink.classList.contains("is-current"),
   });
 
   scrollTimeline.eventCallback("onUpdate", () => {

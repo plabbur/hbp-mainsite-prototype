@@ -1,0 +1,35 @@
+<svg width="402" height="874" viewBox="0 0 402 874" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Small layout. Sparkles from the Figma SM groups 218/220/221, redrawn as vectors (the
+     originals are raster masks). Each one twinkles on its own period and phase. -->
+<style>
+.tw {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation-name: twinkle;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  50% { opacity: 0.3; transform: scale(0.55) rotate(25deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tw { animation: none; }
+}
+</style>
+<defs>
+<path id="sparkle" d="M0 -0.5C0.07 -0.07 0.07 -0.07 0.5 0C0.07 0.07 0.07 0.07 0 0.5C-0.07 0.07 -0.07 0.07 -0.5 0C-0.07 -0.07 -0.07 -0.07 0 -0.5Z"/>
+<filter id="sparkle-glow" x="-50%" y="-50%" width="200%" height="200%">
+<feGaussianBlur stdDeviation="5" result="blur"/>
+<feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+</filter>
+</defs>
+<g fill="#FFD391" filter="url(#sparkle-glow)">
+<g class="tw" style="animation-duration:3.4s;animation-delay:-0.0s"><use href="#sparkle" transform="translate(355.5 109.7) scale(24.8)"/></g>
+<g class="tw" style="animation-duration:2.6s;animation-delay:-1.3s"><use href="#sparkle" transform="translate(371 86.3) scale(14.9)"/></g>
+<g class="tw" style="animation-duration:2.9s;animation-delay:-2.1s"><use href="#sparkle" transform="translate(324.5 114.5) scale(14.9)"/></g>
+<g class="tw" style="animation-duration:3.8s;animation-delay:-0.7s"><use href="#sparkle" transform="translate(347.5 138.3) scale(14.9)"/></g>
+<g class="tw" style="animation-duration:3.1s;animation-delay:-1.8s"><use href="#sparkle" transform="translate(36.8 208.5) scale(27.7)"/></g>
+<g class="tw" style="animation-duration:2.4s;animation-delay:-0.4s"><use href="#sparkle" transform="translate(54.3 181.5) scale(21.5)"/></g>
+</g>
+</svg>

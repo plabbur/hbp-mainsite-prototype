@@ -1,0 +1,28 @@
+<svg width="402" height="260" viewBox="0 0 402 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Small layout. Exported from Figma (SM): the upper swirl (Vector 265). Billows like
+     testi-mist-left.svg. -->
+<style>
+.billow {
+  transform-box: fill-box;
+  transform-origin: 0% 0%;
+  animation: billow 9s ease-in-out infinite alternate;
+}
+@keyframes billow {
+  0% { opacity: 1; transform: translate(0, 0) scale(1, 1) skewX(0deg); }
+  50% { opacity: 0.85; transform: translate(8px, 3px) scale(1.04, 1.025) skewX(1.5deg); }
+  100% { opacity: 1; transform: translate(-5px, 6px) scale(1.06, 1.01) skewX(-1deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .billow { animation: none; }
+}
+</style>
+<defs>
+<linearGradient id="mist-sm-top" x1="-172" y1="76" x2="512.88" y2="93.20" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FFE3B2" stop-opacity="0.9"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</linearGradient>
+</defs>
+<g class="billow">
+<path d="M285.21 248.70C408.13 273.22 446.96 249.12 450.40 243.95C442.90 238.03 403.35 239.13 375.67 225.44C341.06 208.32 308.68 159.22 282.22 97.51C235.23 -12.07 142.35 6.96 92.25 -44.85L-167.26 31.03C-141.46 65.86 -65.13 117.83 31.76 129.91C207.65 151.84 131.56 218.06 285.21 248.70Z" fill="url(#mist-sm-top)"/>
+</g>
+</svg>
