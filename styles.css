@@ -2601,6 +2601,52 @@ img {
   will-change: opacity;
 }
 
+/* Wider screens: Figma's pillars (x 0-165 and 1347-1512 of the render) are
+   pinned to the screen's edges, and the gap each leaves (as wide as the
+   letterbox, --bleed-x) is filled from the render: the top band repeats one
+   of its panels (lined up with the band's own panels), and the wall below
+   stretches the column of wall right beside the pillar. At 1512 wide the pillars
+   sit exactly over the render's own and the fills are empty. */
+.sponsors-pillar,
+.sponsors-edge {
+  position: absolute;
+  top: 0;
+  height: 982px;
+}
+
+.sponsors-pillar {
+  width: 165px;
+  background: url("./assets/sponsors-bg.jpg") 0 0 / 1512px 982px no-repeat;
+}
+
+.sponsors-pillar--left {
+  left: calc(-1 * var(--bleed-x, 0px));
+}
+
+.sponsors-pillar--right {
+  left: calc(1347px + var(--bleed-x, 0px));
+  background-position: -1347px 0;
+}
+
+.sponsors-edge {
+  width: var(--bleed-x, 0px);
+}
+
+.sponsors-edge--left {
+  left: calc(165px - var(--bleed-x, 0px));
+  background:
+    url("./assets/sponsors-edge-band-l.jpg") calc(var(--bleed-x, 0px) - 28.2px)
+      0 / 99.5px 70px repeat-x,
+    url("./assets/sponsors-edge-wall-l.jpg") 0 70px / 100% 912px no-repeat;
+}
+
+.sponsors-edge--right {
+  left: 1347px;
+  background:
+    url("./assets/sponsors-edge-band-r.jpg") -32.7px 0 / 101px 70px repeat-x,
+    url("./assets/sponsors-edge-wall-r.jpg") 0 70px / 100% 912px no-repeat;
+}
+
 .sponsors-copy {
   inset: 0;
   pointer-events: none;
@@ -2735,6 +2781,11 @@ img {
     background-size: 1000px 982px;
   }
 
+  .sponsors-pillar,
+  .sponsors-edge {
+    display: none;
+  }
+
   .sponsors-title {
     left: 335px;
   }
@@ -2776,6 +2827,11 @@ img {
   .sponsors-bg {
     background-image: url("./assets/sponsors-bg-sm.jpg");
     background-size: 402px 874px;
+  }
+
+  .sponsors-pillar,
+  .sponsors-edge {
+    display: none;
   }
 
   .sponsors-title {
