@@ -1587,9 +1587,12 @@ img {
   width: 1021.16px;
 }
 
+/* The long railing again, ending behind the arch, so it runs off past the
+   screen's left edge on wide screens. Its last baluster sits at x 68, where
+   the short railing's was. */
 .speaker-railing--left {
-  left: -68px;
-  width: 214px;
+  left: -855.7px;
+  width: 1021.16px;
 }
 
 /* The curtain wrapper sits at the canvas origin and slides as one piece;
@@ -1606,9 +1609,11 @@ img {
   position: absolute;
 }
 
+/* Shifted by the letterbox width so the drapes meet the screen's right edge
+   on screens wider than the artboard. */
 .speaker-curtain__lg {
   top: 0;
-  left: 5px;
+  left: calc(5px + var(--bleed-x, 0px));
   width: 1509px;
   height: 982px;
 }
@@ -2015,7 +2020,9 @@ img {
   position: absolute;
 }
 
-/* The hall of arches behind the testimonial, cropped to the frame. */
+/* The hall of arches behind the testimonial. The art is the whole hall
+   (it runs 427px past the frame on each side and 70px below), so it still
+   reaches the screen's edges when the frame is letterboxed. */
 .testi-hall {
   inset: 0;
   will-change: transform, opacity;
@@ -2024,17 +2031,18 @@ img {
 .testi-hall__arches {
   position: absolute;
   top: 148px;
-  left: 0;
-  width: 1512px;
-  height: 834px;
+  left: -427px;
+  width: 2366px;
+  height: 904px;
 }
 
+/* The whole trail, running on below the frame's bottom edge. */
 .testi-hall__paws {
   position: absolute;
   top: 849px;
   left: 761px;
   width: 171px;
-  height: 133px;
+  height: 205px;
 }
 
 .testi-mist,
@@ -2044,16 +2052,17 @@ img {
 
 /* Both mist files carry extra canvas toward the center so the billowing
    swirls (animated inside the SVGs) never clip. */
+/* The mists grow out of the screen's side edges, not the frame's. */
 .testi-mist--left {
   top: 0;
-  left: 0;
+  left: calc(-1 * var(--bleed-x, 0px));
   width: 760px;
   height: 982px;
 }
 
 .testi-mist--right {
   top: 240.1px;
-  left: 790.4px;
+  left: calc(790.4px + var(--bleed-x, 0px));
   width: 722px;
   height: 742px;
 }
@@ -2163,7 +2172,7 @@ img {
 
   .testi-mist--right {
     top: 85.53px;
-    left: 490.14px;
+    left: calc(490.14px + var(--bleed-x, 0px));
     width: 510px;
     height: 842px;
   }
@@ -2274,16 +2283,28 @@ img {
 
 /* Only the arch openings show what's behind them. */
 /* Extends past the frame by the slide length on each side, like the arches,
-   so the openings stay filled while they slide. */
+   so the openings stay filled while they slide. The doorway and arches keep
+   to the screen's left edge when the frame is letterboxed. */
 .projects-doorway {
   top: 0;
-  left: -820px;
+  left: calc(-820px - var(--bleed-x, 0px));
   width: 3152px;
   height: 982px;
   -webkit-mask: url("./assets/projects-doorway-mask.svg") 0 0 / 3152px 982px
     no-repeat;
   mask: url("./assets/projects-doorway-mask.svg") 0 0 / 3152px 982px no-repeat;
   will-change: transform;
+}
+
+/* The arches, the scene through them, and the walls around them stand 12%
+   larger than drawn, grown from the frame's bottom edge so the arch tops
+   line up with the picture frame's (y 238). The walls frame the openings
+   from above, so they scale with them. Frame x 0 sits 820px into the arch
+   layers and 1000px into the walls. */
+.projects-doorway,
+.projects-arches {
+  scale: 1.124;
+  transform-origin: 820px 982px;
 }
 
 /* The dinosaur hall seen through the arches, with its own dark backdrop
@@ -2307,10 +2328,14 @@ img {
   position: absolute;
 }
 
+/* 1000px wider than the frame on each side (see projects-walls.svg). */
 .projects-walls {
-  inset: 0;
-  width: 1512px;
+  top: 0;
+  left: -1000px;
+  width: 3512px;
   height: 982px;
+  scale: 1.124;
+  transform-origin: 1000px 982px;
 }
 
 /* The arches and the wall slabs that slide with them (see
@@ -2318,7 +2343,7 @@ img {
    each side. */
 .projects-arches {
   top: 0;
-  left: -820px;
+  left: calc(-820px - var(--bleed-x, 0px));
   width: 3152px;
   height: 982px;
   will-change: transform;
@@ -2326,8 +2351,8 @@ img {
 
 .projects-frieze {
   top: 0;
-  left: 0;
-  width: 1512px;
+  left: -1000px;
+  width: 3512px;
   height: 118px;
   opacity: 0.18;
   mix-blend-mode: multiply;
@@ -2336,7 +2361,7 @@ img {
 
 /* A warm-to-violet wash burned over the whole hall. */
 .projects-lighting {
-  inset: 0;
+  inset: 0 calc(-1 * var(--bleed-x, 0px));
   background: linear-gradient(180deg, #ffe5b2 0%, #32127c 100%);
   opacity: 0.2;
   mix-blend-mode: color-burn;
@@ -2458,10 +2483,12 @@ img {
   .projects-doorway,
   .projects-arches {
     left: -1032px;
+    scale: none;
   }
 
   .projects-walls {
-    left: -212px;
+    left: -1212px;
+    scale: none;
   }
 
   .projects-title {

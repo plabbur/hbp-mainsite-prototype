@@ -1,6 +1,7 @@
-<svg width="1512" height="982" viewBox="0 0 1512 982" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="3512" height="982" viewBox="-1000 0 3512 982" fill="none" xmlns="http://www.w3.org/2000/svg">
 <!-- Exported from Figma "Past Projects" → bg: the right wall (Rectangle 1325) and the upper
-     wall (Rectangle 1324), behind the arches. -->
+     wall (Rectangle 1324), behind the arches. Both run on to 1000px past the frame on each
+     side so they still fill wide screens. -->
 <defs>
 <linearGradient id="room-wall-r" x1="679.16" y1="501.78" x2="541.46" y2="1009.08" gradientUnits="userSpaceOnUse">
 <stop stop-color="#73678D"/>
@@ -10,7 +11,7 @@
 
 <!-- Right wall (Rectangle 1325) and upper wall (Rectangle 1324). -->
 <g transform="translate(687 120)">
-<rect width="1045" height="865" fill="url(#room-wall-r)"/>
+<rect width="1825" height="865" fill="url(#room-wall-r)"/>
 </g>
-<rect x="-283" y="-6" width="2038" height="339" fill="#73678D"/>
+<rect x="-1000" y="-6" width="3512" height="339" fill="#73678D"/>
 </svg>

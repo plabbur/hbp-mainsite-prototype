@@ -2077,17 +2077,29 @@
       },
       18.0,
     )
-    // ---- Speakers exit: arch and text rise away; the balustrade reverses
-    // its entrance (sinks and fades), then the curtains pull back right.
+    // ---- Speakers exit: the text rises away while the arch sinks back the
+    // way it came in, both fading; the balustrade reverses its entrance
+    // (sinks and fades), then the curtains pull back right.
     .fromTo(
-      [speakerStage, speakerCopy],
+      speakerCopy,
       { y: 0, autoAlpha: 1 },
       {
         y: -140,
         autoAlpha: 0,
         duration: 1.1,
         ease: "power1.in",
-        stagger: 0.08,
+        immediateRender: false,
+      },
+      20.98,
+    )
+    .fromTo(
+      speakerStage,
+      { y: 0, autoAlpha: 1 },
+      {
+        y: 140,
+        autoAlpha: 0,
+        duration: 1.1,
+        ease: "power1.in",
         immediateRender: false,
       },
       20.9,

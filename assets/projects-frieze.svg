@@ -1,6 +1,7 @@
-<svg width="1512" height="118" viewBox="0 0 1512 118" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="3512" height="118" viewBox="-1000 0 3512 118" fill="none" xmlns="http://www.w3.org/2000/svg">
 <!-- Exported from Figma "Group 326": a band of recessed panels along the top of the hall.
-     One panel is defined and repeated; the page shows it at 18% opacity, multiplied. -->
+     One panel is defined and repeated; the page shows it at 18% opacity, multiplied. The band
+     runs on to 1000px past the frame on each side so it still fills wide screens. -->
 <defs>
 <filter id="frieze-inset" x="8.63" y="7.19" width="83.47" height="67.64" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
@@ -17,18 +18,36 @@
 <rect x="22.10" y="19.22" width="62.29" height="50.78" stroke="#CFB3B3" stroke-width="1.02"/>
 </g>
 </defs>
-<rect x="-36" y="-6" width="1548" height="119" fill="white"/>
+<rect x="-1000" y="-6" width="3512" height="119" fill="white"/>
+<use href="#frieze-panel" x="-1071.28" y="15.07"/>
+<use href="#frieze-panel" x="-951.92" y="15.07"/>
+<use href="#frieze-panel" x="-832.55" y="15.07"/>
+<use href="#frieze-panel" x="-713.19" y="15.07"/>
+<use href="#frieze-panel" x="-593.82" y="15.07"/>
+<use href="#frieze-panel" x="-474.46" y="15.07"/>
+<use href="#frieze-panel" x="-355.09" y="15.07"/>
+<use href="#frieze-panel" x="-235.73" y="15.07"/>
+<use href="#frieze-panel" x="-116.36" y="15.07"/>
 <use href="#frieze-panel" x="3.00" y="15.07"/>
-<use href="#frieze-panel" x="122.37" y="15.07"/>
+<use href="#frieze-panel" x="122.36" y="15.07"/>
 <use href="#frieze-panel" x="241.73" y="15.07"/>
-<use href="#frieze-panel" x="361.10" y="15.07"/>
+<use href="#frieze-panel" x="361.09" y="15.07"/>
 <use href="#frieze-panel" x="480.46" y="15.07"/>
-<use href="#frieze-panel" x="599.83" y="15.07"/>
-<use href="#frieze-panel" x="719.20" y="15.07"/>
-<use href="#frieze-panel" x="838.56" y="15.07"/>
-<use href="#frieze-panel" x="957.93" y="15.07"/>
-<use href="#frieze-panel" x="1077.29" y="15.07"/>
-<use href="#frieze-panel" x="1196.66" y="15.07"/>
-<use href="#frieze-panel" x="1316.03" y="15.07"/>
-<use href="#frieze-panel" x="1435.39" y="15.07"/>
+<use href="#frieze-panel" x="599.82" y="15.07"/>
+<use href="#frieze-panel" x="719.19" y="15.07"/>
+<use href="#frieze-panel" x="838.55" y="15.07"/>
+<use href="#frieze-panel" x="957.92" y="15.07"/>
+<use href="#frieze-panel" x="1077.28" y="15.07"/>
+<use href="#frieze-panel" x="1196.65" y="15.07"/>
+<use href="#frieze-panel" x="1316.01" y="15.07"/>
+<use href="#frieze-panel" x="1435.38" y="15.07"/>
+<use href="#frieze-panel" x="1554.74" y="15.07"/>
+<use href="#frieze-panel" x="1674.11" y="15.07"/>
+<use href="#frieze-panel" x="1793.47" y="15.07"/>
+<use href="#frieze-panel" x="1912.84" y="15.07"/>
+<use href="#frieze-panel" x="2032.20" y="15.07"/>
+<use href="#frieze-panel" x="2151.57" y="15.07"/>
+<use href="#frieze-panel" x="2270.93" y="15.07"/>
+<use href="#frieze-panel" x="2390.30" y="15.07"/>
+<use href="#frieze-panel" x="2509.66" y="15.07"/>
 </svg>
