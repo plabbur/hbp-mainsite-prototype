@@ -38,9 +38,18 @@
       fit.style.transform =
         `translate(-50%, -50%) translate(${(23.1 * frame).toFixed(2)}px, ` +
         `${(-42.8 * frame).toFixed(2)}px) scale(${(1.1582 * frame).toFixed(5)})`;
+      fit.style.removeProperty("--moon-drop");
     } else {
       fit.style.transform =
         `translate(-50%, -50%) scale(${coverScale.toFixed(5)})`;
+      // Cover-fit crops the top of the scene in short windows, which
+      // would tuck the moon (and its badge) up under the navbar logo.
+      // Lower it so its top never sits above where Figma has it at full
+      // height: 72px below the top of the window.
+      const cropTop = (DESIGN_HEIGHT * coverScale - viewportHeight) / 2;
+      const moonTop = 72 * coverScale - cropTop;
+      const drop = Math.max(0, (72 - moonTop) / coverScale);
+      fit.style.setProperty("--moon-drop", `${drop.toFixed(2)}px`);
     }
 
     // Small: the static night composition (402x874) cover-fits the hero.

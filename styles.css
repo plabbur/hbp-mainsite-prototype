@@ -188,9 +188,10 @@ img {
 
 /* The HackBeanpot-logo moon (Figma "Moon"). The disc must stay fully
    opaque so it occludes the banner tucked behind it. */
+/* In front of the skyline (z 6), with the badge rig just behind it. */
 .moon {
-  z-index: 5;
-  top: 72px;
+  z-index: 8;
+  top: calc(72px + var(--moon-drop, 0px));
   left: 125px;
   width: 119px;
   height: 119px;
@@ -204,8 +205,8 @@ img {
    for the tucked-into-the-background look. */
 .moon-rig {
   position: absolute;
-  z-index: 4;
-  top: 72px;
+  z-index: 7;
+  top: calc(72px + var(--moon-drop, 0px));
   left: 125px;
   width: 119px;
   height: 119px;
@@ -515,15 +516,6 @@ img {
     top: 36.3px;
     width: 71.1px;
     height: 126.4px;
-  }
-
-  /* Above the skyline: medium hangs the moon lower in the sky. */
-  .moon {
-    z-index: 8;
-  }
-
-  .moon-rig {
-    z-index: 7;
   }
 
   /* 1 / 0.9009 (resting scene scale at the medium framing). */
