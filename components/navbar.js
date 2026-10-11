@@ -61,7 +61,7 @@
             <div class="site-nav__links" id="site-nav-menu">
               ${NAV_ITEMS.map(
                 ({ section, label }) =>
-                  `<a href="#" data-section="${section}"${
+                  `<a href="#${section}" data-section="${section}"${
                     section === current ? ' class="is-current"' : ""
                   }>${label}</a>`,
               ).join("")}

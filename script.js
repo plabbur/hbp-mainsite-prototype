@@ -257,6 +257,52 @@
   const shootingLayer = document.querySelector("#shooting-stars");
   const hudIntro = document.querySelector("#hud-intro");
   const nav = document.querySelector("#site-nav");
+  // The navbar pins to the top of the screen for the whole page; inside
+  // the hero's sticky viewport it would scroll away with it at the FAQs.
+  document.body.prepend(nav.closest("hbp-navbar") ?? nav);
+
+  // Shareable section links: picking a section in the navbar puts it in
+  // the URL (#faqs), the logo clears it, and a link with a section hash
+  // opens on that section.
+  const sectionKeys = new Set(
+    [...nav.querySelectorAll(".site-nav__links > a[data-section]")].map(
+      (link) => link.dataset.section,
+    ),
+  );
+  const setSectionHash = (key) => {
+    history.replaceState(
+      null,
+      "",
+      key ? `#${key}` : location.pathname + location.search,
+    );
+  };
+  const initialSection = sectionKeys.has(location.hash.slice(1))
+    ? location.hash.slice(1)
+    : null;
+  // The sections are custom-scrolled, so the browser's own jump to the
+  // anchor would land somewhere arbitrary; start from the top instead.
+  if (initialSection) history.scrollRestoration = "manual";
+  // A section link opened in a tab already on the page only changes the
+  // hash; each page mode registers how to go there.
+  let goToHashSection = null;
+  window.addEventListener("hashchange", () => {
+    const key = location.hash.slice(1);
+    if (sectionKeys.has(key)) goToHashSection?.(key);
+  });
+
+  // Once the FAQs start scrolling up under the navbar, its tinted bar (the
+  // stacked page's) fades in over the first 120px so the links never sit
+  // directly on the page copy.
+  if (!staticScroll) {
+    const faqsSection = document.querySelector("#faqs");
+    const setNavFill = () => {
+      const fill = Math.min(1, Math.max(0, -faqsSection.getBoundingClientRect().top / 120));
+      nav.style.setProperty("--nav-fill", fill.toFixed(3));
+    };
+    setNavFill();
+    window.addEventListener("scroll", setNavFill, { passive: true });
+    window.addEventListener("resize", setNavFill);
+  }
 
   const clamp01 = gsap.utils.clamp(0, 1);
   const smoothstep = (value) => {
@@ -802,9 +848,6 @@
     });
     fitSceneToViewport();
 
-    // The navbar pins to the top of the screen for the whole page.
-    document.body.prepend(nav.closest("hbp-navbar") ?? nav);
-
     const targets = {
       ...Object.fromEntries(
         sections.map((section) => [section.id.replace("section-", ""), section]),
@@ -815,13 +858,24 @@
     links.forEach((link) => {
       link.addEventListener("click", (event) => {
         event.preventDefault();
+        setSectionHash(link.dataset.section);
         targets[link.dataset.section]?.scrollIntoView({ behavior: "smooth" });
       });
     });
     document.querySelector(".site-nav__logo").addEventListener("click", (event) => {
       event.preventDefault();
+      setSectionHash(null);
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
+    goToHashSection = (key) =>
+      targets[key]?.scrollIntoView({ behavior: "smooth" });
+    if (initialSection) {
+      window.addEventListener(
+        "load",
+        () => targets[initialSection]?.scrollIntoView(),
+        { once: true },
+      );
+    }
 
     // While the hero is under the bar, the small layout hides the logo and
     // the bar's tint (the MLH badge takes that corner; see styles.css).
@@ -2634,13 +2688,16 @@
   nav.querySelectorAll(".site-nav__links > a[data-section]").forEach((link) => {
     link.addEventListener("click", (event) => {
       event.preventDefault();
+      setSectionHash(link.dataset.section);
       navigateToSection(link.dataset.section);
     });
   });
   document.querySelector(".site-nav__logo").addEventListener("click", (event) => {
     event.preventDefault();
+    setSectionHash(null);
     scrollToTimelineT(0);
   });
+  goToHashSection = navigateToSection;
   // A real scroll gesture immediately hands control back to the user.
   ["wheel", "touchstart"].forEach((type) =>
     window.addEventListener(type, killNavScroll, { passive: true }),
@@ -2648,7 +2705,15 @@
 
   const startIntro = () => {
     ScrollTrigger.refresh();
-    intro.play();
+    if (initialSection) {
+      // Opened from a section link: skip the intro to its lit end state
+      // and travel straight to the section.
+      window.scrollTo(0, 0);
+      intro.progress(1);
+      navigateToSection(initialSection);
+    } else {
+      intro.play();
+    }
   };
   if (document.readyState === "complete") {
     startIntro();
